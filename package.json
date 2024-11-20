@@ -3,10 +3,13 @@
   "version": "4.3.0",
   "scripts": {
     "dev": "vite --host",
-    "prod": "vite --mode production",
+    "prod": "vite --host --mode production",
     "build": "vite build",
     "build:prod": "vite build --mode production",
-    "serve": "vite preview --host"
+    "serve": "vite preview --host",
+    "f2elint-scan": "f2elint scan",
+    "f2elint-fix": "f2elint fix",
+    "sonar-scanner": "sonar-scanner"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -31,11 +34,21 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/compiler-sfc": "^3.4.27",
-    "prettier": "^2.8.7",
+    "autoprefixer": "^10.4.16",
+    "f2elint": "^2.2.1",
+    "postcss": "^8.4.30",
     "sass": "^1.77.2",
+    "tailwindcss": "^3.3.3",
+    "prettier": "^2.8.7",
     "unplugin-auto-import": "^0.11.2",
     "vite": "^5.2.12",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-vue-setup-extend": "^0.4.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "f2elint commit-file-scan",
+      "commit-msg": "f2elint commit-msg-scan"
+    }
   }
 }

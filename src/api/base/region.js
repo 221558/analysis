@@ -8,9 +8,9 @@ export const getList = (current, size, params) => {
       ...params,
       current,
       size,
-    }
-  })
-}
+    },
+  });
+};
 
 export const getLazyTree = (parentCode, params) => {
   return request({
@@ -18,20 +18,20 @@ export const getLazyTree = (parentCode, params) => {
     method: 'get',
     params: {
       ...params,
-      parentCode
-    }
-  })
-}
+      parentCode,
+    },
+  });
+};
 
 export const getDetail = (code) => {
   return request({
     url: '/blade-system/region/detail',
     method: 'get',
     params: {
-      code
-    }
-  })
-}
+      code,
+    },
+  });
+};
 
 export const remove = (id) => {
   return request({
@@ -39,15 +39,14 @@ export const remove = (id) => {
     method: 'post',
     params: {
       id,
-    }
-  })
-}
+    },
+  });
+};
 
 export const submit = (row) => {
   return request({
     url: '/blade-system/region/submit',
     method: 'post',
-    data: row
-  })
-}
-
+    data: row,
+  });
+};

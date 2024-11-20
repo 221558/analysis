@@ -1,61 +1,50 @@
 <template>
-  <el-dialog center
-             :show-close="false"
-             :close-on-press-escape="false"
-             :close-on-click-modal="false"
-             append-to-body
-             v-model="dialogVisible"
-             title="人机识别"
-             width="400px">
-    <center>
+  <el-dialog center :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false" append-to-body v-model="dialogVisible" title="人机识别" width="400px">
+    <div>
       <span>
-        扫码下方二维码，回复<b>【验证码】</b><br />
-        <span style="color:red">获得「验证码 + 交流群(一起摸🐟)」</span>
+        扫码下方二维码，回复<strong>【验证码】</strong><br />
+        <span style="color: red">获得「验证码 + 交流群(一起摸🐟)」</span>
       </span>
       <br />
       <br />
-      <img width="200"
-           src="https://avuejs.com/images/icon/wechat.png" />
+      <img width="200" src="https://avuejs.com/images/icon/wechat.png" alt="" />
       <br />
       <br />
-      <el-input v-model="value"
-                placeholder="请输入验证码"></el-input>
-    </center>
+      <el-input v-model="value" placeholder="请输入验证码"></el-input>
+    </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary"
-                   @click="submit">确 认</el-button>
+        <el-button type="primary" @click="submit">确 认</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       value: '',
-      dialogVisible: false
-    }
+      dialogVisible: false,
+    };
   },
-  created () {
+  created() {
     if (window.localStorage.getItem('avue_lock')) {
-      return
+      return;
     }
-    this.dialogVisible = true
+    this.dialogVisible = true;
   },
   methods: {
-    submit () {
+    submit() {
       if (this.value == '') {
-        this.$message.error('验证码不能为空')
-        return
+        this.$message.error('验证码不能为空');
+        return;
       } else if (this.value != 'avue') {
-        this.$message.error('验证码不正确')
-        return
+        this.$message.error('验证码不正确');
+        return;
       }
-      this.dialogVisible = false
-      window.localStorage.setItem('avue_lock', true)
-    }
-  }
-
-}
+      this.dialogVisible = false;
+      window.localStorage.setItem('avue_lock', true);
+    },
+  },
+};
 </script>

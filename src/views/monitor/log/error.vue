@@ -1,27 +1,29 @@
 <template>
   <basic-container>
-    <avue-crud :option="option"
-               :data="data"
-               ref="crud"
-               :before-open="beforeOpen"
-               v-model="form"
-               :permission="permissionList"
-               :page="page"
-               @search-change="searchChange"
-               @search-reset="searchReset"
-               @current-change="currentChange"
-               @size-change="sizeChange"
-               @on-load="onLoad">
+    <avue-crud
+      :option="option"
+      :data="data"
+      ref="crud"
+      :before-open="beforeOpen"
+      v-model="form"
+      :permission="permissionList"
+      :page="page"
+      @search-change="searchChange"
+      @search-reset="searchReset"
+      @current-change="currentChange"
+      @size-change="sizeChange"
+      @on-load="onLoad"
+    >
     </avue-crud>
   </basic-container>
 </template>
 
 <script>
-import { getErrorList, getErrorLogs } from "@/api/logs";
-import { mapGetters } from "vuex";
+import { getErrorList, getErrorLogs } from '@/api/logs';
+import { mapGetters } from 'vuex';
 
 export default {
-  data () {
+  data() {
     return {
       form: {},
       selectionList: [],
@@ -29,7 +31,7 @@ export default {
       page: {
         pageSize: 10,
         currentPage: 1,
-        total: 0
+        total: 0,
       },
       option: {
         height: 'auto',
@@ -47,109 +49,108 @@ export default {
         dialogType: 'drawer',
         column: [
           {
-            label: "服务id",
-            prop: "serviceId",
-            search: true
+            label: '服务id',
+            prop: 'serviceId',
+            search: true,
           },
           {
-            label: "服务host",
-            prop: "serverHost",
-            search: true
+            label: '服务host',
+            prop: 'serverHost',
+            search: true,
           },
           {
-            label: "服务ip",
-            prop: "serverIp"
+            label: '服务ip',
+            prop: 'serverIp',
           },
           {
-            label: "软件环境",
-            prop: "env"
+            label: '软件环境',
+            prop: 'env',
           },
           {
-            label: "日志名",
-            prop: "title"
+            label: '日志名',
+            prop: 'title',
           },
           {
-            label: "请求方法",
-            prop: "method"
+            label: '请求方法',
+            prop: 'method',
           },
           {
-            label: "请求接口",
-            prop: "requestUri"
+            label: '请求接口',
+            prop: 'requestUri',
           },
           {
-            label: "日志时间",
-            prop: "createTime"
+            label: '日志时间',
+            prop: 'createTime',
           },
           {
-            label: "用户代理",
-            prop: "userAgent",
+            label: '用户代理',
+            prop: 'userAgent',
             span: 24,
-            hide: true
+            hide: true,
           },
           {
-            label: "请求数据",
-            prop: "params",
-            type: "textarea",
+            label: '请求数据',
+            prop: 'params',
+            type: 'textarea',
             span: 24,
             minRows: 2,
-            hide: true
+            hide: true,
           },
           {
-            label: "日志数据",
-            prop: "stackTrace",
-            type: "textarea",
+            label: '日志数据',
+            prop: 'stackTrace',
+            type: 'textarea',
             span: 24,
             minRows: 6,
-            hide: true
-          }
-        ]
+            hide: true,
+          },
+        ],
       },
-      data: []
+      data: [],
     };
   },
   computed: {
-    ...mapGetters(["permission"]),
-    permissionList () {
+    ...mapGetters(['permission']),
+    permissionList() {
       return {
-        viewBtn: this.validData(this.permission.log_error_view, false)
+        viewBtn: this.validData(this.permission.log_error_view, false),
       };
-    }
+    },
   },
   methods: {
-    searchReset () {
+    searchReset() {
       this.query = {};
       this.onLoad(this.page);
     },
-    searchChange (params, done) {
+    searchChange(params, done) {
       this.query = params;
       this.page.currentPage = 1;
       this.onLoad(this.page, params);
       done();
     },
-    beforeOpen (done, type) {
-      if (["edit", "view"].includes(type)) {
-        getErrorLogs(this.form.strId).then(res => {
+    beforeOpen(done, type) {
+      if (['edit', 'view'].includes(type)) {
+        getErrorLogs(this.form.strId).then((res) => {
           this.form = res.data.data;
         });
       }
       done();
     },
-    currentChange (currentPage) {
+    currentChange(currentPage) {
       this.page.currentPage = currentPage;
     },
-    sizeChange (pageSize) {
+    sizeChange(pageSize) {
       this.page.pageSize = pageSize;
     },
-    onLoad (page, params = {}) {
-      getErrorList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
-        const data = res.data.data;
+    onLoad(page, params = {}) {
+      getErrorList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then((res) => {
+        const { data } = res.data;
         this.page.total = data.total;
         this.data = data.records;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

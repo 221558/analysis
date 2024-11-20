@@ -1,42 +1,39 @@
 <template>
-  <basic-video ref="video"
-               :width="350">
-  </basic-video>
+  <basic-video ref="video" :width="350"> </basic-video>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import basicVideo from '@/components/basic-video/main.vue'
+import { mapGetters } from 'vuex';
+import basicVideo from '@/components/basic-video/main.vue';
+
 export default {
   components: {
-    basicVideo
+    basicVideo,
   },
-  data () {
+  data() {
     return {
       loginForm: {
-        username: "admin",
-        password: "123456",
-      }
-
-    }
+        username: 'admin',
+        password: '123456',
+      },
+    };
   },
-  created () {
+  created() {
     setTimeout(() => {
-      this.handleLogin()
-    }, 6000)
+      this.handleLogin();
+    }, 6000);
   },
   computed: {
-    ...mapGetters(["tagWel"])
+    ...mapGetters(['tagWel']),
   },
   methods: {
-    handleLogin () {
-      this.$store.dispatch("LoginByUsername", this.loginForm).then(() => {
+    handleLogin() {
+      this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
         this.$router.push(this.tagWel);
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<style>
-</style>
+<style></style>

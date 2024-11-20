@@ -8,9 +8,9 @@ export const getListDataScope = (current, size, params) => {
       ...params,
       current,
       size,
-    }
-  })
-}
+    },
+  });
+};
 
 export const removeDataScope = (ids) => {
   return request({
@@ -18,25 +18,25 @@ export const removeDataScope = (ids) => {
     method: 'post',
     params: {
       ids,
-    }
-  })
-}
+    },
+  });
+};
 
 export const addDataScope = (row) => {
   return request({
     url: '/blade-system/data-scope/submit',
     method: 'post',
-    data: row
-  })
-}
+    data: row,
+  });
+};
 
 export const updateDataScope = (row) => {
   return request({
     url: '/blade-system/data-scope/submit',
     method: 'post',
-    data: row
-  })
-}
+    data: row,
+  });
+};
 
 export const getMenuDataScope = (id) => {
   return request({
@@ -44,7 +44,6 @@ export const getMenuDataScope = (id) => {
     method: 'get',
     params: {
       id,
-    }
-  })
-}
-
+    },
+  });
+};

@@ -7,7 +7,7 @@ export default class func {
    * @param val
    * @returns {boolean}
    */
-  static notEmpty (val) {
+  static notEmpty(val) {
     return !this.isEmpty(val);
   }
 
@@ -16,7 +16,7 @@ export default class func {
    * @param val
    * @returns {boolean}
    */
-  static isUndefined (val) {
+  static isUndefined(val) {
     return val === null || typeof val === 'undefined';
   }
 
@@ -25,12 +25,8 @@ export default class func {
    * @param val
    * @returns {boolean}
    */
-  static isEmpty (val) {
-    if (
-      val === null ||
-      typeof val === 'undefined' ||
-      (typeof val === 'string' && val === '' && val !== 'undefined')
-    ) {
+  static isEmpty(val) {
+    if (val === null || typeof val === 'undefined' || (typeof val === 'string' && val === '' && val !== 'undefined')) {
       return true;
     }
     return false;
@@ -42,7 +38,7 @@ export default class func {
    * @param defaultValue
    * @returns {number}
    */
-  static toInt (val, defaultValue) {
+  static toInt(val, defaultValue) {
     if (this.isEmpty(val)) {
       return defaultValue === undefined ? -1 : defaultValue;
     }
@@ -55,9 +51,9 @@ export default class func {
    * @param obj
    * @returns {FormData}
    */
-  static toFormData (obj) {
+  static toFormData(obj) {
     const data = new FormData();
-    Object.keys(obj).forEach(key => {
+    Object.keys(obj).forEach((key) => {
       data.append(key, Array.isArray(obj[key]) ? obj[key].join(',') : obj[key]);
     });
     return data;
@@ -69,7 +65,7 @@ export default class func {
    * @param format
    * @returns {null}
    */
-  static format (date, format = 'YYYY-MM-DD HH:mm:ss') {
+  static format(date, format = 'YYYY-MM-DD HH:mm:ss') {
     return date ? date.format(format) : null;
   }
 
@@ -87,7 +83,7 @@ export default class func {
    * @param str
    * @returns {string}
    */
-  static split (str) {
+  static split(str) {
     return str ? String(str).split(',') : '';
   }
 }

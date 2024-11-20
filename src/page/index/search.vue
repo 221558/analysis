@@ -1,16 +1,12 @@
 <template>
-  <div class="avue-searchs"
-       @click.self="handleEsc">
+  <div class="avue-searchs" @click.self="handleEsc">
     <div class="avue-searchs__title">Avue菜单搜索</div>
     <div class="avue-searchs__content">
       <div class="avue-searchs__form">
-        <el-input :placeholder="$t('search')"
-                  v-model="value"
-                  @keydown.esc="handleEsc">
+        <el-input :placeholder="$t('search')" v-model="value" @keydown.esc="handleEsc">
           <template #append>
             <el-button icon="el-icon-search"></el-button>
           </template>
-
         </el-input>
         <p>
           <el-tag>你可以使用快捷键esc 关闭</el-tag>
@@ -18,14 +14,11 @@
       </div>
       <div class="avue-searchs__list">
         <el-scrollbar class="avue-searchs__scrollbar">
-          <div class="avue-searchs__item"
-               v-for="(item,index) in menus"
-               :key="index"
-               @click="handleSelect(item)">
-            <i :class="[item[iconKey],'avue-searchs__item-icon']"></i>
-            <span class="avue-searchs__item-title">{{item[labelKey]}}</span>
+          <div class="avue-searchs__item" v-for="(item, index) in menus" :key="index" @click="handleSelect(item)">
+            <em :class="[item[iconKey], 'avue-searchs__item-icon']"></em>
+            <span class="avue-searchs__item-title">{{ item[labelKey] }}</span>
             <div class="avue-searchs__item-path">
-              {{item[pathKey]}}
+              {{ item[pathKey] }}
             </div>
           </div>
         </el-scrollbar>
@@ -35,49 +28,48 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
+
 export default {
-  data () {
+  data() {
     return {
-      value: "",
+      value: '',
       menus: [],
-      menuList: []
-    }
+      menuList: [],
+    };
   },
-  created () {
+  created() {
     this.getMenuList();
   },
   watch: {
-    value () {
+    value() {
       this.querySearch();
     },
-    menu () {
+    menu() {
       this.getMenuList();
-    }
+    },
   },
   computed: {
-    labelKey () {
-      return this.website.menu.label
+    labelKey() {
+      return this.website.menu.label;
     },
-    pathKey () {
-      return this.website.menu.path
+    pathKey() {
+      return this.website.menu.path;
     },
-    iconKey () {
-      return this.website.menu.icon
+    iconKey() {
+      return this.website.menu.icon;
     },
-    childrenKey () {
-      return (
-        this.website.menu.children
-      );
+    childrenKey() {
+      return this.website.menu.children;
     },
-    ...mapGetters(["menu"])
+    ...mapGetters(['menu']),
   },
   methods: {
-    handleEsc () {
-      this.$store.commit('SET_IS_SEARCH', false)
+    handleEsc() {
+      this.$store.commit('SET_IS_SEARCH', false);
     },
-    getMenuList () {
-      const findMenu = list => {
+    getMenuList() {
+      const findMenu = (list) => {
         for (let i = 0; i < list.length; i++) {
           const ele = Object.assign({}, list[i]);
           if (this.validatenull(ele[this.childrenKey])) {
@@ -91,30 +83,25 @@ export default {
       findMenu(this.menu);
       this.menus = this.menuList;
     },
-    querySearch () {
-      var restaurants = this.menuList;
-      var queryString = this.value
-      this.menus = queryString
-        ? this.menuList.filter(this.createFilter(queryString))
-        : restaurants;
+    querySearch() {
+      const restaurants = this.menuList;
+      const queryString = this.value;
+      this.menus = queryString ? this.menuList.filter(this.createFilter(queryString)) : restaurants;
     },
-    createFilter (queryString) {
-      return restaurant => {
-        return (
-          restaurant[this.labelKey].toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
+    createFilter(queryString) {
+      return (restaurant) => {
+        return restaurant[this.labelKey].toLowerCase().indexOf(queryString.toLowerCase()) === 0;
       };
     },
-    handleSelect (item) {
-      this.value = "";
+    handleSelect(item) {
+      this.value = '';
       this.$router.push({
         path: item[this.pathKey],
-        query: item.query
+        query: item.query,
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,61 +1,40 @@
 <template>
   <basic-container>
-    <avue-crud :option="option"
-               :table-loading="loading"
-               :data="data"
-               ref="crud"
-               v-model="form"
-               :permission="permissionList"
-               @row-del="rowDel"
-               @row-update="rowUpdate"
-               @row-save="rowSave"
-               @search-change="searchChange"
-               @search-reset="searchReset"
-               @selection-change="selectionChange"
-               @current-change="currentChange"
-               @size-change="sizeChange"
-               @on-load="onLoad">
+    <avue-crud
+      :option="option"
+      :table-loading="loading"
+      :data="data"
+      ref="crud"
+      v-model="form"
+      :permission="permissionList"
+      @row-del="rowDel"
+      @row-update="rowUpdate"
+      @row-save="rowSave"
+      @search-change="searchChange"
+      @search-reset="searchReset"
+      @selection-change="selectionChange"
+      @current-change="currentChange"
+      @size-change="sizeChange"
+      @on-load="onLoad"
+    >
       <template #menu-left>
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   v-if="permission.role_delete"
-                   plain
-                   @click="handleDelete">删 除
-        </el-button>
-        <el-button icon="el-icon-delete"
-                   @click="handleRole"
-                   plain>权限设置
-        </el-button>
+        <el-button type="danger" icon="el-icon-delete" v-if="permission.role_delete" plain @click="handleDelete">删 除 </el-button>
+        <el-button icon="el-icon-delete" @click="handleRole" plain>权限设置 </el-button>
       </template>
     </avue-crud>
-    <el-dialog title="角色配置"
-               v-model="box"
-               width="345px">
+    <el-dialog title="角色配置" v-model="box" width="345px">
       <el-tabs type="border-card">
         <el-tab-pane label="菜单权限">
-          <el-tree :data="menuGrantList"
-                   show-checkbox
-                   node-key="id"
-                   ref="treeMenu"
-                   :default-checked-keys="menuTreeObj"
-                   :props="props">
-          </el-tree>
+          <el-tree :data="menuGrantList" show-checkbox node-key="id" ref="treeMenu" :default-checked-keys="menuTreeObj" :props="props"> </el-tree>
         </el-tab-pane>
         <el-tab-pane label="数据权限">
-          <el-tree :data="dataScopeGrantList"
-                   show-checkbox
-                   node-key="id"
-                   ref="treeDataScope"
-                   :default-checked-keys="dataScopeTreeObj"
-                   :props="props">
-          </el-tree>
+          <el-tree :data="dataScopeGrantList" show-checkbox node-key="id" ref="treeDataScope" :default-checked-keys="dataScopeTreeObj" :props="props"> </el-tree>
         </el-tab-pane>
       </el-tabs>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="box = false">取 消</el-button>
-          <el-button type="primary"
-                     @click="submit">确 定</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -63,19 +42,19 @@
 </template>
 
 <script>
-import { add, getList, getRole, getRoleTree, grant, grantTree, remove, update } from "@/api/system/role";
-import { mapGetters } from "vuex";
+import { add, getList, getRole, getRoleTree, grant, grantTree, remove, update } from '@/api/system/role';
+import { mapGetters } from 'vuex';
 import website from '@/config/website';
 import { baseUrl } from '@/config/env';
 
 export default {
-  data () {
+  data() {
     return {
       form: {},
       box: false,
       props: {
-        label: "title",
-        value: "key"
+        label: 'title',
+        value: 'key',
       },
       menuGrantList: [],
       dataScopeGrantList: [],
@@ -87,7 +66,7 @@ export default {
       page: {
         pageSize: 10,
         currentPage: 1,
-        total: 0
+        total: 0,
       },
       option: {
         searchShow: true,
@@ -100,127 +79,129 @@ export default {
         viewBtn: true,
         column: [
           {
-            label: "角色名称",
-            prop: "roleName",
+            label: '角色名称',
+            prop: 'roleName',
             search: true,
             span: 24,
             rules: [
               {
                 required: true,
-                message: "请输入角色名称",
-                trigger: "blur"
-              }
-            ]
+                message: '请输入角色名称',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "所属租户",
-            prop: "tenantId",
-            type: "tree",
-            dicUrl: baseUrl + "/blade-system/tenant/select",
+            label: '所属租户',
+            prop: 'tenantId',
+            type: 'tree',
+            dicUrl: `${baseUrl}/blade-system/tenant/select`,
             addDisplay: false,
             editDisplay: false,
             viewDisplay: website.tenantMode,
             span: 24,
             props: {
-              label: "tenantName",
-              value: "tenantId"
+              label: 'tenantName',
+              value: 'tenantId',
             },
             hide: !website.tenantMode,
             search: website.tenantMode,
-            rules: [{
-              required: true,
-              message: "请输入所属租户",
-              trigger: "click"
-            }]
+            rules: [
+              {
+                required: true,
+                message: '请输入所属租户',
+                trigger: 'click',
+              },
+            ],
           },
           {
-            label: "角色别名",
-            prop: "roleAlias",
+            label: '角色别名',
+            prop: 'roleAlias',
             search: true,
             span: 24,
             rules: [
               {
                 required: true,
-                message: "请输入角色别名",
-                trigger: "blur"
-              }
-            ]
+                message: '请输入角色别名',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "上级角色",
-            prop: "parentId",
+            label: '上级角色',
+            prop: 'parentId',
             dicData: [],
-            type: "tree",
+            type: 'tree',
             hide: true,
             span: 24,
             props: {
-              label: "title"
+              label: 'title',
             },
             rules: [
               {
                 required: false,
-                message: "请选择上级角色",
-                trigger: "click"
-              }
-            ]
+                message: '请选择上级角色',
+                trigger: 'click',
+              },
+            ],
           },
           {
-            label: "角色排序",
-            prop: "sort",
-            type: "number",
+            label: '角色排序',
+            prop: 'sort',
+            type: 'number',
             span: 24,
             rules: [
               {
                 required: true,
-                message: "请输入角色排序",
-                trigger: "blur"
-              }
-            ]
-          }
-        ]
+                message: '请输入角色排序',
+                trigger: 'blur',
+              },
+            ],
+          },
+        ],
       },
-      data: []
+      data: [],
     };
   },
   computed: {
-    ...mapGetters(["permission"]),
-    permissionList () {
+    ...mapGetters(['permission']),
+    permissionList() {
       return {
         addBtn: this.validData(this.permission.role_add, false),
         viewBtn: this.validData(this.permission.role_view, false),
         delBtn: this.validData(this.permission.role_delete, false),
-        editBtn: this.validData(this.permission.role_edit, false)
+        editBtn: this.validData(this.permission.role_edit, false),
       };
     },
-    ids () {
-      let ids = [];
-      this.selectionList.forEach(ele => {
+    ids() {
+      const ids = [];
+      this.selectionList.forEach((ele) => {
         ids.push(ele.id);
       });
-      return ids.join(",");
+      return ids.join(',');
     },
-    idsArray () {
-      let ids = [];
-      this.selectionList.forEach(ele => {
+    idsArray() {
+      const ids = [];
+      this.selectionList.forEach((ele) => {
         ids.push(ele.id);
       });
       return ids;
-    }
+    },
   },
   methods: {
-    submit () {
+    submit() {
       const menuList = this.$refs.treeMenu.getCheckedKeys();
       const dataScopeList = this.$refs.treeDataScope.getCheckedKeys();
       grant(this.idsArray, menuList, dataScopeList).then(() => {
         this.box = false;
         this.$message({
-          type: "success",
-          message: "操作成功!"
+          type: 'success',
+          message: '操作成功!',
         });
         this.onLoad(this.page);
       });
 
-      /*const menuLIst = this.$refs.tree.getCheckedKeys();
+      /* const menuLIst = this.$refs.tree.getCheckedKeys();
       grant(this.idsArray, menuLIst).then(() => {
         this.box = false;
         this.$message({
@@ -228,39 +209,45 @@ export default {
           message: "操作成功!"
         });
         this.onLoad(this.page);
-      });*/
+      }); */
     },
-    rowSave (row, done, loading) {
-      add(row).then(() => {
-        done();
-        this.onLoad(this.page);
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-      }, error => {
-        window.console.log(error);
-        loading();
-      });
+    rowSave(row, done, loading) {
+      add(row).then(
+        () => {
+          done();
+          this.onLoad(this.page);
+          this.$message({
+            type: 'success',
+            message: '操作成功!',
+          });
+        },
+        (error) => {
+          window.console.log(error);
+          loading();
+        },
+      );
     },
-    rowUpdate (row, index, done, loading) {
-      update(row).then(() => {
-        done();
-        this.onLoad(this.page);
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-      }, error => {
-        window.console.log(error);
-        loading();
-      });
+    rowUpdate(row, index, done, loading) {
+      update(row).then(
+        () => {
+          done();
+          this.onLoad(this.page);
+          this.$message({
+            type: 'success',
+            message: '操作成功!',
+          });
+        },
+        (error) => {
+          window.console.log(error);
+          loading();
+        },
+      );
     },
-    rowDel (row) {
-      this.$confirm("确定将选择数据删除?", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    rowDel(row) {
+      this.$confirm('确定将选择数据删除?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           return remove(row.id);
@@ -268,45 +255,43 @@ export default {
         .then(() => {
           this.onLoad(this.page);
           this.$message({
-            type: "success",
-            message: "操作成功!"
+            type: 'success',
+            message: '操作成功!',
           });
         });
     },
 
-    searchReset () {
+    searchReset() {
       this.query = {};
       this.onLoad(this.page);
     },
-    searchChange (params, done) {
+    searchChange(params, done) {
       this.query = params;
       this.page.currentPage = 1;
       this.onLoad(this.page, params);
       done();
     },
-    selectionChange (list) {
+    selectionChange(list) {
       this.selectionList = list;
     },
-    handleRole () {
+    handleRole() {
       if (this.selectionList.length !== 1) {
-        this.$message.warning("只能选择一条数据");
+        this.$message.warning('只能选择一条数据');
         return;
       }
       this.menuTreeObj = [];
       this.dataScopeTreeObj = [];
-      grantTree()
-        .then(res => {
-          this.menuGrantList = res.data.data.menu;
-          this.dataScopeGrantList = res.data.data.dataScope;
-          getRole(this.ids).then(res => {
-            this.menuTreeObj = res.data.data.menu;
-            this.dataScopeTreeObj = res.data.data.dataScope;
-            this.box = true;
-          });
+      grantTree().then((res) => {
+        this.menuGrantList = res.data.data.menu;
+        this.dataScopeGrantList = res.data.data.dataScope;
+        getRole(this.ids).then((res) => {
+          this.menuTreeObj = res.data.data.menu;
+          this.dataScopeTreeObj = res.data.data.dataScope;
+          this.box = true;
         });
+      });
 
-
-      /*this.defaultObj = [];
+      /* this.defaultObj = [];
       grantTree()
         .then(res => {
           this.list = res.data.data;
@@ -315,17 +300,17 @@ export default {
         .then(res => {
           this.defaultObj = res.data.data;
           this.box = true;
-        });*/
+        }); */
     },
-    handleDelete () {
+    handleDelete() {
       if (this.selectionList.length === 0) {
-        this.$message.warning("请选择至少一条数据");
+        this.$message.warning('请选择至少一条数据');
         return;
       }
-      this.$confirm("确定将选择数据删除?", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定将选择数据删除?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           return remove(this.ids);
@@ -333,32 +318,31 @@ export default {
         .then(() => {
           this.onLoad(this.page);
           this.$message({
-            type: "success",
-            message: "操作成功!"
+            type: 'success',
+            message: '操作成功!',
           });
           this.$refs.crud.toggleSelection();
         });
     },
-    currentChange (currentPage) {
+    currentChange(currentPage) {
       this.page.currentPage = currentPage;
     },
-    sizeChange (pageSize) {
+    sizeChange(pageSize) {
       this.page.pageSize = pageSize;
     },
-    onLoad (page, params = {}) {
+    onLoad(page, params = {}) {
       this.loading = true;
-      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
+      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then((res) => {
         this.data = res.data.data;
         this.loading = false;
-        getRoleTree().then(res => {
-          const column = this.findObject(this.option.column, "parentId");
+        getRoleTree().then((res) => {
+          const column = this.findObject(this.option.column, 'parentId');
           column.dicData = res.data.data;
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

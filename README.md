@@ -1,143 +1,93 @@
- <p align="center">
-      <img src="https://img.shields.io/badge/Release-V4.3.0-green.svg" alt="Downloads">
-      <img src="https://img.shields.io/badge/JDK-17+-green.svg" alt="Build Status">
-  <img src="https://img.shields.io/badge/license-Apache%202-blue.svg" alt="Build Status">
-   <img src="https://img.shields.io/badge/Spring%20Cloud-2023-blue.svg" alt="Coverage Status">
-   <img src="https://img.shields.io/badge/Spring%20Boot-3.2-blue.svg" alt="Downloads">
-   <a target="_blank" href="https://bladex.cn">
-   <img src="https://img.shields.io/badge/Author-Small%20Chill-ff69b4.svg" alt="Downloads">
- </a>
- <a target="_blank" href="https://bladex.cn">
-   <img src="https://img.shields.io/badge/Copyright%20-@BladeX-%23ff3f59.svg" alt="Downloads">
- </a>
- </p>  
+# Saber
 
-## SpringBlade微服务开发平台
-* 采用前后端分离的模式，前端开源两个框架：[Sword](https://gitee.com/smallc/Sword) (基于 React、Ant Design)、[Saber](https://gitee.com/smallc/Saber) (基于 Vue、Element-UI)
-* 后端采用SpringCloud全家桶，并同时对其基础组件做了高度的封装，单独开源出一个框架：[BladeTool](https://gitee.com/smallc/blade-tool)
-* [BladeTool](https://github.com/chillzhuang/blade-tool)已推送至Maven中央库，直接引入即可，减少了工程的臃肿，也可更注重于业务开发
-* 集成Sentinel从流量控制、熔断降级、系统负载等多个维度保护服务的稳定性。
-* 注册中心、配置中心选型Nacos，为工程瘦身的同时加强各模块之间的联动。
-* 极简封装了多租户底层，用更少的代码换来拓展性更强的SaaS多租户系统。
-* 借鉴OAuth2，自研多终端认证系统，可控制子系统的token权限互相隔离。
-* 借鉴Security，自研Secure模块，采用JWT做Token认证，可拓展集成Redis等细颗粒度控制方案。
-* 稳定生产了六年，经历了从 Camden -> Hoxton -> 2023 的技术架构，也经历了从fat jar -> docker -> k8s + jenkins的部署架构。
-* 项目分包明确，规范微服务的开发模式，使包与包之间的分工清晰。
+配套 SpringBlade 前端框架,提供 Vue2/Vue3 版本。
 
-## 架构图
-<img src="https://xbladex.oss-cn-hangzhou.aliyuncs.com/upload/springblade-framework.png"/>
+## 目录
 
-## 核心技术栈
+- [简介](#简介)
+- [安装](#安装)
+- [使用方法](#使用方法)
+- [注意事项](#注意事项)
+- [版本更新日志](#版本更新日志)
 
-| 技术栈                  | 版本         |
-|----------------------|------------|
-| Java                 | 17+        |
-| NodeJS               | 18+        |
-| Spring               | 6.1.14     |
-| Spring Boot          | 3.2.10     |
-| Spring Cloud         | 2023.0.3   |
-| Spring Cloud Alibaba | 2023.0.1.2 |
-| Nacos Alibaba        | 2.3.2      |
-| Mybatis Plus         | 3.5.8      |
+## 项目描述
 
+主要使用 Vue3 版本框架（`3.x`分支），在开源代码基础上添加了规范插件、提升开发效率插件，并上传到 sonar 平台进行了代码扫描。
 
-## 工程结构
-``` 
-SpringBlade
-├── blade-auth -- 授权服务提供
-├── blade-common -- 常用工具封装包
-├── blade-gateway -- Spring Cloud 网关
-├── blade-ops -- 运维中心
-├    ├── blade-admin -- spring-cloud后台管理
-├    ├── blade-develop -- 代码生成
-├    ├── blade-resource -- 资源管理
-├    ├── blade-seata-order -- seata分布式事务demo
-├    ├── blade-seata-storage -- seata分布式事务demo
-├── blade-service -- 业务模块
-├    ├── blade-desk -- 工作台模块 
-├    ├── blade-log -- 日志模块 
-├    ├── blade-system -- 系统模块 
-├    └── blade-user -- 用户模块 
-├── blade-service-api -- 业务模块api封装
-├    ├── blade-desk-api -- 工作台api 
-├    ├── blade-dict-api -- 字典api 
-├    ├── blade-system-api -- 系统api 
-└──  └── blade-user-api -- 用户api 
+## 项目基本结构
+
+```
+├── public  静态资源包
+├── mock    模拟数据包
+├── src
+│   ├── api           接口集合包
+│   ├── components    组件包
+│   ├── config        环境设置集合
+│   ├── docker        docker部署文件
+│   ├── lang          语言翻译包
+│   ├── max           mac主题配置
+│   ├── mixins        mixins配置
+│   ├── option        avue-crud表格配置示例
+│   ├── page          页面框架集合
+│   ├── router        路由集合
+│   ├── store         vuex配置中心
+│   ├── styles        CSS文件集合
+│   ├── util         工具包集合
+│   ├── views         开发视图合计
+│   ├── error.js      错误信息提示文件
+│   ├── main.js       项目入口全局配置
+│   ├── axios.js      axios配置
+│   ├── permission.js 全站权限配置
+│   └── App.vue       vue 实例页
+├── LICENSE         许可证
+└── package.json    项目依赖版本
+├── README.md       项目说明书
+├── vite.config.js   vite配置
+
 ```
 
-## 官方信息
+## 项目技术栈
 
-| 简介   | 内容                                                                            |
-|------|-------------------------------------------------------------------------------|
-| 官网地址 | [https://bladex.cn](https://bladex.cn)                                        |
-| 问答社区 | [https://sns.bladex.cn](https://sns.bladex.cn)                                |
-| 会员计划 | [SpringBlade会员计划](https://gitee.com/smallc/SpringBlade/wikis/SpringBlade会员计划) |
-| 交流一群 | `477853168` (满)                                                               |
-| 交流二群 | `751253339` (满)                                                               |
-| 交流三群 | `784729540` (满)                                                               |
-| 交流四群 | `1034621754` (满)                                                              |
-| 交流五群 | `946350912` (满)                                                               |
-| 交流六群 | `511624269` (满)                                                               |
-| 交流七群 | `298061704`                                                                   |
+- Vue
+- ElementUIPlus
+- Axios
+- VueX
+- vue-router
+- avue
+- tailwindcss
 
-## 官方产品
+## 安装/开发/运行/部署
 
-| 简介            | 演示地址                                                 |
-|---------------|------------------------------------------------------|
-| BladeX企业级开发平台 | [https://saber3.bladex.cn](https://saber3.bladex.cn) |
-| BladeX可视化数据大屏 | [https://data.bladex.cn](https://data.bladex.cn)     |
-| BladeX物联网开发平台 | [https://iot.bladex.cn](https://iot.bladex.cn)       |
+### 安装
 
-## 前端项目
+```shell
+yarn
+```
 
-| 简介                 | 地址                                                                                                 |
-|--------------------|----------------------------------------------------------------------------------------------------|
-| 前端框架Sword(基于React) | [https://gitee.com/smallc/Sword](https://gitee.com/smallc/Sword)                                   |
-| 前端框架Saber(基于Vue2)  | [https://gitee.com/smallc/Saber](https://gitee.com/smallc/Saber)                                   |
-| 前端框架Saber3(基于Vue3) | [https://gitee.com/smallc/Saber3](https://gitee.com/smallc/Saber/tree/3.x/)                        |
+### 开发\运行
 
-## 后端项目
-| 简介            | 地址                                                                                                 |
-|---------------|----------------------------------------------------------------------------------------------------|
-| 核心框架项目地址      | [https://gitee.com/smallc/blade-tool](https://gitee.com/smallc/blade-tool)                         |
-| 后端Gitee地址     | [https://gitee.com/smallc/SpringBlade](https://gitee.com/smallc/SpringBlade)                       |
-| 后端Github地址    | [https://github.com/chillzhuang/SpringBlade](https://github.com/chillzhuang/SpringBlade)           |
-| 后端SpringBoot版 | [https://gitee.com/smallc/SpringBlade/tree/boot/](https://gitee.com/smallc/SpringBlade/tree/boot/) |
+```shell
+yarn dev
+```
 
-## 安全手册
-| 简介        | 地址                                                                                                 |
-|-----------|----------------------------------------------------------------------------------------------------|
-| Blade安全手册 | [https://www.kancloud.cn/smallchill/blade-safety](https://www.kancloud.cn/smallchill/blade-safety) |
+### 部署
 
-## 技术文档
+```shell
+yarn build:prod
+```
 
-| 简介                        | 地址                                                                                                                       |
-|---------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| SpringBlade开发手册一览         | [https://gitee.com/smallc/SpringBlade/wikis/SpringBlade开发手册](https://gitee.com/smallc/SpringBlade/wikis/SpringBlade开发手册) |
-| SpringBlade常见问题集锦         | [https://sns.bladex.cn/article-14966.html](https://sns.bladex.cn/article-14966.html)                                     |
-| SpringBlade基于Kuboard部署K8S | [https://kuboard.cn/learning/k8s-practice/spring-blade/](https://kuboard.cn/learning/k8s-practice/spring-blade/)         |
-| SpringBlade基于Rainbond部署   | [https://www.rainbond.com/docs/micro-service/example/blade](https://www.rainbond.com/docs/micro-service/example/blade)   |
+## 注意事项
 
+### 配置项
 
-## 免费公开课
-<table>
-    <tr>
-        <td><a href="https://space.bilibili.com/525525/channel/seriesdetail?sid=2740449" target="_blank"><img style="width: 300px; height: 170px" src="https://xbladex.oss-cn-hangzhou.aliyuncs.com/upload/springblade-course.jpg"/></a></td>
-        <td><img style="width: 300px; height: 170px" src="https://xbladex.oss-cn-hangzhou.aliyuncs.com/upload/springblade-bilibili.jpg"/></td>
-    </tr>
-</table>
+1. node 版本要求：>=16.x
 
-## 开源协议
-Apache Licence 2.0 （[英文原文](http://www.apache.org/licenses/LICENSE-2.0.html)）
-Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议和BSD类似，同样鼓励代码共享和尊重原作者的著作权，同样允许代码修改，再发布（作为开源或商业软件）。
-需要满足的条件如下：
-* 需要给代码的用户一份Apache Licence
-* 如果你修改了代码，需要在被修改的文件中说明。
-* 在延伸的代码中（修改和有源代码衍生的代码中）需要带有原来代码中的协议，商标，专利声明和其他原来作者规定需要包含的说明。
-* 如果再发布的产品中包含一个Notice文件，则在Notice文件中需要带有Apache Licence。你可以在Notice中增加自己的许可，但不可以表现为对Apache Licence构成更改。
-  Apache Licence也是对商业应用友好的许可。使用者也可以在需要的时候修改代码来满足需要并作为开源或商业产品发布/销售。
+### 其他注意事项
 
-## 用户权益
-* 允许免费用于学习、毕设、公司项目、私活等，但请保留源码作者信息。
-* 对未经过授权和不遵循 Apache 2.0 协议二次开源或者商业化我们将追究到底。
-* 参考请注明：参考自 SpringBlade：https://gitee.com/smallc/SpringBlade。
+1. sonar 配置根据项目实际需求。
+
+## 版本更新日志
+
+### [未发布]
+
+无

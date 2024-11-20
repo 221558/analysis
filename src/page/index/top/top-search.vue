@@ -1,13 +1,7 @@
 <template>
-  <el-autocomplete class="top-search"
-                   popper-class="my-autocomplete"
-                   v-model="value"
-                   :fetch-suggestions="querySearch"
-                   :placeholder="$t('search')"
-                   @select="handleSelect">
-
+  <el-autocomplete class="top-search" popper-class="my-autocomplete" v-model="value" :fetch-suggestions="querySearch" :placeholder="$t('search')" @select="handleSelect">
     <template #="{ item }">
-      <i :class="[item[iconKey],'icon']"></i>
+      <em :class="[item[iconKey], 'icon']"></em>
       <div class="name">{{ item[labelKey] }}</div>
       <div class="addr">{{ item[pathKey] }}</div>
     </template>
@@ -15,45 +9,44 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
+
 export default {
-  data () {
+  data() {
     return {
-      value: "",
-      menuList: []
+      value: '',
+      menuList: [],
     };
   },
-  created () {
+  created() {
     this.getMenuList();
   },
 
   watch: {
-    menu () {
+    menu() {
       this.getMenuList();
-    }
+    },
   },
   computed: {
-    labelKey () {
-      return this.website.menu.label
+    labelKey() {
+      return this.website.menu.label;
     },
-    pathKey () {
-      return this.website.menu.path
+    pathKey() {
+      return this.website.menu.path;
     },
-    iconKey () {
-      return this.website.menu.icon
+    iconKey() {
+      return this.website.menu.icon;
     },
-    childrenKey () {
-      return (
-        this.website.menu.children
-      );
+    childrenKey() {
+      return this.website.menu.children;
     },
-    ...mapGetters(["menu"])
+    ...mapGetters(['menu']),
   },
   methods: {
-    getMenuList () {
-      const findMenu = list => {
-        for (let i = 0; i < list.length; i++) {
-          const ele = Object.assign({}, list[i]);
+    getMenuList() {
+      const findMenu = (list) => {
+        for (let em = 0; em < list.length; em++) {
+          const ele = Object.assign({}, list[em]);
           if (this.validatenull(ele[this.childrenKey])) {
             this.menuList.push(ele);
           } else {
@@ -64,30 +57,25 @@ export default {
       this.menuList = [];
       findMenu(this.menu);
     },
-    querySearch (queryString, cb) {
-      var restaurants = this.menuList;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
+    querySearch(queryString, cb) {
+      const restaurants = this.menuList;
+      const results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
       // 调用 callback 返回建议列表的数据
       cb(results);
     },
-    createFilter (queryString) {
-      return restaurant => {
-        return (
-          restaurant[this.labelKey].toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
+    createFilter(queryString) {
+      return (restaurant) => {
+        return restaurant[this.labelKey].toLowerCase().indexOf(queryString.toLowerCase()) === 0;
       };
     },
-    handleSelect (item) {
-      this.value = "";
+    handleSelect(item) {
+      this.value = '';
       this.$router.push({
         path: item[this.pathKey],
-        query: item.query
+        query: item.query,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -1,51 +1,31 @@
 <template>
-  <el-button @click="show=true"
-             class="setting-icon"
-             type="primary"
-             icon="el-icon-setting"
-             circle></el-button>
-  <el-drawer append-to-body
-             :with-header="false"
-             v-model="show"
-             size="30%">
+  <el-button @click="show = true" class="setting-icon" type="primary" icon="el-icon-setting" circle></el-button>
+  <el-drawer append-to-body :with-header="false" v-model="show" size="30%">
     <div class="setting">
       <h5>导航模式</h5>
       <div class="setting-checkbox">
-        <el-tooltip class="item"
-                    effect="dark"
-                    content="侧边菜单布局"
-                    placement="top">
-          <div @click="setting.sidebar='vertical'"
-               class="setting-checkbox-item setting-checkbox-item--side">
-          </div>
+        <el-tooltip class="item" effect="dark" content="侧边菜单布局" placement="top">
+          <div @click="setting.sidebar = 'vertical'" class="setting-checkbox-item setting-checkbox-item--side"></div>
         </el-tooltip>
-        <el-tooltip class="item"
-                    effect="dark"
-                    content="顶部菜单布局"
-                    placement="top">
-          <div @click="setting.sidebar='horizontal'"
-               class="setting-checkbox-item setting-checkbox-item--top">
-          </div>
+        <el-tooltip class="item" effect="dark" content="顶部菜单布局" placement="top">
+          <div @click="setting.sidebar = 'horizontal'" class="setting-checkbox-item setting-checkbox-item--top"></div>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="顶部侧边菜单布局" placement="top">
+          <div @click="setting.sidebar = 'horizontalVertical'" class="setting-checkbox-item setting-checkbox-item--top setting-checkbox-item--side"></div>
         </el-tooltip>
       </div>
       <h5>页面布局</h5>
       <div class="setting-checkbox">
-        <div class="setting-item"
-             v-for="(item,index) in list1"
-             :key="index">
-          {{item.label}}:
-          <el-switch v-model="setting[item.value]">
-          </el-switch>
+        <div class="setting-item" v-for="(item, index) in list1" :key="index">
+          {{ item.label }}:
+          <el-switch v-model="setting[item.value]"> </el-switch>
         </div>
       </div>
       <h5>功能调试</h5>
       <div class="setting-checkbox">
-        <div class="setting-item"
-             v-for="(item,index) in list2"
-             :key="index">
-          {{item.label}}:
-          <el-switch v-model="setting[item.value]">
-          </el-switch>
+        <div class="setting-item" v-for="(item, index) in list2" :key="index">
+          {{ item.label }}:
+          <el-switch v-model="setting[item.value]"> </el-switch>
         </div>
       </div>
     </div>
@@ -53,47 +33,70 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
+
 export default {
-  data () {
+  data() {
     return {
       show: false,
-      list1: [{
-        label: '导航标签',
-        value: 'tag'
-      }, {
-        label: '菜单折叠',
-        value: 'collapse'
-      }, {
-        label: '菜单搜索',
-        value: 'search'
-      }, {
-        label: '屏幕全屏',
-        value: 'fullscren'
-      }, {
-        label: '主题选择',
-        value: 'theme'
-      }, {
-        label: '顶部菜单',
-        value: 'menu'
-      }],
-      list2: [{
-        label: '日志调试',
-        value: 'debug'
-      }, {
-        label: '屏幕锁定',
-        value: 'lock'
-      }]
-    }
+      list1: [
+        {
+          label: '导航标签',
+          value: 'tag',
+        },
+        {
+          label: '菜单折叠',
+          value: 'collapse',
+        },
+        // {
+        //   label: '菜单搜索',
+        //   value: 'search',
+        // },
+        {
+          label: '屏幕全屏',
+          value: 'fullscren',
+        },
+        // {
+        //   label: '主题选择',
+        //   value: 'theme',
+        // },
+        // {
+        //   label: '顶部菜单',
+        //   value: 'menu',
+        // },
+        {
+          label: '中英文切换',
+          value: 'lang',
+        },
+      ],
+      list2: [
+        // {
+        //   label: '日志调试',
+        //   value: 'debug',
+        // },
+        {
+          label: '屏幕锁定',
+          value: 'lock',
+        },
+      ],
+    };
   },
   computed: {
-    ...mapGetters(["isHorizontal", 'setting']),
-  }
-}
+    ...mapGetters(['isHorizontal', 'setting']),
+  },
+  watch: {
+    setting: {
+      deep: true,
+      immediate: true,
+      handler(setting) {
+        this.$store.commit('SET_SETTING', setting);
+      },
+    },
+  },
+};
 </script>
 
-
-<style lang="scss" >
+<style lang="scss">
 .setting {
   &-icon {
     color: #666;
@@ -134,7 +137,7 @@ export default {
         width: 33%;
         height: 100%;
         background-color: #fff;
-        content: "";
+        content: '';
       }
       &:after {
         position: absolute;
@@ -143,13 +146,13 @@ export default {
         width: 100%;
         height: 25%;
         background-color: #fff;
-        content: "";
+        content: '';
       }
       &--side {
         &:before {
           z-index: 1;
           background-color: #001529;
-          content: "";
+          content: '';
         }
         &:after {
           background-color: #fff;

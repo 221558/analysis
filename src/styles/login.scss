@@ -6,8 +6,8 @@
   height: 100%;
   background-color: #fff;
   overflow: hidden;
-  &::before{
-    content:' ';
+  &::before {
+    content: ' ';
     position: absolute;
     top: 0;
     left: 0;
@@ -22,7 +22,7 @@
 }
 .login-weaper {
   margin: 0 auto;
-  width:100%;
+  width: 100%;
 }
 
 .login-left,
@@ -51,7 +51,6 @@
   top: 25px;
   width: 100%;
   color: #fff;
-  font-weight: 200;
   opacity: 0.9;
   font-size: 18px;
   overflow: hidden;
@@ -61,7 +60,6 @@
   margin-top: 60px;
   text-align: center;
   color: #fff;
-  font-weight: 300;
   letter-spacing: 2px;
   font-size: 28px;
   font-weight: bold;
@@ -101,7 +99,7 @@
   a {
     color: #999;
     font-size: 12px;
-    margin: 0px 8px;
+    margin: 0 8px;
   }
 }
 .login-submit {
@@ -112,28 +110,30 @@
   font-weight: 300;
   cursor: pointer;
   margin-top: 30px;
-  font-family: "neo";
+  font-family: 'neo';
   transition: 0.25s;
 }
 .login-form {
   margin: 10px 0;
-  i {
+  i,
+  em {
     color: #333;
   }
   .el-input {
     input {
       text-indent: 5px;
     }
-    .el-input__wrapper{
-      padding:5px 10px;
+    .el-input__wrapper {
+      padding: 5px 10px;
       border-radius: 0;
     }
-    .el-input__suffix,.el-input__prefix{
+    .el-input__suffix,
+    .el-input__prefix {
       display: flex;
       align-items: center;
       text-align: center;
     }
-    .el-input__prefix{
+    .el-input__prefix {
       margin-left: 8px;
     }
   }
@@ -141,11 +141,11 @@
 .login-code {
   width: 100%;
   height: 100%;
-  .el-input-group__append{
+  .el-input-group__append {
     background-color: #fff;
   }
 }
-.login-code-box{
+.login-code-box {
   display: flex;
   align-items: center;
 }

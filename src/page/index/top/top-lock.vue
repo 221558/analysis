@@ -1,24 +1,12 @@
 <template>
-  <span v-if="text"
-        @click="handleLock">{{text }}</span>
-  <i v-else
-     class="icon-suoping"
-     @click="handleLock"></i>
-  <el-dialog title="设置锁屏密码"
-             v-model="box"
-             width="30%"
-             append-to-body>
-    <el-form :model="form"
-             ref="form"
-             label-width="80px">
-      <el-form-item label="锁屏密码"
-                    prop="passwd"
-                    :rules="[{ required: true, message: '锁屏密码不能为空'}]">
-        <el-input v-model="form.passwd"
-                  placeholder="请输入锁屏密码">
+  <span v-if="text" @click="handleLock">{{ text }}</span>
+  <em v-else class="icon-suoping" @click="handleLock"></em>
+  <el-dialog title="设置锁屏密码" v-model="box" width="30%" append-to-body>
+    <el-form :model="form" ref="form" label-width="80px">
+      <el-form-item label="锁屏密码" prop="passwd" :rules="[{ required: true, message: '锁屏密码不能为空' }]">
+        <el-input v-model="form.passwd" placeholder="请输入锁屏密码">
           <template #append>
-            <el-button @click="handleSetLock"
-                       icon="el-icon-lock"></el-button>
+            <el-button @click="handleSetLock" icon="el-icon-lock"></el-button>
           </template>
         </el-input>
       </el-form-item>
@@ -27,49 +15,49 @@
 </template>
 
 <script>
-import { validatenull } from "utils/validate";
-import { mapGetters } from "vuex";
+import { validatenull } from 'utils/validate';
+import { mapGetters } from 'vuex';
+
 export default {
-  name: "top-lock",
-  data () {
+  name: 'top-lock',
+  data() {
     return {
       box: false,
       form: {
-        passwd: ""
-      }
+        passwd: '',
+      },
     };
   },
-  created () { },
-  mounted () { },
+  created() {},
+  mounted() {},
   computed: {
-    ...mapGetters(["lockPasswd"]),
+    ...mapGetters(['lockPasswd']),
   },
   props: {
-    text: String
+    text: String,
   },
   methods: {
-    handleSetLock () {
-      this.$refs["form"].validate(valid => {
+    handleSetLock() {
+      this.$refs.form.validate((valid) => {
         if (valid) {
-          this.$store.commit("SET_LOCK_PASSWD", this.form.passwd);
+          this.$store.commit('SET_LOCK_PASSWD', this.form.passwd);
           this.handleLock();
         }
       });
     },
-    handleLock () {
+    handleLock() {
       if (validatenull(this.lockPasswd)) {
         this.box = true;
         return;
       }
-      this.$store.commit("SET_LOCK");
+      this.$store.commit('SET_LOCK');
       setTimeout(() => {
-        this.$router.push({ path: "/lock" });
+        this.$router.push({ path: '/lock' });
       }, 100);
-    }
+    },
   },
-  components: {}
+  components: {},
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
