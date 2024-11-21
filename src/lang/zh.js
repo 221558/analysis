@@ -2,7 +2,7 @@ export default {
   // 提示
   tip: '提示',
   // 标题
-  title: 'Saber企业级开发平台',
+  title: '网业质量多维分析系统',
   // 退出系统提示
   logoutTip: '退出系统, 是否继续?',
   // 确定按钮文本
@@ -121,11 +121,11 @@ export default {
     // 标题
     title: '登录 ',
     // 信息
-    info: '企业级开发平台',
+    info: '网业质量多维分析系统',
     // 租户ID
     tenantId: '请输入租户ID',
     // 账号
-    username: '请输入账号',
+    username: '请输入用户名',
     // 密码
     password: '请输入密码',
     // 微信

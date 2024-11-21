@@ -69,7 +69,7 @@ export default {
       this.$store.commit('SET_COLLAPSE');
     },
     logout() {
-      this.$confirm(this.$t('logoutTip'), this.$t('tip'), {
+      this.$confirm(this.$t('logoutTip'), '提示', {
         confirmButtonText: this.$t('submitText'),
         cancelButtonText: this.$t('cancelText'),
         type: 'warning',

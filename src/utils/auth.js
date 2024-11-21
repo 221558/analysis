@@ -2,9 +2,9 @@
 import Cookies from 'js-cookie';
 
 // 定义存放访问令牌的cookie键名
-const TokenKey = 'saber3-access-token';
+const TokenKey = 'analysis-system-access-token';
 // 定义存放刷新令牌的cookie键名
-const RefreshTokenKey = 'saber3-refresh-token';
+const RefreshTokenKey = 'analysis-system-refresh-token';
 
 /**
  * 获取访问令牌

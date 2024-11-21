@@ -17,7 +17,7 @@ export default ({ mode, command }) => {
     // 配置服务器
     server: {
       // 设置服务器端口
-      port: 2888,
+      port: 7888,
       // 配置代理
       proxy: {
         // 将以'/api'开头的请求代理到VITE_APP_BASE_URL

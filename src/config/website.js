@@ -3,10 +3,10 @@
  */
 export default {
   // 标题
-  title: 'saber',
+  title: '网业质量多维分析系统',
   // logo
   logo: 'A',
-  key: 'saber', // 配置主键,目前用于存储
+  key: '网业质量多维分析系统', // 配置主键,目前用于存储
   indexTitle: 'Saber Admin',
   clientId: 'saber', // 客户端id
   clientSecret: 'saber_secret', // 客户端密钥
@@ -68,7 +68,7 @@ export default {
   // auth配置
   auth: {
     // 使用后端工程 @org.springblade.test.Sm2KeyGenerator 获取
-    publicKey: '04087d79d7c7c344489aee90eafafc062da3e69285560abf29f585b2c5015712cea14f1e8cab9380cb4eaf80617dd17d25fc45e73bdc8bcaa728cd7dcfd74fcdcd',
+    publicKey: '04a4c2d80dc82fb1df890671a706d90571756f84658e09e71d6856bf850542c58a7381ebe4159c3c705ded2856e1cea6aec3e8e5c20264dd6de9b1cf83eb19565a',
   },
   // 授权地址
   authUrl: 'http://localhost/blade-auth/oauth/render',

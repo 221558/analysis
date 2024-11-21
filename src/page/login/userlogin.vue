@@ -1,16 +1,17 @@
 <template>
   <el-form class="login-form" status-icon :rules="loginRules" ref="loginForm" :model="loginForm" label-width="0">
-    <el-form-item v-if="tenantMode" prop="tenantId">
+    <!-- <el-form-item v-if="tenantMode" prop="tenantId">
       <el-input @keyup.enter="handleLogin" v-model="loginForm.tenantId" auto-complete="off" :placeholder="$t('login.tenantId')">
         <template #prefix>
           <em class="icon-quanxian"></em>
         </template>
       </el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item prop="username">
       <el-input @keyup.enter="handleLogin" v-model="loginForm.username" auto-complete="off" :placeholder="$t('login.username')">
         <template #prefix>
           <em class="icon-yonghu"></em>
+          <el-divider direction="vertical"></el-divider>
         </template>
       </el-input>
     </el-form-item>
@@ -18,6 +19,7 @@
       <el-input @keyup.enter="handleLogin" type="password" show-password v-model="loginForm.password" auto-complete="off" :placeholder="$t('login.password')">
         <template #prefix>
           <em class="icon-mima"></em>
+          <el-divider direction="vertical"></el-divider>
         </template>
       </el-input>
     </el-form-item>
@@ -25,6 +27,7 @@
       <el-input @keyup.enter="handleLogin" v-model="loginForm.code" auto-complete="off" :placeholder="$t('login.code')">
         <template #prefix>
           <em class="icon-yanzhengma"></em>
+          <el-divider direction="vertical"></el-divider>
         </template>
         <template #append>
           <div class="login-code-box">
@@ -33,7 +36,7 @@
         </template>
       </el-input>
     </el-form-item>
-
+    <el-checkbox v-model="checked" class="login-checkbox">记住密码</el-checkbox>
     <el-form-item>
       <el-button type="primary" @click.prevent="handleLogin" class="login-submit">{{ $t('login.submit') }}</el-button>
     </el-form-item>
@@ -41,7 +44,7 @@
 </template>
 
 <script>
-import { randomLenNum, getTopUrl } from 'utils/util';
+import { getTopUrl } from 'utils/util';
 import { mapGetters } from 'vuex';
 import website from '@/config/website';
 import { getCaptcha } from '@/api/user';
@@ -57,9 +60,9 @@ export default {
         // 租户ID
         tenantId: '000000',
         // 用户名
-        username: 'admin',
+        username: '',
         // 密码
-        password: 'admin',
+        password: '',
         // 账户类型
         type: 'account',
         // 验证码的值
@@ -130,4 +133,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>

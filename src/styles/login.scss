@@ -4,22 +4,13 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #fff;
   overflow: hidden;
-  &::before {
-    content: ' ';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin-left: -48%;
-    background-image: url(/img/login-bg.svg);
-    background-position: 100%;
-    background-repeat: no-repeat;
-    background-size: auto 100%;
-  }
+  background-image: url(/image/login.png);
+  background-position: 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
+
 .login-weaper {
   margin: 0 auto;
   width: 100%;
@@ -77,15 +68,18 @@
 .login-main {
   margin: 0 auto;
   padding: 30px 50px;
-  width: 70%;
-  box-shadow: -4px 5px 10px rgba(255, 255, 255, 0.4);
+  width: 460px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(188, 192, 207, 0.75);
+  // box-shadow: -4px 5px 10px rgba(255, 255, 255, 0.4);
   box-sizing: border-box;
 }
 .login-main > h3 {
   margin-bottom: 20px;
 }
 .login-title {
-  color: #000;
+  color: #56a6ee;
   margin-bottom: 50px;
   font-weight: bold;
   font-size: 28px;
@@ -122,19 +116,57 @@
   .el-input {
     input {
       text-indent: 5px;
+      background-color: transparent !important;
+      color: #56a6ee !important;
+      ::placeholder {
+        color: #56a6ee;
+      }
     }
     .el-input__wrapper {
       padding: 5px 10px;
       border-radius: 0;
+      background-color: transparent !important;
+      color: #56a6ee !important;
+      box-shadow: none !important;
+      border: 1px solid #56a6ee;
+      border-radius: 2px;
     }
     .el-input__suffix,
     .el-input__prefix {
       display: flex;
       align-items: center;
       text-align: center;
+      background-color: transparent !important;
+      color: #56a6ee !important;
+      .el-input__suffix-inner  i{
+        color: #56a6ee !important;
+      }
     }
     .el-input__prefix {
       margin-left: 8px;
+      background-color: transparent !important;
+      color: #56a6ee !important;
+      em {
+        color: #56a6ee !important;
+      }
+      .el-divider--vertical {
+        border-color: #56a6ee !important;
+      }
+    }
+    .el-input__inner::placeholder {
+      color: #56a6ee !important;
+    }
+  }
+  .login-checkbox {
+    color: #56a6ee !important;
+    font-weight: normal;
+    .el-checkbox__label {
+      font-size: 12px;
+    }
+    .el-checkbox__inner {
+      border-color: #56a6ee;
+      background-color: transparent !important;
+      color: #56a6ee !important;
     }
   }
 }
