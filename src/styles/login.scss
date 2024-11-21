@@ -1,13 +1,23 @@
 .login-container {
+  // 设置元素相对定位
   position: relative;
+  // 设置元素为弹性布局
   display: flex;
+  // 设置元素垂直居中对齐
   align-items: center;
+  // 设置元素宽度为100%
   width: 100%;
+  // 设置元素高度为100%
   height: 100%;
+  // 设置元素溢出隐藏
   overflow: hidden;
+  // 设置元素背景图片
   background-image: url(/image/login.png);
+  // 设置背景图片位置
   background-position: 100%;
+  // 设置背景图片不重复
   background-repeat: no-repeat;
+  // 设置背景图片大小
   background-size: 100% 100%;
 }
 
@@ -114,13 +124,25 @@
     color: #333;
   }
   .el-input {
+    // 设置input标签的样式
     input {
+      // 设置文本缩进
       text-indent: 5px;
+      // 设置背景颜色为透明
       background-color: transparent !important;
+      // 设置文字颜色为#56a6ee
       color: #56a6ee !important;
+      // 设置placeholder的样式
       ::placeholder {
+        // 设置placeholder的文字颜色为#56a6ee
         color: #56a6ee;
       }
+      // 设置webkit的阴影效果
+      -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+      /* -webkit-text-fill-color: #fff; */
+      // 设置webkit的过渡效果
+      -webkit-transition-delay: 99999s;
+      -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
     }
     .el-input__wrapper {
       padding: 5px 10px;
@@ -138,7 +160,7 @@
       text-align: center;
       background-color: transparent !important;
       color: #56a6ee !important;
-      .el-input__suffix-inner  i{
+      .el-input__suffix-inner i {
         color: #56a6ee !important;
       }
     }
