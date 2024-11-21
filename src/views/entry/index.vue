@@ -17,7 +17,7 @@
         </div>
       </template>
     </el-upload>
-    <basic-title style="margin-top: 40px;" :title="title" />
+    <basic-title :title="title" />
     <!-- 表格信息 -->
     <avue-crud
       ref="crudRef"
@@ -45,9 +45,10 @@
 </template>
 
 <script setup>
-import BasicTitle from '@/components/basic-title/main.vue'
+import BasicTitle from '@/components/basic-title/main.vue';
 import { ref, getCurrentInstance, onMounted } from 'vue'
-
+//获取this
+let { proxy } = getCurrentInstance()
 const option = ref({})
 const optionTable = ref({})
 const tableData = ref([])
@@ -107,9 +108,10 @@ const page = ref({
 
 // 表格配置
 optionTable.value = {
+  addBtn: false,
   editBtn: false,
   delBtn: false,
-  header: false,
+  searchBtn: false,
   border: true,
   align: 'center',
   column: [
