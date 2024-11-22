@@ -1,20 +1,21 @@
-import { validatenull } from "@/utils/validate";
-import { getStore } from "@/utils/store.js";
+import { validatenull } from '@/utils/validate';
+import { getStore } from '@/utils/store.js';
+
 export default {
-  data () {
+  data() {
     return {
-      //刷新token锁
+      // 刷新token锁
       refreshLock: false,
-      //刷新token的时间
-      refreshTime: ""
+      // 刷新token的时间
+      refreshTime: '',
     };
   },
-  created () {
-    //实时检测刷新token
+  created() {
+    // 实时检测刷新token
     this.refreshToken();
   },
   methods: {
-    //实时检测刷新token
+    // 实时检测刷新token
     refreshToken() {
       this.refreshTime = setInterval(() => {
         const token =
@@ -22,8 +23,8 @@ export default {
             name: 'token',
             debug: true,
           }) || {};
-        let date1 = this.$dayjs(token.datetime);
-        let date2 = this.$dayjs();
+        const date1 = this.$dayjs(token.datetime);
+        const date2 = this.$dayjs();
         const date = date2.diff(date1, 'seconds');
         if (validatenull(date)) return;
         if (date >= this.website.tokenTime && !this.refreshLock) {
@@ -33,12 +34,12 @@ export default {
             .then(() => {
               this.refreshLock = false;
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
               this.refreshLock = false;
             });
         }
       }, 1000);
     },
-  }
-}
+  },
+};

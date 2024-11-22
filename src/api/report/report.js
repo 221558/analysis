@@ -8,15 +8,15 @@ export const getList = (current, size, params) => {
       ...params,
       current,
       size,
-    }
-  })
-}
+    },
+  });
+};
 export const remove = (ids) => {
   return request({
     url: '/blade-report/report/rest/remove',
     method: 'post',
     params: {
       ids,
-    }
-  })
-}
+    },
+  });
+};

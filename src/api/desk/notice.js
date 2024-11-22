@@ -10,8 +10,8 @@ export const getList = (current, size, params) => {
       size,
     },
     cryptoToken: false,
-  })
-}
+  });
+};
 
 export const remove = (ids) => {
   return request({
@@ -21,8 +21,8 @@ export const remove = (ids) => {
       ids,
     },
     cryptoToken: false,
-  })
-}
+  });
+};
 
 export const add = (row) => {
   return request({
@@ -30,8 +30,8 @@ export const add = (row) => {
     method: 'post',
     data: row,
     cryptoToken: false,
-  })
-}
+  });
+};
 
 export const update = (row) => {
   return request({
@@ -39,17 +39,16 @@ export const update = (row) => {
     method: 'post',
     data: row,
     cryptoToken: false,
-  })
-}
+  });
+};
 
 export const getNotice = (id) => {
   return request({
     url: '/blade-desk/notice/detail',
     method: 'get',
     params: {
-      id
+      id,
     },
     cryptoToken: false,
-  })
-}
-
+  });
+};

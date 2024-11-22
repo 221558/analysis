@@ -1,40 +1,32 @@
 <template>
   <basic-container>
-    <avue-crud :option="option"
-               :table-loading="loading"
-               :data="data"
-               ref="crud"
-               v-model="form"
-               :permission="permissionList"
-               :before-open="beforeOpen"
-               @row-del="rowDel"
-               @row-update="rowUpdate"
-               @row-save="rowSave"
-               @search-change="searchChange"
-               @search-reset="searchReset"
-               @selection-change="selectionChange"
-               @current-change="currentChange"
-               @size-change="sizeChange"
-               @on-load="onLoad">
+    <avue-crud
+      :option="option"
+      :table-loading="loading"
+      :data="data"
+      ref="crud"
+      v-model="form"
+      :permission="permissionList"
+      :before-open="beforeOpen"
+      @row-del="rowDel"
+      @row-update="rowUpdate"
+      @row-save="rowSave"
+      @search-change="searchChange"
+      @search-reset="searchReset"
+      @selection-change="selectionChange"
+      @current-change="currentChange"
+      @size-change="sizeChange"
+      @on-load="onLoad"
+    >
       <template #menu-left>
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   v-if="permission.menu_delete"
-                   plain
-                   @click="handleDelete">删 除
-        </el-button>
+        <el-button type="danger" icon="el-icon-delete" v-if="permission.menu_delete" plain @click="handleDelete">删 除 </el-button>
       </template>
       <template #menu="scope">
-        <el-button text
-                   type="primary"
-                   icon="el-icon-plus"
-                   @click.stop="handleAdd(scope.row,scope.index)"
-                   v-if="userInfo.authority.includes('admin')">新增子项
-        </el-button>
+        <el-button text type="primary" icon="el-icon-plus" @click.stop="handleAdd(scope.row, scope.index)" v-if="userInfo.authority.includes('admin')">新增子项 </el-button>
       </template>
-      <template #source="{row}">
-        <div style="text-align:center">
-          <i :class="row.source"></i>
+      <template #source="{ row }">
+        <div style="text-align: center">
+          <em :class="row.source"></em>
         </div>
       </template>
     </avue-crud>
@@ -42,12 +34,13 @@
 </template>
 
 <script>
-import { add, getList, getMenu, remove, update } from "@/api/system/menu";
-import { mapGetters } from "vuex";
-import iconList from "@/config/iconList";
-import { baseUrl } from '@/config/env'
+import { add, getList, getMenu, remove, update } from '@/api/system/menu';
+import { mapGetters } from 'vuex';
+import iconList from '@/config/iconList';
+import { baseUrl } from '@/config/env';
+
 export default {
-  data () {
+  data() {
     return {
       form: {},
       loading: true,
@@ -56,7 +49,7 @@ export default {
       page: {
         pageSize: 10,
         currentPage: 1,
-        total: 0
+        total: 0,
       },
       option: {
         searchShow: true,
@@ -70,234 +63,240 @@ export default {
         menuWidth: 350,
         column: [
           {
-            label: "菜单名称",
-            prop: "name",
+            label: '菜单名称',
+            prop: 'name',
             search: true,
             rules: [
               {
                 required: true,
-                message: "请输入菜单名称",
-                trigger: "blur"
-              }
-            ]
+                message: '请输入菜单名称',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "路由地址",
-            prop: "path",
+            label: '路由地址',
+            prop: 'path',
             rules: [
               {
                 required: true,
-                message: "请输入路由地址",
-                trigger: "blur"
-              }
-            ]
+                message: '请输入路由地址',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "上级菜单",
-            prop: "parentId",
-            type: "tree",
-            dicUrl: baseUrl + "/blade-system/menu/tree",
+            label: '上级菜单',
+            prop: 'parentId',
+            type: 'tree',
+            dicUrl: `${baseUrl}/blade-system/menu/tree`,
             hide: true,
             props: {
-              label: "title"
+              label: 'title',
             },
             rules: [
               {
                 required: false,
-                message: "请选择上级菜单",
-                trigger: "click"
-              }
-            ]
+                message: '请选择上级菜单',
+                trigger: 'click',
+              },
+            ],
           },
           {
-            label: "菜单图标",
-            prop: "source",
-            type: "icon",
+            label: '菜单图标',
+            prop: 'source',
+            type: 'icon',
             slot: true,
-            iconList: iconList,
+            iconList,
             rules: [
               {
                 required: true,
-                message: "请输入菜单图标",
-                trigger: "click"
-              }
-            ]
+                message: '请输入菜单图标',
+                trigger: 'click',
+              },
+            ],
           },
           {
-            label: "菜单编号",
-            prop: "code",
+            label: '菜单编号',
+            prop: 'code',
             search: true,
             rules: [
               {
                 required: true,
-                message: "请输入菜单编号",
-                trigger: "blur"
-              }
-            ]
+                message: '请输入菜单编号',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "菜单类型",
-            prop: "category",
-            type: "radio",
+            label: '菜单类型',
+            prop: 'category',
+            type: 'radio',
             dicData: [
               {
-                label: "菜单",
-                value: 1
+                label: '菜单',
+                value: 1,
               },
               {
-                label: "按钮",
-                value: 2
-              }
+                label: '按钮',
+                value: 2,
+              },
             ],
             hide: true,
             rules: [
               {
                 required: true,
-                message: "请选择菜单类型",
-                trigger: "blur"
-              }
-            ]
+                message: '请选择菜单类型',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "菜单别名",
-            prop: "alias",
+            label: '菜单别名',
+            prop: 'alias',
             rules: [
               {
                 required: true,
-                message: "请输入菜单别名",
-                trigger: "blur"
-              }
-            ]
+                message: '请输入菜单别名',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "按钮功能",
-            prop: "action",
-            type: "radio",
+            label: '按钮功能',
+            prop: 'action',
+            type: 'radio',
             dicData: [
               {
-                label: "工具栏",
-                value: 1
+                label: '工具栏',
+                value: 1,
               },
               {
-                label: "操作栏",
-                value: 2
+                label: '操作栏',
+                value: 2,
               },
               {
-                label: "工具操作栏",
-                value: 3
-              }
+                label: '工具操作栏',
+                value: 3,
+              },
             ],
             hide: true,
             rules: [
               {
                 required: true,
-                message: "请选择按钮功能",
-                trigger: "blur"
-              }
-            ]
+                message: '请选择按钮功能',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "菜单排序",
-            prop: "sort",
-            type: "number",
+            label: '菜单排序',
+            prop: 'sort',
+            type: 'number',
             rules: [
               {
                 required: true,
-                message: "请输入菜单排序",
-                trigger: "blur"
-              }
-            ]
-          },
-          {
-            label: "新窗口",
-            prop: "isOpen",
-            type: "radio",
-            dicData: [
-              {
-                label: "否",
-                value: 0
-              },
-              {
-                label: "是",
-                value: 1
+                message: '请输入菜单排序',
+                trigger: 'blur',
               },
             ],
-            hide: true
           },
           {
-            label: "菜单备注",
-            prop: "remark",
-            type: "textarea",
+            label: '新窗口',
+            prop: 'isOpen',
+            type: 'radio',
+            dicData: [
+              {
+                label: '否',
+                value: 0,
+              },
+              {
+                label: '是',
+                value: 1,
+              },
+            ],
+            hide: true,
+          },
+          {
+            label: '菜单备注',
+            prop: 'remark',
+            type: 'textarea',
             span: 24,
             minRows: 6,
-            hide: true
-          }
-        ]
+            hide: true,
+          },
+        ],
       },
-      data: []
+      data: [],
     };
   },
 
   computed: {
-    ...mapGetters(["userInfo", "permission"]),
-    permissionList () {
+    ...mapGetters(['userInfo', 'permission']),
+    permissionList() {
       return {
         addBtn: this.validData(this.permission.menu_add, false),
         viewBtn: this.validData(this.permission.menu_view, false),
         delBtn: this.validData(this.permission.menu_delete, false),
-        editBtn: this.validData(this.permission.menu_edit, false)
+        editBtn: this.validData(this.permission.menu_edit, false),
       };
     },
-    ids () {
-      let ids = [];
-      this.selectionList.forEach(ele => {
+    ids() {
+      const ids = [];
+      this.selectionList.forEach((ele) => {
         ids.push(ele.id);
       });
-      return ids.join(",");
-    }
+      return ids.join(',');
+    },
   },
   methods: {
-    handleAdd (row) {
+    handleAdd(row) {
       this.$refs.crud.modelValue.parentId = row.id;
-      this.$refs.crud.option.column.filter(item => {
-        if (item.prop === "parentId") {
+      this.$refs.crud.option.column.filter((item) => {
+        if (item.prop === 'parentId') {
           item.value = row.id;
           item.addDisabled = true;
         }
       });
       this.$refs.crud.rowAdd();
     },
-    rowSave (row, done, loading) {
-      add(row).then(() => {
-        done();
-        this.onLoad(this.page);
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-      }, error => {
-        window.console.log(error);
-        loading();
-      });
+    rowSave(row, done, loading) {
+      add(row).then(
+        () => {
+          done();
+          this.onLoad(this.page);
+          this.$message({
+            type: 'success',
+            message: '操作成功!',
+          });
+        },
+        (error) => {
+          window.console.log(error);
+          loading();
+        },
+      );
     },
-    rowUpdate (row, index, done, loading) {
-      update(row).then(() => {
-        done();
-        this.onLoad(this.page);
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-      }, error => {
-        window.console.log(error);
-        loading();
-      });
+    rowUpdate(row, index, done, loading) {
+      update(row).then(
+        () => {
+          done();
+          this.onLoad(this.page);
+          this.$message({
+            type: 'success',
+            message: '操作成功!',
+          });
+        },
+        (error) => {
+          window.console.log(error);
+          loading();
+        },
+      );
     },
-    rowDel (row) {
-      this.$confirm("确定将选择数据删除?", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    rowDel(row) {
+      this.$confirm('确定将选择数据删除?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           return remove(row.id);
@@ -305,33 +304,33 @@ export default {
         .then(() => {
           this.onLoad(this.page);
           this.$message({
-            type: "success",
-            message: "操作成功!"
+            type: 'success',
+            message: '操作成功!',
           });
         });
     },
-    searchReset () {
+    searchReset() {
       this.query = {};
       this.onLoad(this.page);
     },
-    searchChange (params, done) {
+    searchChange(params, done) {
       this.query = params;
       this.page.currentPage = 1;
       this.onLoad(this.page, params);
       done();
     },
-    selectionChange (list) {
+    selectionChange(list) {
       this.selectionList = list;
     },
-    handleDelete () {
+    handleDelete() {
       if (this.selectionList.length === 0) {
-        this.$message.warning("请选择至少一条数据");
+        this.$message.warning('请选择至少一条数据');
         return;
       }
-      this.$confirm("确定将选择数据删除?", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定将选择数据删除?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           return remove(this.ids);
@@ -339,38 +338,37 @@ export default {
         .then(() => {
           this.onLoad(this.page);
           this.$message({
-            type: "success",
-            message: "操作成功!"
+            type: 'success',
+            message: '操作成功!',
           });
           this.$refs.crud.toggleSelection();
         });
     },
-    beforeOpen (done, type) {
-      if (["edit", "view"].includes(type)) {
-        getMenu(this.form.id).then(res => {
+    beforeOpen(done, type) {
+      if (['edit', 'view'].includes(type)) {
+        getMenu(this.form.id).then((res) => {
           this.form = Object.assign(res.data.data, {
-            hasChildren: this.form.hasChildren
-          })
+            hasChildren: this.form.hasChildren,
+          });
         });
       }
       done();
     },
-    currentChange (currentPage) {
+    currentChange(currentPage) {
       this.page.currentPage = currentPage;
     },
-    sizeChange (pageSize) {
+    sizeChange(pageSize) {
       this.page.pageSize = pageSize;
     },
-    onLoad (page, params = {}) {
+    onLoad(page, params = {}) {
       this.loading = true;
-      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
+      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then((res) => {
         this.loading = false;
         this.data = res.data.data;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

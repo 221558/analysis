@@ -1,9 +1,6 @@
-import {
-  setStore,
-  getStore,
-  removeStore
-} from 'utils/store'
-import website from '@/config/website'
+import { setStore, getStore, removeStore } from 'utils/store';
+import website from '@/config/website';
+
 const common = {
   state: {
     language: getStore({ name: 'language' }) || 'zh-cn',
@@ -15,16 +12,23 @@ const common = {
     isLock: getStore({ name: 'isLock' }),
     themeName: getStore({ name: 'themeName' }) || 'default',
     lockPasswd: getStore({ name: 'lockPasswd' }) || '',
-    website: website,
-    setting: website.setting
+    website,
+    setting: getStore({ name: 'setting' }) || website.setting,
   },
   mutations: {
+    SET_SETTING: (state, setting) => {
+      state.setting = setting;
+      setStore({
+        name: 'setting',
+        content: state.setting,
+      });
+    },
     SET_LANGUAGE: (state, language) => {
-      state.language = language
+      state.language = language;
       setStore({
         name: 'language',
-        content: state.language
-      })
+        content: state.language,
+      });
     },
     SET_COLLAPSE: (state) => {
       state.isCollapse = !state.isCollapse;
@@ -46,36 +50,36 @@ const common = {
       setStore({
         name: 'isLock',
         content: state.isLock,
-        type: 'session'
-      })
+        type: 'session',
+      });
     },
     SET_THEME_NAME: (state, themeName) => {
       state.themeName = themeName;
       setStore({
         name: 'themeName',
         content: state.themeName,
-      })
+      });
     },
     SET_LOCK_PASSWD: (state, lockPasswd) => {
       state.lockPasswd = lockPasswd;
       setStore({
         name: 'lockPasswd',
         content: state.lockPasswd,
-        type: 'session'
-      })
+        type: 'session',
+      });
     },
     CLEAR_LOCK: (state) => {
       state.isLock = false;
       state.lockPasswd = '';
       removeStore({
         name: 'lockPasswd',
-        type: 'session'
+        type: 'session',
       });
       removeStore({
         name: 'isLock',
-        type: 'session'
+        type: 'session',
       });
     },
-  }
-}
-export default common
+  },
+};
+export default common;

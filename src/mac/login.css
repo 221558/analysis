@@ -1,131 +1,227 @@
+/* 定义登录错误动画 */
 @keyframes loginErrorAnimation {
+  /* 初始状态，向左移动 30px */
   0% {
     margin-left: -30px;
   }
+  /* 中间状态，向右移动 30px */
   50% {
     margin-left: 30px;
   }
+  /* 最终状态，恢复原位 */
   100% {
     margin-left: 0;
   }
 }
+
+/* 登录页面的样式 */
 .login {
+  /* 固定定位 */
   position: fixed;
+  /* 距离左边 0px */
   left: 0;
+  /* 距离右边 0px */
   right: 0;
+  /* 距离顶部 0px */
   top: 0;
+  /* 距离底部 0px */
   bottom: 0;
+  /* 使用 Flexbox 布局 */
   display: flex;
+  /* 按列方向排列子元素 */
   flex-direction: column;
+  /* 垂直居中对齐 */
   justify-content: center;
+  /* 水平居中对齐 */
   align-items: center;
+  /* 文本颜色为白色 */
   color: white;
+  /* 顶部外边距为 -100px */
   margin-top: -100px;
+  /* 设置 z-index 以确保在最上层 */
   z-index: 99999;
+  /* 添加背景模糊效果 */
   backdrop-filter: blur(20px);
 }
 
+/* 头部样式 */
 .head {
+  /* 内边距为 3px */
   padding: 3px;
+  /* 背景图片大小为 40% 自动 */
   background-size: 40% auto;
+  /* 背景图片位置为居中 */
   background-position: center center;
+  /* 高度为 150px */
   height: 150px;
+  /* 宽度为 150px */
   width: 150px;
+  /* 圆角边框 */
   border-radius: 100%;
+  /* 盒模型为 border-box */
   box-sizing: border-box;
-  box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
+  /* 添加阴影效果 */
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+  /* 顶部外边距为 -50px */
   margin-top: -50px;
+  /* 隐藏溢出内容 */
   overflow: hidden;
 }
+
+/* 头部图片样式 */
 .head img {
+  /* 圆角边框 */
   border-radius: 100%;
+  /* 宽度为 100% */
   width: 100%;
+  /* 高度为 100% */
   height: 100%;
 }
 
+/* 消息样式 */
 .message {
+  /* 顶部外边距为 20px */
   margin-top: 20px;
+  /* 字体大小为 20px */
   font-size: 20px;
-  text-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.3);
+  /* 添加文本阴影效果 */
+  text-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.3);
+  /* 文本颜色为浅灰色 */
   color: #eee;
+  /* 底部外边距为 50px */
   margin-bottom: 50px;
 }
 
+/* 密码输入框的过渡效果 */
 .password {
+  /* 宽度变化的过渡效果，持续 0.3s */
   transition: width 0.3s;
 }
 
+/* 密码输入框的初始宽度 */
 .password-in {
+  /* 宽度为 155px */
   width: 155px;
 }
 
+/* 登录按钮样式 */
 .login-button {
+  /* 绝对定位 */
   position: absolute;
+  /* 距离顶部 5px */
   top: 5px;
+  /* 距离右侧 -50px */
   right: -50px;
+  /* 右侧位置变化的过渡效果，持续 0.3s */
   transition: right 0.3s;
 }
 
+/* 点击启用时的按钮样式 */
 .click-enable {
+  /* 右侧位置为 0 */
   right: 0;
 }
 
+/* 错误状态的动画效果 */
 .error {
+  /* 使用 loginErrorAnimation 动画，持续 0.2s，缓动效果，重复 3 次 */
   animation: loginErrorAnimation 0.2s ease 3;
 }
 
+/* WebKit 浏览器的输入框占位符样式 */
 ::-webkit-input-placeholder {
+  /* 占位符文本颜色为白色 */
   color: #fff;
 }
 
+/* Firefox 浏览器的输入框占位符样式 */
 ::-moz-placeholder {
+  /* 占位符文本颜色为白色 */
   color: #fff;
 }
 
+/* IE 浏览器的输入框占位符样式 */
 :-ms-input-placeholder {
+  /* 占位符文本颜色为白色 */
   color: #fff;
 }
 
+/* 表单样式 */
 .form {
+  /* 使用 Flexbox 布局 */
   display: flex;
+  /* 按列方向排列子元素 */
   flex-direction: column;
+  /* 水平居中对齐 */
   align-items: center;
 }
 
+/* 表单项样式 */
 .item {
+  /* 相对定位 */
   position: relative;
+  /* 宽度为 280px */
   width: 280px;
+  /* 使用 Flexbox 布局 */
   display: flex;
+  /* 垂直居中对齐 */
   align-items: center;
 }
+
+/* 输入框样式 */
 .item input {
+  /* 文本颜色为白色 */
   color: white;
+  /* 移除焦点边框 */
   outline: none;
+  /* 移除边框 */
   border: none;
+  /* 上下外边距为 5px */
   margin: 5px 0;
+  /* 字体大小为 16px */
   font-size: 16px;
+  /* 背景颜色为半透明白色 */
   background-color: rgba(255, 255, 255, 0.3);
+  /* 内边距为 8px 24px */
   padding: 8px 24px;
+  /* 圆角边框 */
   border-radius: 20px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  /* 添加阴影效果 */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  /* 占据剩余空间 */
   flex: 1;
 }
 
+/* 图标样式 */
 .item .iconfont {
+  /* 左侧外边距为 10px */
   margin-left: 10px;
+  /* 垂直居中对齐 */
   vertical-align: middle;
+  /* 行内块级元素 */
   display: inline-block;
+  /* 背景颜色为半透明白色 */
   background-color: rgba(255, 255, 255, 0.3);
+  /* 字体大小为 18px */
   font-size: 18px;
+  /* 圆角边框 */
   border-radius: 100%;
+  /* 宽度为 36px */
   width: 36px;
+  /* 高度为 36px */
   height: 36px;
+  /* 文本水平居中对齐 */
   text-align: center;
+  /* 文本垂直居中对齐 */
   line-height: 36px;
+  /* 鼠标指针为手形 */
   cursor: pointer;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  /* 添加阴影效果 */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+/* 图标悬停时的样式 */
 .item .iconfont:hover {
+  /* 背景颜色为更透明的白色 */
   background-color: rgba(255, 255, 255, 0.5);
 }

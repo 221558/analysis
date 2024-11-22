@@ -1,28 +1,29 @@
 .login-container {
+  // 设置元素相对定位
   position: relative;
+  // 设置元素为弹性布局
   display: flex;
+  // 设置元素垂直居中对齐
   align-items: center;
+  // 设置元素宽度为100%
   width: 100%;
+  // 设置元素高度为100%
   height: 100%;
-  background-color: #fff;
+  // 设置元素溢出隐藏
   overflow: hidden;
-  &::before{
-    content:' ';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin-left: -48%;
-    background-image: url(/img/login-bg.svg);
-    background-position: 100%;
-    background-repeat: no-repeat;
-    background-size: auto 100%;
-  }
+  // 设置元素背景图片
+  background-image: url(/image/login.png);
+  // 设置背景图片位置
+  background-position: 100%;
+  // 设置背景图片不重复
+  background-repeat: no-repeat;
+  // 设置背景图片大小
+  background-size: 100% 100%;
 }
+
 .login-weaper {
   margin: 0 auto;
-  width:100%;
+  width: 100%;
 }
 
 .login-left,
@@ -51,7 +52,6 @@
   top: 25px;
   width: 100%;
   color: #fff;
-  font-weight: 200;
   opacity: 0.9;
   font-size: 18px;
   overflow: hidden;
@@ -61,7 +61,6 @@
   margin-top: 60px;
   text-align: center;
   color: #fff;
-  font-weight: 300;
   letter-spacing: 2px;
   font-size: 28px;
   font-weight: bold;
@@ -79,15 +78,18 @@
 .login-main {
   margin: 0 auto;
   padding: 30px 50px;
-  width: 70%;
-  box-shadow: -4px 5px 10px rgba(255, 255, 255, 0.4);
+  width: 460px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgba(188, 192, 207, 0.75);
+  // box-shadow: -4px 5px 10px rgba(255, 255, 255, 0.4);
   box-sizing: border-box;
 }
 .login-main > h3 {
   margin-bottom: 20px;
 }
 .login-title {
-  color: #000;
+  color: #56a6ee;
   margin-bottom: 50px;
   font-weight: bold;
   font-size: 28px;
@@ -101,7 +103,7 @@
   a {
     color: #999;
     font-size: 12px;
-    margin: 0px 8px;
+    margin: 0 8px;
   }
 }
 .login-submit {
@@ -112,40 +114,92 @@
   font-weight: 300;
   cursor: pointer;
   margin-top: 30px;
-  font-family: "neo";
+  font-family: 'neo';
   transition: 0.25s;
 }
 .login-form {
   margin: 10px 0;
-  i {
+  i,
+  em {
     color: #333;
   }
   .el-input {
+    // 设置input标签的样式
     input {
+      // 设置文本缩进
       text-indent: 5px;
+      // 设置背景颜色为透明
+      background-color: transparent !important;
+      // 设置文字颜色为#56a6ee
+      color: #56a6ee !important;
+      // 设置placeholder的样式
+      ::placeholder {
+        // 设置placeholder的文字颜色为#56a6ee
+        color: #56a6ee;
+      }
+      // 设置webkit的阴影效果
+      -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+      /* -webkit-text-fill-color: #fff; */
+      // 设置webkit的过渡效果
+      -webkit-transition-delay: 99999s;
+      -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
     }
-    .el-input__wrapper{
-      padding:5px 10px;
+    .el-input__wrapper {
+      padding: 5px 10px;
       border-radius: 0;
+      background-color: transparent !important;
+      color: #56a6ee !important;
+      box-shadow: none !important;
+      border: 1px solid #56a6ee;
+      border-radius: 2px;
     }
-    .el-input__suffix,.el-input__prefix{
+    .el-input__suffix,
+    .el-input__prefix {
       display: flex;
       align-items: center;
       text-align: center;
+      background-color: transparent !important;
+      color: #56a6ee !important;
+      .el-input__suffix-inner i {
+        color: #56a6ee !important;
+      }
     }
-    .el-input__prefix{
+    .el-input__prefix {
       margin-left: 8px;
+      background-color: transparent !important;
+      color: #56a6ee !important;
+      em {
+        color: #56a6ee !important;
+      }
+      .el-divider--vertical {
+        border-color: #56a6ee !important;
+      }
+    }
+    .el-input__inner::placeholder {
+      color: #56a6ee !important;
+    }
+  }
+  .login-checkbox {
+    color: #56a6ee !important;
+    font-weight: normal;
+    .el-checkbox__label {
+      font-size: 12px;
+    }
+    .el-checkbox__inner {
+      border-color: #56a6ee;
+      background-color: transparent !important;
+      color: #56a6ee !important;
     }
   }
 }
 .login-code {
   width: 100%;
   height: 100%;
-  .el-input-group__append{
+  .el-input-group__append {
     background-color: #fff;
   }
 }
-.login-code-box{
+.login-code-box {
   display: flex;
   align-items: center;
 }

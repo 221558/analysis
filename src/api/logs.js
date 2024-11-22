@@ -6,10 +6,10 @@ export const getUsualList = (current, size) => {
     method: 'get',
     params: {
       current,
-      size
-    }
-  })
-}
+      size,
+    },
+  });
+};
 
 export const getApiList = (current, size) => {
   return request({
@@ -17,10 +17,10 @@ export const getApiList = (current, size) => {
     method: 'get',
     params: {
       current,
-      size
-    }
-  })
-}
+      size,
+    },
+  });
+};
 
 export const getErrorList = (current, size) => {
   return request({
@@ -28,11 +28,10 @@ export const getErrorList = (current, size) => {
     method: 'get',
     params: {
       current,
-      size
-    }
-  })
-}
-
+      size,
+    },
+  });
+};
 
 export const getUsualLogs = (id) => {
   return request({
@@ -40,25 +39,24 @@ export const getUsualLogs = (id) => {
     method: 'get',
     params: {
       id,
-    }
-  })
-}
+    },
+  });
+};
 export const getApiLogs = (id) => {
   return request({
     url: '/blade-log/api/detail',
     method: 'get',
     params: {
       id,
-    }
-  })
-}
+    },
+  });
+};
 export const getErrorLogs = (id) => {
   return request({
     url: '/blade-log/error/detail',
     method: 'get',
     params: {
       id,
-    }
-  })
-}
-
+    },
+  });
+};

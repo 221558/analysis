@@ -11,22 +11,28 @@ export default () => {
     headerAlign: 'center',
     border: true,
     stripe: true,
-    column: [{
-      label: "姓名",
-      prop: "name",
-      search: true,
-    }, {
-      label: "性别",
-      prop: "sex",
-      type: 'select',
-      dicData: [{
-        label: '男',
-        value: 0
-      }, {
-        label: '女',
-        value: 1
-      }],
-      search: true,
-    }],
-  }
-}
+    column: [
+      {
+        label: '姓名',
+        prop: 'name',
+        search: true,
+      },
+      {
+        label: '性别',
+        prop: 'sex',
+        type: 'select',
+        dicData: [
+          {
+            label: '男',
+            value: 0,
+          },
+          {
+            label: '女',
+            value: 1,
+          },
+        ],
+        search: true,
+      },
+    ],
+  };
+};

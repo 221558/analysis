@@ -1,39 +1,36 @@
 <template>
   <basic-container>
-    <avue-crud :option="option"
-               :table-loading="loading"
-               :data="data"
-               :page="page"
-               @row-del="rowDel"
-               v-model="form"
-               :permission="permissionList"
-               @row-update="rowUpdate"
-               @row-save="rowSave"
-               :before-open="beforeOpen"
-               @search-change="searchChange"
-               @search-reset="searchReset"
-               @selection-change="selectionChange"
-               @current-change="currentChange"
-               @size-change="sizeChange"
-               @on-load="onLoad">
+    <avue-crud
+      :option="option"
+      :table-loading="loading"
+      :data="data"
+      :page="page"
+      @row-del="rowDel"
+      v-model="form"
+      :permission="permissionList"
+      @row-update="rowUpdate"
+      @row-save="rowSave"
+      :before-open="beforeOpen"
+      @search-change="searchChange"
+      @search-reset="searchReset"
+      @selection-change="selectionChange"
+      @current-change="currentChange"
+      @size-change="sizeChange"
+      @on-load="onLoad"
+    >
       <template #menu-left>
-        <el-button type="danger"
-                   icon="el-icon-delete"
-                   plain
-                   v-if="permission.client_delete"
-                   @click="handleDelete">删 除
-        </el-button>
+        <el-button type="danger" icon="el-icon-delete" plain v-if="permission.client_delete" @click="handleDelete">删 除 </el-button>
       </template>
     </avue-crud>
   </basic-container>
 </template>
 
 <script>
-import { getList, getDetail, add, update, remove } from "@/api/system/client";
-import { mapGetters } from "vuex";
+import { getList, getDetail, add, update, remove } from '@/api/system/client';
+import { mapGetters } from 'vuex';
 
 export default {
-  data () {
+  data() {
     return {
       form: {},
       query: {},
@@ -41,7 +38,7 @@ export default {
       page: {
         pageSize: 10,
         currentPage: 1,
-        total: 0
+        total: 0,
       },
       selectionList: [],
       option: {
@@ -56,170 +53,198 @@ export default {
         selection: true,
         column: [
           {
-            label: "应用id",
-            prop: "clientId",
+            label: '应用id',
+            prop: 'clientId',
             search: true,
-            rules: [{
-              required: true,
-              message: "请输入客户端id",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                required: true,
+                message: '请输入客户端id',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "应用密钥",
-            prop: "clientSecret",
+            label: '应用密钥',
+            prop: 'clientSecret',
             search: true,
-            rules: [{
-              required: true,
-              message: "请输入客户端密钥",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                required: true,
+                message: '请输入客户端密钥',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "授权类型",
-            prop: "authorizedGrantTypes",
-            valueDefault: "refresh_token,password,authorization_code",
-            rules: [{
-              required: true,
-              message: "请输入授权类型",
-              trigger: "blur"
-            }]
+            label: '授权类型',
+            prop: 'authorizedGrantTypes',
+            valueDefault: 'refresh_token,password,authorization_code',
+            rules: [
+              {
+                required: true,
+                message: '请输入授权类型',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "授权范围",
-            prop: "scope",
-            valueDefault: "all",
-            rules: [{
-              required: true,
-              message: "请输入授权范围",
-              trigger: "blur"
-            }]
+            label: '授权范围',
+            prop: 'scope',
+            valueDefault: 'all',
+            rules: [
+              {
+                required: true,
+                message: '请输入授权范围',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "令牌秒数",
-            prop: "accessTokenValidity",
-            type: "number",
+            label: '令牌秒数',
+            prop: 'accessTokenValidity',
+            type: 'number',
             valueDefault: 3600,
-            rules: [{
-              required: true,
-              message: "请输入令牌过期秒数",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                required: true,
+                message: '请输入令牌过期秒数',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "刷新秒数",
-            prop: "refreshTokenValidity",
-            type: "number",
+            label: '刷新秒数',
+            prop: 'refreshTokenValidity',
+            type: 'number',
             valueDefault: 604800,
             hide: true,
-            rules: [{
-              required: true,
-              message: "请输入刷新令牌过期秒数",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                required: true,
+                message: '请输入刷新令牌过期秒数',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "回调地址",
-            prop: "webServerRedirectUri",
+            label: '回调地址',
+            prop: 'webServerRedirectUri',
             hide: true,
-            rules: [{
-              required: true,
-              message: "请输入回调地址",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                required: true,
+                message: '请输入回调地址',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "资源集合",
-            prop: "resourceIds",
+            label: '资源集合',
+            prop: 'resourceIds',
             hide: true,
-            rules: [{
-              message: "请输入资源集合",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                message: '请输入资源集合',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "权限",
-            prop: "authorities",
+            label: '权限',
+            prop: 'authorities',
             hide: true,
-            rules: [{
-              message: "请输入权限",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                message: '请输入权限',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "自动授权",
-            prop: "autoapprove",
+            label: '自动授权',
+            prop: 'autoapprove',
             hide: true,
-            rules: [{
-              message: "请输入自动授权",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                message: '请输入自动授权',
+                trigger: 'blur',
+              },
+            ],
           },
           {
-            label: "附加说明",
+            label: '附加说明',
             hide: true,
-            prop: "additionalInformation",
+            prop: 'additionalInformation',
             span: 24,
-            rules: [{
-              message: "请输入附加说明",
-              trigger: "blur"
-            }]
+            rules: [
+              {
+                message: '请输入附加说明',
+                trigger: 'blur',
+              },
+            ],
           },
-        ]
+        ],
       },
-      data: []
+      data: [],
     };
   },
   computed: {
-    ...mapGetters(["permission"]),
-    permissionList () {
+    ...mapGetters(['permission']),
+    permissionList() {
       return {
         addBtn: this.validData(this.permission.client_add),
         viewBtn: this.validData(this.permission.client_view),
         delBtn: this.validData(this.permission.client_delete),
-        editBtn: this.validData(this.permission.client_edit)
+        editBtn: this.validData(this.permission.client_edit),
       };
     },
-    ids () {
-      let ids = [];
-      this.selectionList.forEach(ele => {
+    ids() {
+      const ids = [];
+      this.selectionList.forEach((ele) => {
         ids.push(ele.id);
       });
-      return ids.join(",");
-    }
+      return ids.join(',');
+    },
   },
   methods: {
-    rowSave (row, done, loading) {
-      add(row).then(() => {
-        done();
-        this.onLoad(this.page);
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-      }, error => {
-        window.console.log(error);
-        loading();
-      });
+    rowSave(row, done, loading) {
+      add(row).then(
+        () => {
+          done();
+          this.onLoad(this.page);
+          this.$message({
+            type: 'success',
+            message: '操作成功!',
+          });
+        },
+        (error) => {
+          window.console.log(error);
+          loading();
+        },
+      );
     },
-    rowUpdate (row, index, done, loading) {
-      update(row).then(() => {
-        done();
-        this.onLoad(this.page);
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-      }, error => {
-        window.console.log(error);
-        loading();
-      });
+    rowUpdate(row, index, done, loading) {
+      update(row).then(
+        () => {
+          done();
+          this.onLoad(this.page);
+          this.$message({
+            type: 'success',
+            message: '操作成功!',
+          });
+        },
+        (error) => {
+          window.console.log(error);
+          loading();
+        },
+      );
     },
-    rowDel (row) {
-      this.$confirm("确定将选择数据删除?", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    rowDel(row) {
+      this.$confirm('确定将选择数据删除?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           return remove(row.id);
@@ -227,33 +252,33 @@ export default {
         .then(() => {
           this.onLoad(this.page);
           this.$message({
-            type: "success",
-            message: "操作成功!"
+            type: 'success',
+            message: '操作成功!',
           });
         });
     },
-    searchReset () {
+    searchReset() {
       this.query = {};
       this.onLoad(this.page);
     },
-    searchChange (params, done) {
+    searchChange(params, done) {
       this.query = params;
       this.page.currentPage = 1;
       this.onLoad(this.page, params);
       done();
     },
-    selectionChange (list) {
+    selectionChange(list) {
       this.selectionList = list;
     },
-    handleDelete () {
+    handleDelete() {
       if (this.selectionList.length === 0) {
-        this.$message.warning("请选择至少一条数据");
+        this.$message.warning('请选择至少一条数据');
         return;
       }
-      this.$confirm("确定将选择数据删除?", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定将选择数据删除?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           return remove(this.ids);
@@ -261,38 +286,37 @@ export default {
         .then(() => {
           this.onLoad(this.page);
           this.$message({
-            type: "success",
-            message: "操作成功!"
+            type: 'success',
+            message: '操作成功!',
           });
           this.$refs.crud.toggleSelection();
         });
     },
-    beforeOpen (done, type) {
-      if (["edit", "view"].includes(type)) {
-        getDetail(this.form.id).then(res => {
+    beforeOpen(done, type) {
+      if (['edit', 'view'].includes(type)) {
+        getDetail(this.form.id).then((res) => {
           this.form = res.data.data;
         });
       }
       done();
     },
-    currentChange (currentPage) {
+    currentChange(currentPage) {
       this.page.currentPage = currentPage;
     },
-    sizeChange (pageSize) {
+    sizeChange(pageSize) {
       this.page.pageSize = pageSize;
     },
-    onLoad (page, params = {}) {
+    onLoad(page, params = {}) {
       this.loading = true;
-      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
-        const data = res.data.data;
+      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then((res) => {
+        const { data } = res.data;
         this.page.total = data.total;
         this.data = data.records;
         this.loading = false;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -7,10 +7,10 @@ export const getList = (current, size, params) => {
     params: {
       ...params,
       current,
-      size
-    }
-  })
-}
+      size,
+    },
+  });
+};
 
 export const build = (ids) => {
   return request({
@@ -18,35 +18,35 @@ export const build = (ids) => {
     method: 'post',
     params: {
       ids,
-      system: 'saber3'
-    }
-  })
-}
+      system: 'saber3',
+    },
+  });
+};
 export const remove = (ids) => {
   return request({
     url: '/blade-develop/code/remove',
     method: 'post',
     params: {
       ids,
-    }
-  })
-}
+    },
+  });
+};
 
 export const add = (row) => {
   return request({
     url: '/blade-develop/code/submit',
     method: 'post',
-    data: row
-  })
-}
+    data: row,
+  });
+};
 
 export const update = (row) => {
   return request({
     url: '/blade-develop/code/submit',
     method: 'post',
-    data: row
-  })
-}
+    data: row,
+  });
+};
 
 export const copy = (id) => {
   return request({
@@ -54,9 +54,9 @@ export const copy = (id) => {
     method: 'post',
     params: {
       id,
-    }
-  })
-}
+    },
+  });
+};
 
 export const getCode = (id) => {
   return request({
@@ -64,6 +64,6 @@ export const getCode = (id) => {
     method: 'get',
     params: {
       id,
-    }
-  })
-}
+    },
+  });
+};

@@ -1,31 +1,58 @@
+// 定义错误页面样式
 .error-page {
+  // 背景颜色
   background: #f0f2f5;
+  // 上边距
   margin-top: -30px;
+  // 高度
   height: 100%;
+  // 弹性布局
   display: flex;
+  // 垂直居中
   align-items: center;
+  // 水平居中
   justify-content: center;
+  // 图片样式
   .img {
+    // 右边距
     margin-right: 80px;
+    // 高度
     height: 360px;
+    // 宽度
     width: 100%;
+    // 最大宽度
     max-width: 430px;
+    // 背景重复
     background-repeat: no-repeat;
+    // 背景位置
     background-position: 50% 50%;
+    // 背景大小
     background-size: contain;
   }
+  // 内容样式
   .content {
+    // 标题样式
     h1 {
+      // 颜色
       color: #434e59;
+      // 字体大小
       font-size: 72px;
+      // 字体粗细
       font-weight: 600;
+      // 行高
       line-height: 72px;
+      // 下边距
       margin-bottom: 24px;
     }
+    // 描述样式
     .desc {
+      // 颜色
       color: rgba(0, 0, 0, 0.45);
+      // 字体大小
       font-size: 20px;
+      // 行高
       line-height: 28px;
+      // 下边距
       margin-bottom: 16px;
     }
   }
