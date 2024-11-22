@@ -1,6 +1,10 @@
 <template>
   <!-- 动态id，避免for循环渲染失败 -->
+  <<<<<<< HEAD
   <div :id="`lineChart${props.name}`" style="width: 100%; height: 90%; border-radius: 10px"></div>
+  =======
+  <div :id="`lineChart${props.name}`" style="width: 100%; height: 120%"></div>
+  >>>>>>> 9574af8 (feat(board): 省、全国大屏(70%))
 </template>
 <script setup>
 import * as echarts from 'echarts';
