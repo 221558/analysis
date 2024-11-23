@@ -60,7 +60,7 @@
               <div
                 v-for="(item, index) in list"
                 :key="index"
-                :class="['scroll-item', index % 2 == 0 ? 'item1' : 'item2', getTop(index)]"
+                :class="['scroll-item', index % 2 == 0 ? 'item1' : 'item2']"
               >
                 <span :class="getTop(index)" v-if="index < 3"></span>
                 <span>{{ index + 1 }}</span>
@@ -110,10 +110,12 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .scroll-wrap {
-  width: 22vw;
+  width: 22.3vw;
   height: 84vh;
   overflow: hidden;
   color: white;
+  box-sizing: border-box;
+  padding: 0 0.7vw;
 }
 
 .scroll-header,
@@ -133,6 +135,17 @@ onMounted(() => {
   padding: 0 1vw;
   color: rgba(150, 210, 239, 0.8);
   font-size: 18px;
+  position: relative;
+  ::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    border-top: 5px solid rgba(239, 223, 5, 0.8);
+    //   border-left: 5px solid rgba(77, 171, 246);
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
 }
 .scroll-list {
   width: 100%;
@@ -153,8 +166,8 @@ onMounted(() => {
       position: absolute;
       top: 5px;
       left: 5px;
-      border-top: 5px solid rgba(77, 171, 246);
-      border-left: 5px solid rgba(77, 171, 246);
+      border-top: 5px solid rgba(77, 171, 246, 1);
+      //   border-left: 5px solid rgba(77, 171, 246);
       border-right: 5px solid transparent;
       border-bottom: 5px solid transparent;
     }
@@ -164,7 +177,7 @@ onMounted(() => {
       position: absolute;
       width: 1.5vw;
       height: 0.2vh;
-      background-color: rgb(239, 223, 5);
+      background-color: rgba(239, 223, 5, 1);
       filter: blur(5px) contrast(150%);
     }
     .top2 {
@@ -187,9 +200,10 @@ onMounted(() => {
 #board {
   width: 100%;
   height: 100%;
-  background-color: #f5f5f5;
-  background: url('/board/country_bg.png') no-repeat center center;
-  background-size: cover;
+  background: url('/board/country_bg.png') no-repeat;
+  background-position: 5vw 8vh;
+  background-size: 90%;
+  background-color: rgba(1, 30, 70, 1);
   .header {
     width: 100%;
     height: 7vh;
@@ -227,7 +241,7 @@ onMounted(() => {
       height: 4vh;
       line-height: 3.3vh;
       .time {
-        margin-right: 4vw;
+        margin-right: 3vw;
         letter-spacing: 0.06vw;
       }
       .user_icon {
@@ -246,6 +260,7 @@ onMounted(() => {
     padding: 0 1.5vw;
     .left {
       .left_top {
+        border-radius: 10px;
         box-sizing: border-box;
         padding-left: 0.3vw;
         padding-top: 1vh;
@@ -290,6 +305,7 @@ onMounted(() => {
         }
       }
       .left_btm {
+        border-radius: 10px;
         box-sizing: border-box;
         padding-left: 0.3vw;
         padding-top: 1vh;
@@ -302,9 +318,9 @@ onMounted(() => {
     .center {
       width: 52vw;
       height: 90vh;
-      border: 1px solid red;
     }
     .right {
+      border-radius: 10px;
       box-sizing: border-box;
       padding-top: 1vh;
       padding-left: 0.3vw;

@@ -37,7 +37,7 @@ const data = [
     // 大屏展示
     label: '大屏展示',
     // 图片链接
-    url: '1',
+    url: '/board',
     // 图片路径
     image: '/image/large_screen_display.png',
     // 图片颜色
@@ -54,7 +54,12 @@ const data = [
     color: 'rgb(234, 249, 249)',
   },
   // 数据查询
-  { label: '数据查询', url: '/data-query/original-report', image: '/image/data_query.png', color: 'rgb(239, 241, 255)' },
+  {
+    label: '数据查询',
+    url: '/data-query/original-report',
+    image: '/image/data_query.png',
+    color: 'rgb(239, 241, 255)',
+  },
   {
     // 可视化展示
     label: '可视化展示',

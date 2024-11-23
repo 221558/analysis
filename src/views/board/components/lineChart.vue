@@ -1,6 +1,6 @@
 <template>
   <!-- 动态id，避免for循环渲染失败 -->
-  <div :id="`lineChart${props.name}`" style="width: 100%; height: 120%"></div>
+  <div :id="`lineChart${props.name}`" style="width: 100%; height: 90%; border-radius: 10px"></div>
 </template>
 <script setup>
 import * as echarts from 'echarts';
@@ -22,7 +22,7 @@ const props = defineProps({
 onMounted(() => {
   const chartDom = document.getElementById('lineChart' + props.name);
   const myChart = echarts.init(chartDom);
-  const goToSchool = ['91', '92.3', '94', '93.1', '92.5', '91', '93'];
+  const goToSchool = ['94', '93', '96.2', '95.1', '99.2', '96.3', '94'];
   const option = {
     grid: props.province
       ? {
@@ -31,13 +31,11 @@ onMounted(() => {
           bottom: '18%',
           top: '10%',
         }
-      : {
-          bottom: '10%',
-        },
+      : {},
     backgroundColor: props.province ? 'rgba(1, 52, 104, 0.5)' : 'transparent',
     title: {
       text: props.title || '',
-      left: props.position ? '4%' : 'center',
+      left: 'center',
       top: '2%',
       textStyle: {
         color: 'rgba(179, 232, 254,1)',
@@ -59,6 +57,7 @@ onMounted(() => {
             color: 'white',
             fontSize: 14,
           },
+          margin: 20, // 单位是px，设置标签文字距离x轴的间距
         },
         axisLine: {
           // x轴底部的线
@@ -78,9 +77,9 @@ onMounted(() => {
     yAxis: [
       {
         name: '',
-        min: 80,
+        min: 90,
         max: 100,
-        interval: 5,
+        interval: 2,
         nameTextStyle: {
           color: '#7ec7ff',
           fontSize: 16,
@@ -90,7 +89,7 @@ onMounted(() => {
         splitLine: {
           show: true,
           lineStyle: {
-            color: 'white',
+            color: 'rgba(141, 161, 182,1)',
             type: 'dashed',
           },
         },
@@ -148,8 +147,8 @@ onMounted(() => {
               ],
               false
             ),
-            shadowColor: 'rgba(25,163,223, 0.5)', // 阴影颜色
-            shadowBlur: 500, // shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
+            // shadowColor: 'rgba(25,163,223, 1)', // 阴影颜色
+            // shadowBlur: 500, // shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
           },
         },
         data: goToSchool,

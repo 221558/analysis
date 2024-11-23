@@ -82,7 +82,7 @@
         <div class="business_lines">
           <div v-for="(item, index) in busList" :key="index" :class="['business_lines_items']">
             <div class="business_name">{{ item.name }}</div>
-            <LineChart :name="index" :province="true" />
+            <LineChart :name="index + ''" :province="true" />
           </div>
         </div>
       </div>
@@ -309,7 +309,7 @@ onMounted(() => {
         justify-content: space-between;
         .business_lines_items {
           width: 22vw;
-          height: 20vh;
+          height: 23vh;
           color: white;
           margin-bottom: 2vh;
           .business_name {
