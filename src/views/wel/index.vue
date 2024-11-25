@@ -31,7 +31,6 @@ const { proxy } = getCurrentInstance();
 const _this = proxy;
 
 // 定义一个响应式数据，包含多个对象，每个对象包含label、url、image和color属性
-/* eslint-disable no-unused-vars */
 const data = [
   {
     // 大屏展示
@@ -90,7 +89,6 @@ const data = [
 ];
 
 // 跳转相关模块
-/* eslint-disable no-unused-vars */
 const getJumpRelatedPage = url => {
   // 跳转到 url
   _this.$router.push({ path: url });

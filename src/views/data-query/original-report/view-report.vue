@@ -62,13 +62,11 @@ onMounted(() => {
   });
 });
 // 返回按钮点击事件
-/* eslint-disable no-unused-vars */
 const getReturn = () => {
   _this.$router.push({ path: '/data-query/original-report/index' });
 };
 
 // 下载按钮点击事件
-/* eslint-disable no-unused-vars */
 const getDownload = () => {
   const url = `/api/analysis-system/data-table/upload-records/download?blade-auth=${getToken()}&recordIds=${
     objcet.id
