@@ -35,7 +35,8 @@ import { ref } from 'vue';
 /* eslint-disable no-unused-vars */
 import searchReport from './components/search-report.vue'; // NOSONAR
 import { getUploadRecords } from '@/api/data-query/original-report';
-
+// 导入getToken方法，用于获取token
+import { getToken } from 'utils/auth';
 // 导入通用CRUD混入
 import { useMixins } from '@/mixins/data.js';
 // _this, store, option, data, search, loadings, conf, selectionList, selectionChange
@@ -129,6 +130,9 @@ const getView = row => {
 // 定义一个函数getDownload，参数为row
 const getDownload = row => {
   // 打印'下载模板'
-  console.log('下载模板');
+  const url = `/api/analysis-system/data-table/upload-records/download?blade-auth=${getToken()}&recordIds=${
+    row.id
+  }`;
+  window.open(url, '_self');
 };
 </script>
