@@ -144,13 +144,32 @@
     </basic-container>
     <basic-container>
       <basic-title title="查询结果" />
+      <vue-office-excel style="height: 50vh;" v-if="customBlobContent" :src="customBlobContent"> </vue-office-excel>
     </basic-container>
   </div>
 </template>
 
 <script setup>
 import BasicTitle from '@/components/basic-title/main.vue'
-import { ref, watch } from 'vue'
+import VueOfficeExcel from '@vue-office/excel'
+import '@vue-office/excel/lib/index.css'
+import { ref, watch, onMounted } from 'vue'
+import { downloadFile } from '@/api/data-query/base-operation'
+
+// 文件预览
+let customBlobContent = ref()
+
+onMounted(() => {
+  downloadFile({ recordIds: '1860931757090549763' }).then((res) => {
+    console.log(res, 'res')
+    customBlobContent.value = new Blob([res.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel 文件类型
+    })
+  }).catch((err) => {
+    console.log(err)
+  })
+})
+
 const month = ref('')
 const isActiveClass = ref(0)
 
