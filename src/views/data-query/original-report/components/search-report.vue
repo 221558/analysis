@@ -24,11 +24,16 @@
 
 <script setup>
 // 导入reactive函数
-import { reactive, defineEmits, defineProps } from 'vue';
+import { reactive, defineEmits, defineProps, computed } from 'vue';
 import { ElMessage } from 'element-plus';
+// 导入getToken方法，用于获取token
+import { getToken } from 'utils/auth';
 const emit = defineEmits(['getSearch']);
 // 定义组件的props，接收父组件传递的值
 const props = defineProps(['selectionList']);
+const ids = computed(() => {
+  return props.selectionList.map(item => String(item.id)).join(',');
+});
 // 创建一个响应式对象form，包含user和date两个属性
 const form = reactive({ keyword: '', fileTime: '' });
 // 定义禁用未来日期的函数
@@ -67,7 +72,10 @@ const getDownload = () => {
   if (props.selectionList.length === 0) {
     return ElMessage.warning('请选择至少一条数据');
   }
-  console.log('正在现在批量下载...');
+  const url = `/api/analysis-system/data-table/upload-records/download?blade-auth=${getToken()}&recordIds=${
+    ids.value
+  }`;
+  window.open(url, '_self');
 };
 </script>
 
