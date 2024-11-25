@@ -1,10 +1,23 @@
 <template>
   <basic-container>
+    <el-button text @click="getReturn">
+      <el-icon><ArrowLeftBold /></el-icon>
+      <span>返回</span>
+    </el-button>
     <div class="view-report">
-      <el-button class="handle-button top" plain @click="getReturn">返回</el-button>
-      <div class="title">[{{ objcet.sheetIndex }}]:{{ objcet.sheetName }}</div>
+      <div class="title">[{{ objcet.sheetIndex }}] : {{ objcet.sheetName }}</div>
       <div class="annotation">
-        上传时间(2024-02-03) 所属月份({{ objcet.fileTime }}) 阅读信息(23)
+        <!-- 上传时间(2024-02-03) 所属月份({{ objcet.fileTime }}) 阅读信息(23) -->
+        <span> 所属月份({{ objcet.fileTime }})</span>
+        <el-button
+          style="float: right; margin-top: -8px"
+          type="primary"
+          plain
+          size="small"
+          @click="getDownload"
+        >
+          下载
+        </el-button>
       </div>
       <div class="sheet-main">
         <div class="sheet-content">
@@ -95,24 +108,6 @@ const errorHandler = () => {
     line-height: 21px;
     // 设置颜色为rgba(187, 187, 187, 1)
     color: rgba(187, 187, 187, 1);
-  }
-
-  // 处理按钮样式
-  .handle-button {
-    // 设置定位为绝对定位
-    position: absolute;
-    // 设置右对齐
-    right: 0;
-  }
-  // 顶部样式
-  .top {
-    // 设置顶部为0
-    top: 0;
-  }
-  // 底部样式
-  .bottom {
-    // 设置底部为0
-    bottom: 0;
   }
 }
 </style>
