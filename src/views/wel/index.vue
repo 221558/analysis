@@ -54,7 +54,7 @@ const data = [
     color: 'rgb(234, 249, 249)',
   },
   // 数据查询
-  { label: '数据查询', url: '1', image: '/image/data_query.png', color: 'rgb(239, 241, 255)' },
+  { label: '数据查询', url: '/data-query/original-report', image: '/image/data_query.png', color: 'rgb(239, 241, 255)' },
   {
     // 可视化展示
     label: '可视化展示',
@@ -81,7 +81,7 @@ const data = [
   {
     label: '系统管理',
     // 路径
-    url: '1',
+    url: '/system/user',
     // 图片路径
     image: '/image/system_management.png',
     // 颜色
