@@ -2,17 +2,17 @@
   <el-form :inline="true" :model="form" class="demo-form-inline">
     <el-form-item label="选择月份：">
       <el-date-picker
-        v-model="form.date"
+        v-model="form.fileTime"
         type="month"
         placeholder="请选择选择月份"
         clearable
         value-format="YYYY-MM"
         :disabled-date="disabledDate"
-        @change="changeData(form.date)"
+        @change="changeData(form.fileTime)"
       />
     </el-form-item>
     <el-form-item label="关键字：">
-      <el-input v-model="form.user" placeholder="请选择关键字" clearable />
+      <el-input v-model="form.keyword" placeholder="请选择关键字" clearable />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="getSearchForm">查询</el-button>
@@ -30,7 +30,7 @@ const emit = defineEmits(['getSearch']);
 // 定义组件的props，接收父组件传递的值
 const props = defineProps(['selectionList']);
 // 创建一个响应式对象form，包含user和date两个属性
-const form = reactive({ user: '', date: '' });
+const form = reactive({ keyword: '', fileTime: '' });
 // 定义禁用未来日期的函数
 /* eslint-disable no-unused-vars */
 const disabledDate = time => {
@@ -42,15 +42,15 @@ const disabledDate = time => {
 const changeData = val => {
   // 如果传入的值为空，则将表单中的日期置为空
   if (!val) {
-    form.date = '';
+    form.fileTime = '';
   }
 };
 // 重置表单
 /* eslint-disable no-unused-vars */
 const getResetForm = () => {
   // 将表单中的用户名和日期重置为空
-  form.user = '';
-  form.date = '';
+  form.keyword = '';
+  form.fileTime = '';
   // 打印表单中的用户名和日期
   emit('getSearch', form);
 };

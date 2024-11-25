@@ -7,14 +7,3 @@ export const getUploadRecords = params => {
     params,
   });
 };
-
-// 查看
-
-export const getViewDetails = params => {
-  return request({
-    url: '/analysis-system/data-table/upload-records/download',
-    method: 'get',
-    params,
-    responseType: 'blob',
-  });
-};
