@@ -15,6 +15,7 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@kjgl77/datav-vue3": "^1.7.4",
     "@smallwei/avue": "^3.4.4",
+    "@vue-office/excel": "^1.7.11",
     "animate.css": "^4.1.1",
     "autofit.js": "^3.2.2",
     "avue-plugin-ueditor": "^1.0.3",
