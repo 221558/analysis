@@ -37,13 +37,11 @@ const ids = computed(() => {
 // 创建一个响应式对象form，包含user和date两个属性
 const form = reactive({ keyword: '', fileTime: '' });
 // 定义禁用未来日期的函数
-/* eslint-disable no-unused-vars */
 const disabledDate = time => {
   // 如果传入的时间大于当前时间，则返回true，表示禁用该日期
   return time.getTime() > Date.now();
 };
 // 解决 再带清空返回 null 情况
-/* eslint-disable no-unused-vars */
 const changeData = val => {
   // 如果传入的值为空，则将表单中的日期置为空
   if (!val) {
@@ -51,7 +49,6 @@ const changeData = val => {
   }
 };
 // 重置表单
-/* eslint-disable no-unused-vars */
 const getResetForm = () => {
   // 将表单中的用户名和日期重置为空
   form.keyword = '';
@@ -61,13 +58,11 @@ const getResetForm = () => {
 };
 
 // 获取搜索报告
-/* eslint-disable no-unused-vars */
 const getSearchForm = () => {
   // 打印表单中的用户名和日期
   emit('getSearch', form);
 };
 // 批量下载
-/* eslint-disable no-unused-vars */
 const getDownload = () => {
   if (props.selectionList.length === 0) {
     return ElMessage.warning('请选择至少一条数据');
