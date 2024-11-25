@@ -2,12 +2,20 @@
   <basic-container>
     <div class="view-report">
       <el-button class="handle-button top" plain @click="getReturn">返回</el-button>
-      <div class="title">[{{ objcet.num }}]:{{ objcet.name }}</div>
-      <div class="annotation">上传时间(2024-02-03) 所属月份({{ objcet.month }}) 阅读信息(23)</div>
-      <div>121212</div>
-      <div>121212</div>
-      <div>121212</div>
-      <div>121212</div>
+      <div class="title">[{{ objcet.sheetIndex }}]:{{ objcet.sheetName }}</div>
+      <div class="annotation">
+        上传时间(2024-02-03) 所属月份({{ objcet.fileTime }}) 阅读信息(23)
+      </div>
+      <div class="sheet-main">
+        <div class="sheet-content">
+          <vue-office-excel
+            :src="excel"
+            style="height: calc(100vh - 220px)"
+            @rendered="renderedHandler"
+            @error="errorHandler"
+          />
+        </div>
+      </div>
       <el-button class="handle-button bottom" type="primary" text @click="getDownload">
         <el-icon><Download /></el-icon>
         <span>下载</span>
@@ -17,13 +25,29 @@
 </template>
 
 <script setup>
+//引入VueOfficeExcel组件
+import VueOfficeExcel from '@vue-office/excel';
+//引入相关样式
+import '@vue-office/excel/lib/index.css';
+import { getViewDetails } from '@/api/data-query/original-report';
 // 引入mixin
 import { useMixins } from '@/mixins/data.js';
+// 导入getToken方法，用于获取token
+import { getToken } from 'utils/auth';
+import { onMounted } from 'vue';
 const { _this } = useMixins();
 // 获取路由参数
 const objcet = _this.$route.query;
+const excel = ref(null);
 
-console.log(objcet);
+onMounted(() => {
+  // 获取文件信息
+  getViewDetails({ recordIds: objcet.id }).then(res => {
+    console.log(res.data);
+    const blob = new Blob([res.data], { type: res.headers['content-type'] });
+    excel.value = URL.createObjectURL(blob);
+  });
+});
 // 返回按钮点击事件
 /* eslint-disable no-unused-vars */
 const getReturn = () => {
@@ -33,7 +57,17 @@ const getReturn = () => {
 // 下载按钮点击事件
 /* eslint-disable no-unused-vars */
 const getDownload = () => {
-  console.log('下载模板');
+  const url = `/api/analysis-system/data-table/upload-records/download?blade-auth=${getToken()}&recordIds=${
+    objcet.id
+  }`;
+  window.open(url, '_self');
+};
+
+const renderedHandler = () => {
+  console.log('渲染完成');
+};
+const errorHandler = () => {
+  console.log('渲染失败');
 };
 </script>
 
