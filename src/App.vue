@@ -5,7 +5,8 @@
 <script>
 export default {};
 </script>
-
+<!-- <style lang="scss" src="./styles/date.scss" scoped></style> -->
+<style lang="scss"></style>
 <style>
 html,
 body,

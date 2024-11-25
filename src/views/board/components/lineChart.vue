@@ -57,6 +57,7 @@ onMounted(() => {
             color: 'white',
             fontSize: 14,
           },
+          interval: 0, // 强制显示所有标签(小屏适配)
           margin: 20, // 单位是px，设置标签文字距离x轴的间距
         },
         axisLine: {
