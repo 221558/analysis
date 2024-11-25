@@ -54,7 +54,7 @@ option.value = {
   selection: true,
   align: 'center',
   column: [
-    { label: '表格编号', prop: 'fileId' },
+    { label: '表格编号', prop: 'sheetIndex' },
     { label: '表格名', prop: 'sheetName' },
     { label: '所属月份', prop: 'fileTime' },
     { label: '说明', prop: 'explain' },
