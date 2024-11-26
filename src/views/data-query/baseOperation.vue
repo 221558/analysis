@@ -138,7 +138,7 @@
         </div>
         <div class="bottom">
           <el-button color="#0068FF" type="primary">查询</el-button>
-          <el-button class="reset-btn">重置</el-button>
+          <el-button class="reset-btn" @click="handleMonthChange('', 0)">重置</el-button>
         </div>
       </div>
     </basic-container>
@@ -155,13 +155,13 @@ import VueOfficeExcel from '@vue-office/excel'
 import '@vue-office/excel/lib/index.css'
 import { ref, watch, onMounted } from 'vue'
 import { downloadFile } from '@/api/data-query/base-operation'
+import { ElMessage } from 'element-plus'
 
 // 文件预览
 let customBlobContent = ref()
 
 onMounted(() => {
   downloadFile({ recordIds: '1860931757090549763' }).then((res) => {
-    console.log(res, 'res')
     customBlobContent.value = new Blob([res.data], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel 文件类型
     })
@@ -170,6 +170,7 @@ onMounted(() => {
   })
 })
 
+// 月份选择
 const month = ref('')
 const isActiveClass = ref(0)
 
@@ -300,6 +301,15 @@ function disabledDate(time) {
 // 清空选择框数据
 function clearData(typeData) {
   switch (typeData) {
+    case 0:
+      month.value = ''
+      type.value = ''
+      business.value = ''
+      area.value = []
+      checkAll.value = false
+      indeterminate.value = false
+      target.value = ''
+      break
     case 1:
       type.value = ''
       business.value = ''
@@ -327,6 +337,55 @@ function clearData(typeData) {
   }
 }
 
+// 选择框变化时触发
+function checkChange(step) {
+  let flag = false
+  switch (step) {
+    case 2:
+      if (!month.value) {
+        flag = true
+      }
+      break
+    case 3:
+      if (!month.value) {
+        flag = true
+      }
+      if (!type.value) {
+        flag = true
+      }
+      break
+    case 4:
+      if (!month.value) {
+        flag = true
+        area.value = []
+      }
+      if (!type.value) {
+        flag = true
+        area.value = []
+      }
+      if (!business.value) {
+        flag = true
+        area.value = []
+      }
+      break
+    case 5:
+      if (!month.value) {
+        flag = true
+      }
+      if (!type.value) {
+        flag = true
+      }
+      if (!business.value) {
+        flag = true
+      }
+      if (!(area.value && area.value.length)) {
+        flag = true
+      }
+      break
+  }
+  return flag
+}
+
 /**
  * 月份选择变化时触发
  * @param val 选择的数据值
@@ -336,6 +395,10 @@ function handleMonthChange(val, step) {
   clearData(step)
   if (!val) {
     isActiveClass.value = step - 1
+    return
+  }
+  if (checkChange(step)) {
+    ElMessage.warning('请先选择前面所有选项')
     return
   }
   if (step === 2 && val === 1) {
