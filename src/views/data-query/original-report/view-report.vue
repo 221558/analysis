@@ -4,6 +4,10 @@
       <el-icon><ArrowLeftBold /></el-icon>
       <span>返回</span>
     </el-button>
+    <el-button text style="float: right">
+      <top-full />
+    </el-button>
+
     <div class="view-report">
       <div class="title">[{{ objcet.sheetIndex }}] : {{ objcet.sheetName }}</div>
       <div class="annotation">
@@ -40,6 +44,7 @@
 <script setup>
 //引入VueOfficeExcel组件
 import VueOfficeExcel from '@vue-office/excel';
+import topFull from '@/page/index/top/top-full.vue';
 //引入相关样式
 import '@vue-office/excel/lib/index.css';
 import { getViewDetails } from '@/api/data-query/original-report';
