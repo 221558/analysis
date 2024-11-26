@@ -43,3 +43,16 @@ export const deleteUploadRecord = (params) => {
     method: 'delete',
   })
 }
+
+/**
+ * 获取文件类型下拉框
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export const getFileTypeList = (params) => {
+  return request({
+    url: '/analysis-system/condition/file-type-list',
+    method: 'get',
+    params,
+  })
+}
