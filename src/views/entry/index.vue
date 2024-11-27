@@ -57,6 +57,8 @@ import BasicTitle from '@/components/basic-title/main.vue'
 import { ref } from 'vue'
 import { dataDownload, deleteUploadRecord, getFileTypeList, getUploadRecords } from '@/api/entry'
 import { ElMessage } from 'element-plus'
+import { getToken } from '@/utils/auth'
+import { baseUrl } from '@/config/env'
 
 const option = ref({})
 const optionTable = ref({})
@@ -186,7 +188,7 @@ function beforeUpload(file) {
   if (MODE !== 'development') {
     apiPrefix = VITE_APP_BASE_URL
   }
-  action.value = `${apiPrefix}/analysis-system/data-file/upload?fileTime=${formData.value.fileTime}&filetype=${formData.value.filetype}`
+  action.value = `${baseUrl}/analysis-system/data-file/upload?blade-auth=bearer ${getToken()}&fileTime=${formData.value.fileTime}&filetype=${formData.value.filetype}`
   fullscreenLoading.value = true
   return true
 }
