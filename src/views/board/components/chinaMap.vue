@@ -3,9 +3,27 @@
 </template>
 <script setup>
 import * as echarts from 'echarts';
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, defineProps, watch, watchEffect, ref } from 'vue';
 import mittBus from '@/utils/mitt';
 import chinaMap from './china.json';
+const props = defineProps({
+  provinceRank: {
+    type: Array,
+    default: () => [],
+  },
+});
+let mapData = ref([]);
+let myChart = ref(null);
+const initMap = () => {
+  echarts.registerMap('china', chinaMap);
+  myChart = echarts.init(document.getElementById('chart-panel'));
+
+  myChart.setOption(option, true);
+  myChart.on('click', function (params) {
+    mittBus.emit('clickMap', params.name);
+    console.log(params);
+  });
+};
 const option = reactive({
   title: {
     text: '',
@@ -116,35 +134,21 @@ const option = reactive({
           borderWidth: 4,
         },
       },
-      data: [
-        { name: '四川', rank: 93.15, top: 18 },
-        { name: '西藏', rank: 92.26, top: 23 },
-      ],
+      data: mapData.value,
     },
   ],
 });
-const initMap = () => {
-  echarts.registerMap('china', chinaMap);
-  const chart = echarts.init(document.getElementById('chart-panel'));
-  chart.setOption(option);
-  chart.on('click', function (params) {
-    mittBus.emit('clickMap', params.data);
-    console.log(params);
-    // chart.setOption({
-    //   geo: {
-    //     regions: [
-    //       {
-    //         name: params.name,
-    //         itemStyle: {
-    //           areaColor: 'rgba(53, 115, 208,1)',
-    //           borderWidth: 40,
-    //         },
-    //       },
-    //     ],
-    //   },
-    // });
-  });
-};
+watch(
+  () => props.provinceRank,
+  val => {
+    // console.log('props', val);
+    mapData.value = val;
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
 onMounted(() => {
   initMap();
 });

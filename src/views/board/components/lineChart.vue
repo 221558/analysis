@@ -1,14 +1,10 @@
 <template>
   <!-- 动态id，避免for循环渲染失败 -->
-  <<<<<<< HEAD
   <div :id="`lineChart${props.name}`" style="width: 100%; height: 90%; border-radius: 10px"></div>
-  =======
-  <div :id="`lineChart${props.name}`" style="width: 100%; height: 120%"></div>
-  >>>>>>> 9574af8 (feat(board): 省、全国大屏(70%))
 </template>
 <script setup>
 import * as echarts from 'echarts';
-import { onMounted, defineProps } from 'vue';
+import { onMounted, defineProps, watch, ref, nextTick, reactive } from 'vue';
 const props = defineProps({
   title: {
     type: String,
@@ -22,11 +18,50 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  chartData: {
+    type: Object,
+    default: () => {},
+  },
 });
-onMounted(() => {
+/* 月份对照表 */
+const monthCode = reactive({
+  '01': '一月',
+  '02': '二月',
+  '03': '三月',
+  '04': '四月',
+  '05': '五月',
+  '06': '六月',
+  '07': '七月',
+  '08': '八月',
+  '09': '九月',
+  10: '十月',
+  11: '十一月',
+  12: '十二月',
+});
+const xData = ref([]);
+const yData = ref([]);
+watch(
+  () => props.chartData,
+  newVal => {
+    console.log('newVal', newVal);
+    xData.value = newVal.timeData.map(item => monthCode[item.split('-')[1]]);
+    yData.value = newVal.trendData;
+    nextTick(() => {
+      initChart();
+    });
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+let myChart = ref();
+const initChart = () => {
+  if (myChart.value) {
+    myChart.value.dispose(); // 销毁实例
+  }
   const chartDom = document.getElementById('lineChart' + props.name);
-  const myChart = echarts.init(chartDom);
-  const goToSchool = ['94', '93', '96.2', '95.1', '99.2', '96.3', '94'];
+  myChart.value = echarts.init(chartDom);
   const option = {
     grid: props.province
       ? {
@@ -49,6 +84,7 @@ onMounted(() => {
       },
     },
     tooltip: {
+      show: true,
       trigger: 'axis',
     },
     xAxis: [
@@ -76,15 +112,15 @@ onMounted(() => {
         axisTick: {
           show: false, // 不显示x轴底部的刻度线
         },
-        data: ['五月', '六月', '七月', '八月', '九月', '十月', '十一月'],
+        data: xData.value,
       },
     ],
     yAxis: [
       {
         name: '',
-        min: 90,
+        min: 50,
         max: 100,
-        interval: 2,
+        interval: 10,
         nameTextStyle: {
           color: '#7ec7ff',
           fontSize: 16,
@@ -156,13 +192,18 @@ onMounted(() => {
             // shadowBlur: 500, // shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
           },
         },
-        data: goToSchool,
+        data: yData.value,
       },
     ],
   };
   if (option && typeof option === 'object') {
-    myChart.setOption(option);
+    myChart.value.setOption(option);
   }
-  window.addEventListener('resize', myChart.resize);
+  window.addEventListener('resize', myChart.value.resize);
+};
+onMounted(() => {
+  nextTick(() => {
+    initChart();
+  });
 });
 </script>

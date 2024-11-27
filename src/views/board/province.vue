@@ -9,8 +9,8 @@
       <div class="user">
         <div class="time">{{ time }}</div>
         <div class="user_icon"></div>
-        <div>{{ '你好，admin' }}</div>
-        <div>{{ '退出' }}</div>
+        <div>{{ '你好,admin' }}</div>
+        <i></i>
       </div>
     </div>
     <div class="content">
@@ -20,39 +20,49 @@
           <div class="left_top_content">
             <div style="display: flex; justify-content: center; align-items: center">
               <div class="left_top_item num1">
-                <div class="item1">91.23</div>
+                <div class="item1"><span>No.</span>{{ busList[0].rank }}</div>
                 <div class="item2">综合指数</div>
-                <div class="item3">中国移动</div>
+                <div class="item3">{{ busList[0].indexName }}</div>
               </div>
             </div>
           </div>
         </div>
         <div class="left_btm">
           <Title title="综合业务趋势" />
-          <LineChart :title="'综合业务体验指数变化趋势'" />
+          <LineChart :title="'综合业务体验指数变化趋势'" :chartData="trandData[0]" />
         </div>
       </div>
       <div class="center">
-        <div class="time_select">
-          <span style="color: rgba(127, 223, 255); margin-right: 1vw; font-size: 14px"
+        <div class="time_select" ref="dropdownWrapper1" @click="showDropdown1 = !showDropdown1">
+          <span style="color: rgba(150, 210, 239, 0.8); margin-right: 1vw; font-size: 14px"
             >时间 |
           </span>
-          <span style="font-size: 18px">本月</span>
+          <span class="time_box">{{ params.fileTime }} <i></i></span>
+          <div v-show="showDropdown1" class="dropdown_content">
+            <div
+              v-for="item in timeList"
+              :key="item"
+              class="dropdown_item"
+              @click="timeChange(item)"
+            >
+              {{ item.label }}
+            </div>
+          </div>
         </div>
         <div class="business_types">
           <div
             class="business_item"
             :class="bgList[index]"
-            v-for="(item, index) in busList"
+            v-for="(item, index) in busList.slice(1)"
             :key="index"
           >
             <div class="detail">
               <div>
-                <div class="business_name">{{ item.name }}</div>
+                <div class="business_name">{{ busCode.slice(1)[index].label }}</div>
                 <div style="margin-top: 0.6vh">
                   综合指数
                   <span style="color: rgba(127, 223, 255); font-size: 28px; padding-left: 0.5vw">{{
-                    item.score
+                    item.experience
                   }}</span>
                 </div>
               </div>
@@ -80,9 +90,13 @@
         </div>
         <Title title="业务趋势" />
         <div class="business_lines">
-          <div v-for="(item, index) in busList" :key="index" :class="['business_lines_items']">
-            <div class="business_name">{{ item.name }}</div>
-            <LineChart :name="index + ''" :province="true" />
+          <div
+            v-for="(item, index) in trandData.slice(1)"
+            :key="index"
+            :class="['business_lines_items']"
+          >
+            <div class="business_name">{{ busCode.slice(1)[index].label }}</div>
+            <LineChart :name="index + ''" :province="true" :chartData="item" />
           </div>
         </div>
       </div>
@@ -95,15 +109,12 @@ import { getTime } from '@/utils/util';
 /* eslint-disable no-unused-vars */
 import Title from './components/title.vue';
 import LineChart from './components/lineChart.vue';
+import { timelist, provinces, trend, businesstypelist } from '@/api/board';
+
 const time = ref('');
-const busList = reactive([
-  { name: '网站业务', score: 91.23, rank: '12' },
-  { name: '网站(IDC)业务', score: 91.23, rank: '12' },
-  { name: '国际网站业务', score: 91.23, rank: '12' },
-  { name: '视频业务', score: 91.23, rank: '12' },
-  { name: '文件业务', score: 91.23, rank: '12' },
-  { name: '游戏业务', score: 91.23, rank: '12' },
-]);
+const dropdownWrapper1 = ref();
+const showDropdown1 = ref(false);
+const busList = ref([]);
 const bgList = reactive([
   'business1',
   'business2',
@@ -112,10 +123,50 @@ const bgList = reactive([
   'business5',
   'business6',
 ]);
-onMounted(() => {
+const handleClickOutside = event => {
+  if (dropdownWrapper1.value && !dropdownWrapper1.value.contains(event.target)) {
+    showDropdown1.value = false;
+  }
+};
+
+const busCode = ref([]);
+const businesstypelistApi = async () => {
+  const { data } = await businesstypelist();
+  busCode.value = data.data;
+};
+const params = reactive({
+  province: '北京',
+  fileTime: '',
+});
+const timeChange = async item => {
+  params.fileTime = item.value;
+  await provinceApi();
+  await trendApi();
+};
+const timeList = ref([]);
+const timelistApi = async () => {
+  const { data } = await timelist();
+  timeList.value = data.data.reverse();
+  params.fileTime = timeList.value[0].value;
+};
+const provinceApi = async () => {
+  const { data } = await provinces(params);
+  busList.value = data.data;
+};
+const trandData = ref([]);
+const trendApi = async () => {
+  const { data } = await trend();
+  trandData.value = data.data;
+};
+onMounted(async () => {
   setInterval(() => {
     time.value = getTime();
   }, 1000);
+  document.addEventListener('click', handleClickOutside);
+  await businesstypelistApi();
+  await timelistApi();
+  await provinceApi();
+  await trendApi();
 });
 </script>
 <style lang="scss" scoped>
@@ -156,13 +207,16 @@ onMounted(() => {
       font-weight: 600;
       background: url('/board/title_button.png') no-repeat center center;
       background-size: cover;
+      cursor: pointer;
     }
     .user {
       width: 23vw;
       height: 4vh;
       line-height: 3.3vh;
+      display: flex;
+      align-items: center;
       .time {
-        margin-right: 3vw;
+        margin-right: 3.5vw;
         letter-spacing: 0.06vw;
       }
       .user_icon {
@@ -170,6 +224,16 @@ onMounted(() => {
         height: 3vh;
         background: url('/board/admin.png') no-repeat center center;
         background-size: contain;
+      }
+      i {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 12px solid rgba(150, 210, 239, 0.8);
+        margin-left: 0.3vw;
+        cursor: pointer;
       }
     }
   }
@@ -198,16 +262,16 @@ onMounted(() => {
             color: white;
             .item1 {
               color: rgba(247, 219, 30, 1);
-              font-size: 32px;
-              margin: 15vh 0 0.6vh;
+              font-size: 60px;
+              margin: 14vh 0 0.6vh;
             }
             .item2 {
-              font-size: 12px;
+              font-size: 24px;
               letter-spacing: 0.1vw;
-              margin-bottom: 12.5vh;
+              margin-bottom: 10vh;
             }
             .item3 {
-              font-size: 26px;
+              font-size: 42px;
               letter-spacing: 0.1vw;
             }
           }
@@ -236,7 +300,6 @@ onMounted(() => {
       margin-left: 1vw;
       box-sizing: border-box;
       padding-top: 1vh;
-      padding-left: 1vw;
       padding-right: 2vw;
       .time_select {
         display: flex;
@@ -244,9 +307,43 @@ onMounted(() => {
         justify-content: center;
         width: 6.5vw;
         height: 3.5vh;
+        line-height: 3.5vh;
         color: white;
         background: url('/board/select_bg.png') no-repeat;
         background-size: cover;
+        position: relative;
+        cursor: pointer;
+        .dropdown_content {
+          position: absolute;
+          z-index: 999;
+          top: 4vh;
+          .dropdown_item {
+            margin-bottom: 0.5vh;
+            width: 6.5vw;
+            height: 3vh;
+            font-size: 18px;
+            line-height: 3vh;
+            text-align: center;
+            background: url('/board/select_item.png') no-repeat;
+            background-size: cover;
+            &:hover {
+              color: rgba(150, 210, 239, 0.8);
+            }
+          }
+        }
+        .time_box {
+          font-size: 18px;
+          i {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 12px solid rgba(150, 210, 239, 0.8);
+            margin-left: 0.1vw;
+            cursor: pointer;
+          }
+        }
       }
       .business_types {
         display: flex;
@@ -264,6 +361,7 @@ onMounted(() => {
             height: 4vh;
             display: flex;
             position: absolute;
+            justify-content: space-between;
             left: 7vw;
             top: 3vh;
             .business_name {

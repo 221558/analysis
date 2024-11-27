@@ -7,10 +7,10 @@
         <div class="title2">更多</div>
       </div>
       <div class="user">
-        <div class="time">{{ time }}</div>
+        <div class="time">{{ nowTime }}</div>
         <div class="user_icon"></div>
         <div>{{ '你好，admin' }}</div>
-        <div>{{ '退出' }}</div>
+        <i></i>
       </div>
     </div>
     <div class="content">
@@ -20,20 +20,28 @@
           <div class="left_top_content">
             <div style="display: flex; justify-content: center">
               <div class="left_top_item num1">
-                <div class="item1">91.23</div>
+                <div class="item1">{{ top3[0].experience }}</div>
                 <div class="item2">综合指数</div>
-                <div class="item3">中国移动</div>
+                <div class="item3">{{ top3[0].indexName }}</div>
               </div>
             </div>
             <div style="display: flex; justify-content: space-around; margin-top: 7vh">
-              <div class="left_top_item num2"></div>
-              <div class="left_top_item num3"></div>
+              <div class="left_top_item num2">
+                <div class="item1">{{ top3[1].experience }}</div>
+                <div class="item2">综合指数</div>
+                <div class="item3">{{ top3[1].indexName }}</div>
+              </div>
+              <div class="left_top_item num3">
+                <div class="item1">{{ top3[2].experience }}</div>
+                <div class="item2">综合指数</div>
+                <div class="item3">{{ top3[2].indexName }}</div>
+              </div>
             </div>
           </div>
         </div>
         <div class="left_btm">
           <Title title="业务趋势" />
-          <LineChart :title="'联通业务体验指数变化趋势'" />
+          <LineChart :title="'联通业务体验指数变化趋势'" :chartData="trendData[0]" />
         </div>
       </div>
       <div class="center">
@@ -51,38 +59,36 @@
                 class="dropdown_item"
                 @click="selectOption(item)"
               >
-                {{ item.name }}
+                {{ item.label }}
               </div>
             </div>
           </div>
-          <div class="business_type time_selection">
+          <div class="business_type" ref="dropdownWrapper1" @click="showDropdown1 = !showDropdown1">
             <span style="color: rgba(150, 210, 239, 0.8); font-size: 14px; padding-right: 1vw"
               >时间 |</span
-            ><span>{{ monthsCode[selectMonth.split('-')[1]] }} </span>
-            <div class="time_selection_input">
-              <el-date-picker
-                v-model="selectMonth"
-                type="month"
-                placeholder="Pick a month"
-                class="month_input"
-                popper-class="date_style"
-                @change="dateChange"
-                value-format="YYYY-MM"
-                :disabled-date="disabledDate"
-              />
+            ><span class="time_box">{{ params.fileTime }} <i></i></span>
+            <div v-show="showDropdown1" class="dropdown_content">
+              <div
+                v-for="item in timeList"
+                :key="item"
+                class="dropdown_item"
+                @click="timeChange(item)"
+              >
+                {{ item.label }}
+              </div>
             </div>
           </div>
         </div>
         <div class="map_box">
-          <china-map />
+          <china-map :provinceRank="provinceRank" />
           <div class="map_tooltip" v-show="isShowTooltip">
             <div class="map_tooltip_title">
-              {{ provinceDetail.name }}
+              {{ provinceDetail.indexName }}
             </div>
             <div class="map_tooltip_content">
-              <div class="map_tooltip_content_item">时间：{{ selectMonth }}</div>
-              <div class="map_tooltip_content_item">排名：{{ provinceDetail.top }}</div>
-              <div class="map_tooltip_content_item">体验指数：{{ provinceDetail.rank }}</div>
+              <div class="map_tooltip_content_item">时间：{{ provinceDetail.month }}</div>
+              <div class="map_tooltip_content_item">排名：{{ provinceDetail.rank }}</div>
+              <div class="map_tooltip_content_item">体验指数：{{ provinceDetail.experience }}</div>
             </div>
           </div>
         </div>
@@ -95,27 +101,29 @@
             <span>省份</span>
             <span>体验指数</span>
           </div>
-          <div class="scroll-content">
-            <!-- <vue3-seamless-scroll
+          <div class="scroll-content" v-if="provinceShow">
+            <vue3-seamless-scroll
               class="scroll-list"
-              :list="list"
+              :list="provinceRank"
               :hover="true"
               :step="0.5"
               :wheel="true"
               :isWatch="true"
-              limitScrollNum="5"
+              :limitScrollNum="5"
             >
               <div
-                v-for="(item, index) in list"
+                v-for="(item, index) in provinceRank"
                 :key="index"
                 :class="['scroll-item', index % 2 == 0 ? 'item1' : 'item2']"
               >
                 <span :class="getTop(index)" v-if="index < 3"></span>
-                <span>{{ index + 1 }}</span>
-                <span>{{ item.title }}</span>
-                <span>{{ item.date }}</span>
+                <span style="display: inline-block; width: 1vw; text-align: center">{{
+                  item.rank
+                }}</span>
+                <span>{{ item.indexName }}</span>
+                <span>{{ item.experience }}</span>
               </div>
-            </vue3-seamless-scroll> -->
+            </vue3-seamless-scroll>
           </div>
         </div>
       </div>
@@ -124,7 +132,7 @@
 </template>
 <script setup>
 import ChinaMap from './components/chinaMap.vue';
-import { ref, onMounted, reactive, onUnmounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, reactive, onUnmounted, onBeforeUnmount, toRefs } from 'vue';
 import mittBus from '@/utils/mitt';
 import { getTime } from '@/utils/util';
 /* eslint-disable no-unused-vars */
@@ -133,53 +141,45 @@ import Title from './components/title.vue';
 import LineChart from './components/lineChart.vue';
 /* eslint-disable no-unused-vars */
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll';
-const list = ref([]);
-const time = ref('');
+import dayjs from 'dayjs';
+import { operators, businesses, trend, timelist, businesstypelist } from '@/api/board';
+const nowTime = ref('');
 const dropdownWrapper = ref(null);
+const dropdownWrapper1 = ref(null);
 const showDropdown = ref(false);
-const selectedOption = ref('综合业务');
-const selectMonth = ref('2024-11');
-const monthsCode = ref({
-  '01': '一月',
-  '02': '二月',
-  '03': '三月',
-  '04': '四月',
-  '05': '五月',
-  '06': '六月',
-  '07': '七月',
-  '08': '八月',
-  '09': '九月',
-  10: '十月',
-  11: '十一月',
-  12: '十二月',
-});
-const provinceDetail = ref('');
+const showDropdown1 = ref(false);
+const selectedOption = ref(); //业务类型展示
+const provinceDetail = ref({});
+const provinceShow = ref(false);
 const isShowTooltip = ref(false); // 省份弹框显示
-const disabledDate = time => {
-  return time.getTime() > Date.now(); //禁止选择今天以后的时间
-  //return time.getTime() < Date.now() - 8.64e7;//禁止选择今天以前的时间
-};
 const selectOption = item => {
-  selectedOption.value = item.name;
+  selectedOption.value = item.label;
+  params.businessType = item.value;
   showDropdown.value = false;
+  operatorsApi();
+  businessesApi();
+  trendApi();
 };
 const handleClickOutside = event => {
   if (dropdownWrapper.value && !dropdownWrapper.value.contains(event.target)) {
     showDropdown.value = false;
   }
+  if (dropdownWrapper1.value && !dropdownWrapper1.value.contains(event.target)) {
+    showDropdown1.value = false;
+  }
 };
-const dateChange = value => {
-  console.log('value', value);
+const timeChange = item => {
+  params.fileTime = item.value;
+  operatorsApi();
+  businessesApi();
+  trendApi();
 };
-const businessList = ref([
-  { name: '综合业务1', value: 1 },
-  { name: '综合业务2', value: 1 },
-  { name: '综合业务3', value: 1 },
-  { name: '综合业务4', value: 1 },
-  { name: '综合业务6', value: 1 },
-  { name: '综合业务6', value: 1 },
-  { name: '综合业务6', value: 1 },
-]);
+const businessList = ref([]);
+const businesstypelistApi = async () => {
+  const { data } = await businesstypelist();
+  businessList.value = data.data;
+  selectedOption.value = businessList.value[0].label;
+};
 /* eslint-disable no-unused-vars */
 const getTop = index => {
   switch (index) {
@@ -192,26 +192,54 @@ const getTop = index => {
   }
 };
 const provinceInfo = e => {
-  if (e) {
+  console.log('e', e);
+  let aa = provinceRank.value.find(item => item.indexName === e);
+  if (aa) {
     isShowTooltip.value = true;
-    provinceDetail.value = e;
-    console.log('省份信息', e);
+    provinceDetail.value = aa;
   } else {
     isShowTooltip.value = false;
   }
 };
-onMounted(() => {
+const params = reactive({
+  businessType: '1', //业务类型
+  fileTime: '2024-01', //时间
+});
+const top3 = ref([]); //全国综合指数前三
+const operatorsApi = async () => {
+  const { data } = await operators(params);
+  top3.value = data.data;
+};
+const provinceRank = ref([]); // 省份排名
+const businessesApi = async () => {
+  provinceShow.value = false;
+  const { data } = await businesses(params);
+  provinceRank.value = data.data;
+  provinceShow.value = true;
+};
+const trendData = ref([]); // 趋势
+const trendApi = async () => {
+  const { data } = await trend(params);
+  trendData.value = data.data;
+};
+const timeList = ref([]);
+const timelistApi = async () => {
+  const { data } = await timelist();
+  timeList.value = data.data.reverse();
+  params.fileTime = timeList.value[0].value;
+};
+onMounted(async () => {
+  setInterval(() => {
+    nowTime.value = getTime();
+  }, 1000);
+
   mittBus.on('clickMap', provinceInfo);
   document.addEventListener('click', handleClickOutside);
-  for (let i = 0; i < 34; i++) {
-    list.value.push({
-      title: `Vue3.0 无缝滚动组件展示数据第${i + 1}条`,
-      date: `${i + 50}`,
-    });
-  }
-  setInterval(() => {
-    time.value = getTime();
-  }, 1000);
+  await businesstypelistApi();
+  await timelistApi();
+  operatorsApi();
+  businessesApi();
+  trendApi();
 });
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside);
@@ -242,7 +270,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  padding: 0 1vw;
+  padding: 0 1.4vw;
   color: rgba(150, 210, 239, 0.8);
   font-size: 18px;
   position: relative;
@@ -344,13 +372,17 @@ onBeforeUnmount(() => {
       font-weight: 600;
       background: url('/board/title_button.png') no-repeat center center;
       background-size: cover;
+      cursor: pointer;
     }
     .user {
       width: 23vw;
       height: 4vh;
-      line-height: 3.3vh;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      padding-bottom: 0.2vh;
       .time {
-        margin-right: 3vw;
+        margin-right: 3.5vw;
         letter-spacing: 0.06vw;
       }
       .user_icon {
@@ -358,6 +390,16 @@ onBeforeUnmount(() => {
         height: 3vh;
         background: url('/board/admin.png') no-repeat center center;
         background-size: contain;
+      }
+      i {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 12px solid rgba(150, 210, 239, 0.8);
+        margin-left: 0.3vw;
+        cursor: pointer;
       }
     }
   }
@@ -387,7 +429,7 @@ onBeforeUnmount(() => {
             .item1 {
               color: rgba(247, 219, 30, 1);
               font-size: 32px;
-              margin: 4vh 0 0.6vh;
+              margin: 4vh 0 0.1vh;
             }
             .item2 {
               font-size: 12px;
@@ -432,9 +474,9 @@ onBeforeUnmount(() => {
         display: flex;
         padding: 1vh 0 0 1vw;
         .business_type {
-          width: 9vw;
-          height: 5vh;
-          line-height: 5vh;
+          width: 7vw;
+          height: 4vh;
+          line-height: 4vh;
           font-size: 18px;
           color: white;
           text-align: center;
@@ -446,18 +488,29 @@ onBeforeUnmount(() => {
           .dropdown_content {
             position: absolute;
             z-index: 999;
-            top: 5.2vh;
+            top: 4.5vh;
             .dropdown_item {
               margin-bottom: 0.3vh;
-              width: 9.2vw;
-              height: 4vh;
-              font-size: 16px;
-              line-height: 4vh;
+              width: 7vw;
+              height: 3vh;
+              font-size: 18px;
+              line-height: 3vh;
               background: url('/board/select_item.png') no-repeat;
               background-size: cover;
               &:hover {
                 color: rgba(150, 210, 239, 0.8);
               }
+            }
+          }
+          .time_box {
+            i {
+              display: inline-block;
+              width: 0;
+              height: 0;
+              border-left: 10px solid transparent;
+              border-right: 10px solid transparent;
+              border-top: 12px solid rgba(150, 210, 239, 0.8);
+              margin-left: 0.1vw;
             }
           }
         }
@@ -499,11 +552,12 @@ onBeforeUnmount(() => {
           background: url('/board/province_tip.png') no-repeat;
           background-size: contain;
           .map_tooltip_title {
+            font-size: 18px;
             text-align: center;
             padding: 1.5vh 0 0 1vw;
           }
           .map_tooltip_content {
-            padding: 1vh 0 0 2vw;
+            padding: 1.5vh 0 0 2vw;
           }
           .map_tooltip_content_item {
             margin: 1vh 0;
