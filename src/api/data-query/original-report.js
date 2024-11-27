@@ -8,9 +8,8 @@ export const getUploadRecords = params => {
   });
 };
 
-// 查看
-
-export const getViewDetails = params => {
+// 查看  下载文件
+export const getDownloadFile = params => {
   return request({
     url: '/analysis-system/data-table/upload-records/download',
     method: 'get',
