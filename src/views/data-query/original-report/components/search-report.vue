@@ -26,6 +26,7 @@
 // 导入reactive函数
 import { reactive, defineEmits, defineProps, computed } from 'vue';
 import { ElMessage } from 'element-plus';
+import { getDownloadFile } from '@/api/data-query/original-report';
 // 导入getToken方法，用于获取token
 import { getToken } from 'utils/auth';
 const emit = defineEmits(['getSearch']);
@@ -67,10 +68,33 @@ const getDownload = () => {
   if (props.selectionList.length === 0) {
     return ElMessage.warning('请选择至少一条数据');
   }
-  const url = `/api/analysis-system/data-table/upload-records/download?blade-auth=${getToken()}&recordIds=${
-    ids.value
-  }`;
-  window.open(url, '_self');
+
+  getDownloadFile({ recordIds: ids.value }).then(res => {
+    // 如果返回的状态码为200
+    if (res.status == 200) {
+      // 创建一个Blob对象，将返回的数据作为参数传入
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      // 创建一个a标签
+      const link = document.createElement('a');
+      // 设置a标签的样式为不显示
+      link.style.display = 'none';
+      // 设置a标签的href属性为Blob对象的URL
+      link.href = url;
+      // 设置a标签的download属性为row对象的deviceFileName属性
+      link.setAttribute('download', '信通院报表数据.xlsx');
+      // 将a标签添加到body中
+      document.body.appendChild(link);
+      // 模拟点击a标签，触发下载
+      link.click();
+      // 将a标签从body中移除
+      document.body.removeChild(link);
+      // 释放Blob对象的URL
+      window.URL.revokeObjectURL(link.href);
+    } else {
+      // 如果返回的状态码不为200，则弹出错误提示
+      ElMessage.error('下载失败，请稍后再试。');
+    }
+  });
 };
 </script>
 
