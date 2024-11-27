@@ -28,13 +28,6 @@ export default ({ mode, command }) => {
           // 重写请求路径，移除'/api'前缀
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
-        '/upload': {
-          target: VITE_APP_BASE_URL,
-          // 修改请求头，使Origin看起来像是从目标服务器发出的请求
-          changeOrigin: true,
-          // 重写请求路径，移除'/api'前缀
-          rewrite: (path) => path.replace(/^\/upload/, ''),
-        },
       },
     },
     // 配置路径解析

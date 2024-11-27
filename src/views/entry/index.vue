@@ -182,7 +182,7 @@ function beforeUpload(file) {
   const { VITE_APP_BASE_URL, MODE } = import.meta.env
   console.log(import.meta.env)
   // 定义api前缀
-  let apiPrefix = '/upload'
+  let apiPrefix = '/api'
   if (MODE !== 'development') {
     apiPrefix = VITE_APP_BASE_URL
   }
