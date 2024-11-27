@@ -47,7 +47,7 @@ import VueOfficeExcel from '@vue-office/excel';
 import topFull from '@/page/index/top/top-full.vue';
 //引入相关样式
 import '@vue-office/excel/lib/index.css';
-import { getViewDetails } from '@/api/data-query/original-report';
+import { getDownloadFile } from '@/api/data-query/original-report';
 // 引入mixin
 import { useMixins } from '@/mixins/data.js';
 // 导入getToken方法，用于获取token
@@ -60,7 +60,7 @@ const excel = ref(null);
 
 onMounted(() => {
   // 获取文件信息
-  getViewDetails({ recordIds: objcet.id }).then(res => {
+  getDownloadFile({ recordIds: objcet.id }).then(res => {
     console.log(res.data);
     const blob = new Blob([res.data], { type: res.headers['content-type'] });
     excel.value = URL.createObjectURL(blob);
@@ -73,10 +73,32 @@ const getReturn = () => {
 
 // 下载按钮点击事件
 const getDownload = () => {
-  const url = `/api/analysis-system/data-table/upload-records/download?blade-auth=${getToken()}&recordIds=${
-    objcet.id
-  }`;
-  window.open(url, '_self');
+  getDownloadFile({ recordIds: objcet.id }).then(res => {
+    // 如果返回的状态码为200
+    if (res.status == 200) {
+      // 创建一个Blob对象，将返回的数据作为参数传入
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      // 创建一个a标签
+      const link = document.createElement('a');
+      // 设置a标签的样式为不显示
+      link.style.display = 'none';
+      // 设置a标签的href属性为Blob对象的URL
+      link.href = url;
+      // 设置a标签的download属性为row对象的deviceFileName属性
+      link.setAttribute('download', objcet.sheetName + objcet.fileTime + '.xlsx');
+      // 将a标签添加到body中
+      document.body.appendChild(link);
+      // 模拟点击a标签，触发下载
+      link.click();
+      // 将a标签从body中移除
+      document.body.removeChild(link);
+      // 释放Blob对象的URL
+      window.URL.revokeObjectURL(link.href);
+    } else {
+      // 如果返回的状态码不为200，则弹出错误提示
+      ElMessage.error('下载失败，请稍后再试。');
+    }
+  });
 };
 
 const renderedHandler = () => {
