@@ -55,13 +55,13 @@ watch(
     deep: true,
   }
 );
-let myChart = ref();
+let myChart; // 设为常量，避免响应式丢失导致tooltip不显示
 const initChart = () => {
-  if (myChart.value) {
-    myChart.value.dispose(); // 销毁实例
+  if (myChart) {
+    myChart.dispose(); // 销毁实例
   }
   const chartDom = document.getElementById('lineChart' + props.name);
-  myChart.value = echarts.init(chartDom);
+  myChart = echarts.init(chartDom);
   const option = {
     grid: props.province
       ? {
@@ -197,9 +197,9 @@ const initChart = () => {
     ],
   };
   if (option && typeof option === 'object') {
-    myChart.value.setOption(option);
+    myChart.setOption(option);
   }
-  window.addEventListener('resize', myChart.value.resize);
+  window.addEventListener('resize', myChart.resize);
 };
 onMounted(() => {
   nextTick(() => {

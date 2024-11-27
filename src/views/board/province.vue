@@ -266,7 +266,7 @@ onMounted(async () => {
               margin: 14vh 0 0.6vh;
             }
             .item2 {
-              font-size: 24px;
+              font-size: 18px;
               letter-spacing: 0.1vw;
               margin-bottom: 10vh;
             }
