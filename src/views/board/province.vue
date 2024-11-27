@@ -3,14 +3,27 @@
     <div class="header">
       <div class="title">
         <div class="title1">网页质量多维分析系统</div>
-        <div class="title2">主页</div>
+        <div class="title2" @click="$router.push('/')">主页</div>
         <div class="title2">更多</div>
       </div>
       <div class="user">
         <div class="time">{{ time }}</div>
         <div class="user_icon"></div>
         <div>{{ '你好,admin' }}</div>
-        <i></i>
+        <el-dropdown>
+          <i></i>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <!-- <el-dropdown-item @click="$router.push('/')">
+                {{ $t('navbar.dashboard') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click="$router.push('/info/index')">
+                {{ $t('navbar.userinfo') }}
+              </el-dropdown-item> -->
+              <el-dropdown-item @click="logout" divided>{{ $t('navbar.logOut') }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
     <div class="content">
@@ -104,7 +117,8 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+// import { ElMessageBox, ElMessage } from 'element-plus';
+import { ref, reactive, onMounted, getCurrentInstance } from 'vue';
 import { getTime } from '@/utils/util';
 /* eslint-disable no-unused-vars */
 import Title from './components/title.vue';
@@ -123,6 +137,32 @@ const bgList = reactive([
   'business5',
   'business6',
 ]);
+const { proxy } = getCurrentInstance();
+const _this = proxy;
+
+const logout = () => {
+  _this
+    .$confirm(_this.$t('logoutTip'), '提示', {
+      confirmButtonText: _this.$t('submitText'),
+      cancelButtonText: _this.$t('cancelText'),
+      type: 'warning',
+    })
+    .then(() => {
+      _this.$store.dispatch('LogOut').then(() => {
+        _this.$router.push({ path: '/login' });
+      });
+    });
+  // ElMessageBox.confirm('退出系统，是否继续？', '提示', {
+  //   confirmButtonText: '确定',
+  //   cancelButtonText: '取消',
+  //   type: 'warning',
+  // }).then(() => {
+  //   ElMessage({
+  //     type: 'success',
+  //     message: 'Delete completed',
+  //   });
+  // });
+};
 const handleClickOutside = event => {
   if (dropdownWrapper1.value && !dropdownWrapper1.value.contains(event.target)) {
     showDropdown1.value = false;

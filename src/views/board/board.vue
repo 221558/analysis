@@ -3,14 +3,28 @@
     <div class="header">
       <div class="title">
         <div class="title1">网页质量多维分析系统</div>
-        <div class="title2">主页</div>
+        <div class="title2" @click="$router.push('/')">主页</div>
         <div class="title2">更多</div>
       </div>
       <div class="user">
         <div class="time">{{ nowTime }}</div>
         <div class="user_icon"></div>
         <div>{{ '你好，admin' }}</div>
-        <i></i>
+        <!-- <i></i> -->
+        <el-dropdown>
+          <i></i>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <!-- <el-dropdown-item @click="$router.push('/')">
+                {{ $t('navbar.dashboard') }}
+              </el-dropdown-item>
+              <el-dropdown-item @click="$router.push('/info/index')">
+                {{ $t('navbar.userinfo') }}
+              </el-dropdown-item> -->
+              <el-dropdown-item @click="logout" divided>{{ $t('navbar.logOut') }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
     <div class="content">
@@ -132,7 +146,15 @@
 </template>
 <script setup>
 import ChinaMap from './components/chinaMap.vue';
-import { ref, onMounted, reactive, onUnmounted, onBeforeUnmount, toRefs } from 'vue';
+import {
+  ref,
+  onMounted,
+  reactive,
+  onUnmounted,
+  onBeforeUnmount,
+  toRefs,
+  getCurrentInstance,
+} from 'vue';
 import mittBus from '@/utils/mitt';
 import { getTime } from '@/utils/util';
 /* eslint-disable no-unused-vars */
@@ -152,6 +174,23 @@ const selectedOption = ref(); //业务类型展示
 const provinceDetail = ref({});
 const provinceShow = ref(false);
 const isShowTooltip = ref(false); // 省份弹框显示
+
+const { proxy } = getCurrentInstance();
+const _this = proxy;
+
+const logout = () => {
+  _this
+    .$confirm(_this.$t('logoutTip'), '提示', {
+      confirmButtonText: _this.$t('submitText'),
+      cancelButtonText: _this.$t('cancelText'),
+      type: 'warning',
+    })
+    .then(() => {
+      _this.$store.dispatch('LogOut').then(() => {
+        _this.$router.push({ path: '/login' });
+      });
+    });
+};
 const selectOption = item => {
   selectedOption.value = item.label;
   params.businessType = item.value;
