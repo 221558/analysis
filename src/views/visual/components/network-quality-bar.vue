@@ -2,69 +2,97 @@
   <div class="chart-box">
     <!-- 省间互访时延排名（IPv4） -->
     <div class="border">
+      <!-- 头部 -->
       <el-row class="headers">
+        <!-- 左侧标题 -->
         <el-col :span="8">
           <div class="title">省间互访时延排名（IPv4）</div>
         </el-col>
-        <el-col :span="16" class="flex-center">
-          <el-form-item class="search" label="时间选择">
-            <el-date-picker v-model="value2" type="month" placeholder="选择月份" />
-            <span class="detail">详情</span>
+        <!-- 右侧搜索框 -->
+        <el-col :span="16">
+          <el-form class="form" :inline="true" :model="formInline">
+            <el-form-item label="时间选择">
+              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+            </el-form-item>
+            <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
-          </el-form-item>
+          </el-form>
         </el-col>
       </el-row>
+      <!-- 体验指数排名图表 -->
       <div ref="delayIpv4" style="height: 350px" />
     </div>
-
     <!-- 省间互访时延排名（IPv6） -->
     <div class="border">
+      <!-- 头部 -->
       <el-row class="headers">
-        <el-col :span="10">
+        <!-- 左侧标题 -->
+        <el-col :span="8">
           <div class="title">省间互访时延排名（IPv6）</div>
         </el-col>
-        <el-col :span="14" class="flex-center">
-          <el-form-item class="search" label="时间选择">
-            <el-date-picker v-model="value2" type="month" placeholder="选择月份" />
-            <span class="detail">详情</span>
+        <!-- 右侧搜索框 -->
+        <el-col :span="16">
+          <el-form class="form" :inline="true" :model="formInline">
+            <el-form-item label="时间选择">
+              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+            </el-form-item>
+            <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
-          </el-form-item>
+          </el-form>
         </el-col>
       </el-row>
+      <!-- 体验指数排名图表 -->
       <div ref="delayIpv6" style="height: 350px" />
     </div>
-
     <!-- 省间互访丢包排名（IPv4） -->
     <div class="border">
+      <!-- 头部 -->
       <el-row class="headers">
-        <el-col :span="10">
+        <!-- 左侧标题 -->
+        <el-col :span="8">
           <div class="title">省间互访丢包排名（IPv4）</div>
         </el-col>
-        <el-col :span="14" class="flex-center">
-          <el-form-item class="search" label="时间选择">
-            <el-date-picker v-model="value2" type="month" placeholder="选择月份" />
-            <span class="detail">详情</span>
+        <!-- 右侧搜索框 -->
+        <el-col :span="16">
+          <el-form class="form" :inline="true" :model="formInline">
+            <el-form-item label="时间选择">
+              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+            </el-form-item>
+            <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
-          </el-form-item>
+          </el-form>
         </el-col>
       </el-row>
+      <!-- 体验指数排名图表 -->
       <div ref="loserIpv4" style="height: 350px" />
     </div>
 
     <!-- 省间互访丢包排名（IPv6） -->
     <div class="border">
+      <!-- 头部 -->
       <el-row class="headers">
-        <el-col :span="10">
+        <!-- 左侧标题 -->
+        <el-col :span="8">
           <div class="title">省间互访丢包排名（IPv6）</div>
         </el-col>
-        <el-col :span="14" class="flex-center">
-          <el-form-item class="search" label="时间选择">
-            <el-date-picker v-model="value2" type="month" placeholder="选择月份" />
-            <span class="detail">详情</span>
+        <!-- 右侧搜索框 -->
+        <el-col :span="16">
+          <el-form class="form" :inline="true" :model="formInline">
+            <el-form-item label="省份">
+              <el-select style="width: 120px" v-model="formInline.region" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="时间选择">
+              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+            </el-form-item>
+            <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
-          </el-form-item>
+          </el-form>
         </el-col>
       </el-row>
+      <!-- 体验指数排名图表 -->
       <div ref="loserIpv6" style="height: 350px" />
     </div>
   </div>
@@ -85,12 +113,17 @@ const loserIpv4 = ref(null);
 const loserIpv6 = ref(null);
 // 定义一个响应式变量，用于存储输入框的值
 const value2 = ref('');
+const formInline = ref({
+  user: '',
+  region: '',
+});
 
 // 定义一个函数，用于生成一个1到100之间的随机整数
 const getRandomValue = () => {
   // 生成一个1到100之间的随机整数
   return Math.floor(Math.random() * 100) + 1;
 };
+
 const data = [
   { label: '北京', value: getRandomValue() },
   { label: '天津', value: getRandomValue() },
@@ -162,6 +195,15 @@ const handleData = (data, ref) => {
   let myChart = echarts.init(ref, null, { renderer: 'canvas', useDirtyRect: false });
   // 定义图表的配置项
   let option = {
+    color: ['#5087ec'],
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: params => {
+        const data = params[0];
+        return `${data.name} <br> ${data.marker}${data.seriesName} \u00A0${data.value}ms`;
+      },
+    },
     // 设置图表的网格
     grid: { top: '10%', left: '1%', right: '1%', bottom: '5%', containLabel: true },
     // 设置x轴
@@ -175,15 +217,25 @@ const handleData = (data, ref) => {
       },
     },
     // 设置y轴
-    yAxis: { type: 'value' },
+    yAxis: {
+      type: 'value',
+      // 在每个值后面加上单位 "ms"
+      axisLabel: { formatter: '{value}ms' },
+    },
     // 设置图表的系列
     series: [
       {
+        name: '数据',
         data: values,
         type: 'bar',
         barWidth: 20,
         barCategoryGap: 10, // 缩小柱状图之间的间距
-        label: { show: true, position: 'top', color: '#909399' },
+        label: {
+          show: true,
+          position: 'top',
+          color: '#5087ec',
+          formatter: params => params.data + 'ms',
+        },
       },
     ],
   };
@@ -194,89 +246,11 @@ const handleData = (data, ref) => {
   // 监听窗口大小变化事件，当窗口大小变化时，重新调整图表大小
   window.addEventListener('resize', myChart.resize);
 };
-
 const handleClick = (tab, event) => {
   console.log(tab, event);
 };
 </script>
 <style lang="scss" scoped>
-:deep(.el-form-item__label) {
-  // 设置高度为40px，并且强制应用
-  height: 40px !important;
-  // 设置行高为40px，并且强制应用
-  line-height: 40px !important;
-}
-.chart-box {
-  // 设置背景颜色为白色
-  background-color: #fff;
-  // 设置内边距为15px
-  padding: 15px;
-  // 设置左下角圆角半径为5px
-  border-bottom-left-radius: 5px;
-  // 设置右下角圆角半径为5px
-  border-bottom-right-radius: 5px;
-  .border {
-    /* 设置边框样式为1像素实线，颜色为#ebedf0 */
-    border: 1px solid #ebedf0;
-    /* 设置边框圆角为5像素 */
-    border-radius: 5px;
-    /* 设置底部外边距为15像素 */
-    margin-bottom: 15px;
-    .headers {
-      // 设置内边距
-      padding: 0 10px;
-      // 设置高度
-      height: 40px;
-      // 设置行高
-      line-height: 40px;
-      // 设置背景颜色
-      background-color: #ebedf0;
-      // 设置左上角圆角
-      border-top-left-radius: 5px;
-      // 设置右上角圆角
-      border-top-right-radius: 5px;
-      .title {
-        // 设置标题字体粗细为500
-        font-weight: 500;
-      }
-      .el-col {
-        // 设置el-col的margin为0
-        margin: 0;
-      }
-      .flex-center {
-        // 设置高度为40px
-        height: 40px;
-        // 设置行高为40px
-        line-height: 40px;
-        // 设置定位为相对定位
-        position: relative;
-        .el-form-item {
-          // 设置外边距为0
-          margin: 0;
-        }
-        .search {
-          // 设置宽度为400px
-          width: 400px;
-          // 设置定位方式为绝对定位
-          position: absolute;
-          // 设置顶部距离为0
-          top: 0;
-          // 设置右侧距离为0
-          right: 0;
-          .detail {
-            // 设置左边距为20px
-            margin-left: 20px;
-          }
-          .icon,
-          .detail {
-            // 设置字体颜色为蓝色
-            color: #409eff;
-            /* 设置鼠标悬停时为手型 */
-            cursor: pointer;
-          }
-        }
-      }
-    }
-  }
-}
+// 导入样式文件
+@import '@/styles/bar-line.scss';
 </style>

@@ -1,0 +1,59 @@
+:deep(.el-form-item) {
+  margin-bottom: 0;
+  .el-input {
+    width: 120px;
+  }
+}
+
+.chart-box {
+  // 设置背景颜色为白色
+  background-color: #fff;
+  // 设置内边距为15px
+  padding: 15px;
+  // 设置左下角圆角半径为5px
+  border-bottom-left-radius: 5px;
+  // 设置右下角圆角半径为5px
+  border-bottom-right-radius: 5px;
+  .border {
+    /* 设置边框样式为1像素实线，颜色为#ebedf0 */
+    border: 1px solid #ebedf0;
+    /* 设置边框圆角为5像素 */
+    border-radius: 5px;
+    /* 设置底部外边距为15像素 */
+    margin-bottom: 15px;
+    .headers {
+      // 设置内边距
+      padding: 0 10px;
+      // 设置高度
+      min-height: 40px !important;
+      line-height: 39px !important;
+      // 设置背景颜色
+      background-color: #ebedf0;
+      // 设置左上角圆角
+      border-top-left-radius: 5px;
+      // 设置右上角圆角
+      border-top-right-radius: 5px;
+      .title {
+        // 设置标题字体粗细为500
+        font-weight: 500;
+        height: 100%;
+      }
+      .el-col {
+        // 设置el-col的margin为0
+        margin: 0;
+      }
+      .form {
+        margin-right: 40px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .detail,
+        .icon {
+          font-size: 14px;
+          color: #259eff;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
