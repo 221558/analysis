@@ -33,6 +33,15 @@ export const fetchTypeList = params => {
   })
 }
 
+// 省份列表
+export const fetchAreaList = params => {
+  return request({
+    url: '/analysis-system/condition/province-list',
+    method: 'get',
+    params
+  })
+}
+
 // 根据类型查询对应的业务下拉框
 export const fetchBusinessList = params => {
   return request({
