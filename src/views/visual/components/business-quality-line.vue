@@ -5,11 +5,11 @@
       <!-- 头部 -->
       <el-row class="headers">
         <!-- 左侧标题 -->
-        <el-col :span="8">
+        <el-col :span="4">
           <div class="title">业务体验指数排名</div>
         </el-col>
         <!-- 右侧搜索框 -->
-        <el-col :span="16">
+        <el-col :span="20">
           <el-form class="form" :inline="true" :model="formInline">
             <el-form-item label="省份">
               <el-select style="width: 120px" v-model="formInline.region" placeholder="活动区域">

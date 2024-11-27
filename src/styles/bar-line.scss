@@ -4,6 +4,12 @@
     width: 120px;
   }
 }
+:deep(.el-date-editor) {
+  width: 200px;
+  input {
+    width: 70px;
+  }
+}
 
 .chart-box {
   // 设置背景颜色为白色
@@ -43,7 +49,6 @@
         margin: 0;
       }
       .form {
-        margin-right: 40px;
         display: flex;
         justify-content: flex-end;
         align-items: center;

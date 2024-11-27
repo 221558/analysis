@@ -5,11 +5,11 @@
       <!-- 头部 -->
       <el-row class="headers">
         <!-- 左侧标题 -->
-        <el-col :span="8">
+        <el-col :span="6">
           <div class="title">省间互访时延排名（IPv4）</div>
         </el-col>
         <!-- 右侧搜索框 -->
-        <el-col :span="16">
+        <el-col :span="18">
           <el-form class="form" :inline="true" :model="formInline">
             <el-form-item label="时间选择">
               <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
@@ -27,11 +27,11 @@
       <!-- 头部 -->
       <el-row class="headers">
         <!-- 左侧标题 -->
-        <el-col :span="8">
+        <el-col :span="6">
           <div class="title">省间互访时延排名（IPv6）</div>
         </el-col>
         <!-- 右侧搜索框 -->
-        <el-col :span="16">
+        <el-col :span="18">
           <el-form class="form" :inline="true" :model="formInline">
             <el-form-item label="时间选择">
               <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
@@ -49,11 +49,11 @@
       <!-- 头部 -->
       <el-row class="headers">
         <!-- 左侧标题 -->
-        <el-col :span="8">
+        <el-col :span="6">
           <div class="title">省间互访丢包排名（IPv4）</div>
         </el-col>
         <!-- 右侧搜索框 -->
-        <el-col :span="16">
+        <el-col :span="18">
           <el-form class="form" :inline="true" :model="formInline">
             <el-form-item label="时间选择">
               <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
@@ -72,11 +72,11 @@
       <!-- 头部 -->
       <el-row class="headers">
         <!-- 左侧标题 -->
-        <el-col :span="8">
+        <el-col :span="6">
           <div class="title">省间互访丢包排名（IPv6）</div>
         </el-col>
         <!-- 右侧搜索框 -->
-        <el-col :span="16">
+        <el-col :span="18">
           <el-form class="form" :inline="true" :model="formInline">
             <el-form-item label="省份">
               <el-select style="width: 120px" v-model="formInline.region" placeholder="活动区域">
