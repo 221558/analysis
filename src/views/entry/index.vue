@@ -55,7 +55,7 @@
 <script setup>
 import BasicTitle from '@/components/basic-title/main.vue'
 import { ref } from 'vue'
-import { dataDownload, deleteUploadRecord, getUploadRecords } from '@/api/entry'
+import { dataDownload, deleteUploadRecord, getFileTypeList, getUploadRecords } from '@/api/entry'
 import { ElMessage } from 'element-plus'
 
 const option = ref({})
@@ -89,16 +89,22 @@ option.value = {
       label: '上传数据',
       prop: 'filetype',
       type: 'select',
-      dicData: [
-        { label: '信通院报表数据', value: '1' },
-        { label: '信通院原始数据', value: '2' },
-        { label: '5k指标数据', value: '3' },
-      ],
+      dicData: [],
       span: 4,
       row: true,
     },
   ]
 }
+
+// 获取搜索条件数据
+const getFormFiles = () => {
+  getFileTypeList().then(res => {
+    option.value.column[1].dicData = res.data.data
+  }).catch(err => {
+    console.log(err)
+  })
+}
+getFormFiles()
 
 // 表格分页信息
 const page = ref({
@@ -143,27 +149,6 @@ const currentChange = val => {
 
 // 获取表格数据
 function onLoad(pages) {
-  /* tableData.value = [
-    {
-      id: 1,
-      month1: '2021-01',
-      select1: '0',
-      imgUrl: 'https://www.baidu.com/img/flexible/logo/pc/result.png',
-    },
-    {
-      id: 2,
-      month1: '2021-02',
-      select1: '1',
-      imgUrl: 'https://www.baidu.com/img/flexible/logo/pc/result.png',
-    },
-    {
-      id: 3,
-      month1: '2021-03',
-      select1: '2',
-      imgUrl: 'https://www.baidu.com/img/flexible/logo/pc/result.png',
-    },
-  ]
-  page.value.total = tableData.value.length */
   loading.value = true
   getUploadRecords({
     current: pages.currentPage,
@@ -197,7 +182,7 @@ function beforeUpload(file) {
   const { VITE_APP_BASE_URL, MODE } = import.meta.env
   console.log(import.meta.env)
   // 定义api前缀
-  let apiPrefix = '/upload'
+  let apiPrefix = '/api'
   if (MODE !== 'development') {
     apiPrefix = VITE_APP_BASE_URL
   }

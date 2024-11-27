@@ -8,18 +8,24 @@
               <div class="top-circle" :class="isActiveClassFrom(1)">
                 <span>1</span>
               </div>
-              <el-date-picker
-                class="date-picker"
-                :class="isActiveClass >= 1 ? 'date-picker-active' : ''"
-                style="width: 80%;"
-                prefix-icon="icon"
+              <el-select
                 v-model="month"
-                type="month"
+                clearable
+                collapse-tags
                 placeholder="时间选择"
-                :disabled-date="disabledDate"
-                value-format="YYYY-MM"
+                class="custom-select"
+                :class="isActiveClass + 1 === 1 ? 'custom-select' : isActiveClass >= 1 ? 'custom-select-active' : 'custom-select-inactive'"
+                :max-collapse-tags="1"
+                style="width: 80%;"
                 @change="handleMonthChange($event, 1)"
-              />
+              >
+                <el-option
+                  v-for="item in monthList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </el-col>
             <el-col :span="1" class="top-col">
               <el-icon :size="20" :color="iconColor(1)"><ArrowRightBold /></el-icon>
@@ -154,7 +160,11 @@ import BasicTitle from '@/components/basic-title/main.vue'
 import VueOfficeExcel from '@vue-office/excel'
 import '@vue-office/excel/lib/index.css'
 import { ref, watch, onMounted } from 'vue'
-import { downloadFile } from '@/api/data-query/base-operation'
+import {
+  downloadFile, fetchBusinessList, fetchTargetList,
+  fetchTimeList,
+  fetchTypeList
+} from '@/api/data-query/base-operation'
 import { ElMessage } from 'element-plus'
 
 // 文件预览
@@ -172,14 +182,12 @@ onMounted(() => {
 
 // 月份选择
 const month = ref('')
+const monthList = ref([])
 const isActiveClass = ref(0)
 
 // 业务类型数据
 const type = ref('')
-const typeList = ref([
-  { label: '网络质量', value: 1 },
-  { label: '业务质量', value: 2 },
-])
+const typeList = ref([])
 
 // 业务数据
 const business = ref('')
@@ -238,38 +246,6 @@ const areaList = ref([
 // 指标数据
 const target = ref('')
 const targetList = ref([])
-const targetIPList = ref([
-  { label: 'IPv4', value: 1 },
-  { label: 'IPv6', value: 2 },
-])
-const targetBasicsList = ref([
-  { label: '体验指数', value: 3 },
-  { label: 'DNS解析时延', value: 4 },
-  { label: 'DNS解析成功率', value: 5 },
-  { label: 'TCP连接时延', value: 6 },
-])
-const targetWebList = ref([
-  { label: '首包响应时延', value: 7 },
-  { label: '首屏时延', value: 8 },
-  { label: '首页时延', value: 9 },
-  { label: '访问成功率', value: 10 },
-])
-const targetVideoList = ref([
-  { label: '首次播放时延', value: 11 },
-  { label: '卡顿率', value: 12 },
-  { label: '平均下载速率', value: 13 },
-  { label: '视频播放成功率', value: 14 },
-])
-const targetFileList = ref([
-  { label: '文件下载速率', value: 15 },
-  { label: '文件下载成功率', value: 16 },
-])
-const targetGameList = ref([
-  { label: '体验指数', value: 3 },
-  { label: '平均时延', value: 17 },
-  { label: '平均丢包率', value: 18 },
-  { label: '抖动时延', value: 19 },
-])
 
 watch(area, (val) => {
   if (val.length === 0) {
@@ -281,6 +257,44 @@ watch(area, (val) => {
   } else {
     indeterminate.value = true
   }
+})
+
+// 获取月份列表
+const getMonthList = () => {
+  fetchTimeList().then((res) => {
+    monthList.value = res.data.data
+  })
+}
+getMonthList()
+
+// 获取类型列表
+const getTypeList = () => {
+  fetchTypeList().then((res) => {
+    typeList.value = res.data.data
+  })
+}
+getTypeList()
+
+// 类型变化时业务列表变化
+watch(type, (val) => {
+  if (!val) {
+    businessList.value = []
+    return
+  }
+  fetchBusinessList({ code: val }).then((res) => {
+    businessList.value = res.data.data
+  })
+})
+
+// 业务变化时指标列表变化
+watch(business, (val) => {
+  if (!val) {
+    targetList.value = []
+    return
+  }
+  fetchTargetList({ code: val }).then((res) => {
+    targetList.value = res.data.data
+  })
 })
 
 const handleCheckAll = (val) => {
@@ -400,25 +414,6 @@ function handleMonthChange(val, step) {
   if (checkChange(step)) {
     ElMessage.warning('请先选择前面所有选项')
     return
-  }
-  if (step === 2 && val === 1) {
-    businessList.value = networkList.value
-    targetList.value = targetIPList.value
-  }
-  if (step === 2 && val === 2) {
-    businessList.value = businessListData.value
-  }
-  if (step === 3 && [3, 4, 5].includes(val)) {
-    targetList.value = [...targetBasicsList.value, ...targetWebList.value]
-  }
-  if (step === 3 && val === 6) {
-    targetList.value = [...targetBasicsList.value, ...targetVideoList.value]
-  }
-  if (step === 3 && val === 7) {
-    targetList.value = [...targetBasicsList.value, ...targetFileList.value]
-  }
-  if (step === 3 && val === 8) {
-    targetList.value = [...targetBasicsList.value, ...targetGameList.value]
   }
   isActiveClass.value = step
 }

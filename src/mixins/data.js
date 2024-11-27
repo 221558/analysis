@@ -22,7 +22,7 @@ export function useMixins() {
   const conf = ref({
     tip: false,
     border: true, // 是否带有纵向边框
-    index: true, // 是否有序号
+    index: false, // 是否有序号
     indexLabel: '序号', // 序号列标题
     indexWidth: 80, // 序号列宽度
     // addBtn: false, // 新增按钮
