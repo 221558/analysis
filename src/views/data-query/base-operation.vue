@@ -124,6 +124,7 @@
               <el-select
                 v-model="target"
                 clearable
+                :multiple="type === 2"
                 collapse-tags
                 placeholder="指标选择"
                 class="custom-select"
@@ -132,6 +133,14 @@
                 style="width: 80%;"
                 @change="handleMonthChange($event, 5)"
               >
+                <template v-if="type === 2" #header>
+                  <el-checkbox
+                    v-model="checkTypeAll"
+                    :indeterminate="indeterminateType"
+                    @change="handleCheckTypeAll"
+                  >一键全选
+                  </el-checkbox>
+                </template>
                 <el-option
                   v-for="item in targetList"
                   :key="item.value"
@@ -143,7 +152,7 @@
           </el-row>
         </div>
         <div class="bottom">
-          <el-button color="#0068FF" type="primary">查询</el-button>
+          <el-button color="#0068FF" type="primary" @click="handleQuery">查询</el-button>
           <el-button class="reset-btn" @click="handleMonthChange('', 0)">重置</el-button>
         </div>
       </div>
@@ -159,9 +168,12 @@
 import BasicTitle from '@/components/basic-title/main.vue'
 import VueOfficeExcel from '@vue-office/excel'
 import '@vue-office/excel/lib/index.css'
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import {
-  downloadFile, fetchBusinessList, fetchTargetList,
+  fetchAreaList,
+  fetchBusinessList,
+  fetchSelectResult,
+  fetchTargetList,
   fetchTimeList,
   fetchTypeList
 } from '@/api/data-query/base-operation'
@@ -169,16 +181,6 @@ import { ElMessage } from 'element-plus'
 
 // 文件预览
 let customBlobContent = ref()
-
-onMounted(() => {
-  downloadFile({ recordIds: '1860931757090549763' }).then((res) => {
-    customBlobContent.value = new Blob([res.data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel 文件类型
-    })
-  }).catch((err) => {
-    console.log(err)
-  })
-})
 
 // 月份选择
 const month = ref('')
@@ -192,59 +194,19 @@ const typeList = ref([])
 // 业务数据
 const business = ref('')
 const businessList = ref([])
-const networkList = ref([
-  { label: '省间联通网内互访时延', value: 1 },
-  { label: '省间联通网内互访丢包', value: 2 },
-])
-const businessListData = ref([
-  { label: '网站业务', value: 3 },
-  { label: '网站(IDC)业务', value: 4 },
-  { label: '国际网站业务', value: 5 },
-  { label: '视频业务', value: 6 },
-  { label: '文件业务', value: 7 },
-  { label: '游戏业务', value: 8 },
-])
 
 // 省份数据
 const checkAll = ref(false)
 const indeterminate = ref(false)
 const area = ref([])
-const areaList = ref([
-  { label: '北京', value: 1 },
-  { label: '天津', value: 2 },
-  { label: '河北', value: 3 },
-  { label: '山西', value: 4 },
-  { label: '内蒙古', value: 4 },
-  { label: '辽宁', value: 4 },
-  { label: '吉林', value: 4 },
-  { label: '黑龙江', value: 4 },
-  { label: '上海', value: 4 },
-  { label: '江苏', value: 4 },
-  { label: '浙江', value: 4 },
-  { label: '安徽', value: 4 },
-  { label: '福建', value: 4 },
-  { label: '江西', value: 4 },
-  { label: '山东', value: 4 },
-  { label: '河南', value: 4 },
-  { label: '湖北', value: 4 },
-  { label: '湖南', value: 4 },
-  { label: '广东', value: 4 },
-  { label: '广西', value: 4 },
-  { label: '海南', value: 4 },
-  { label: '重庆', value: 4 },
-  { label: '四川', value: 4 },
-  { label: '贵州', value: 4 },
-  { label: '云南', value: 4 },
-  { label: '西藏', value: 4 },
-  { label: '陕西', value: 4 },
-  { label: '甘肃', value: 4 },
-  { label: '青海', value: 4 },
-  { label: '宁夏', value: 4 },
-  { label: '新疆', value: 4 },
-])
+const areaList = ref([])
+
+// 指标全选
+const checkTypeAll = ref(false)
+const indeterminateType = ref(false)
 
 // 指标数据
-const target = ref('')
+const target = ref(null)
 const targetList = ref([])
 
 watch(area, (val) => {
@@ -256,6 +218,18 @@ watch(area, (val) => {
     indeterminate.value = false
   } else {
     indeterminate.value = true
+  }
+})
+
+watch(target, (val) => {
+  if (val.length === 0) {
+    checkTypeAll.value = false
+    indeterminateType.value = false
+  } else if (val.length === targetList.value.length) {
+    checkTypeAll.value = true
+    indeterminateType.value = false
+  } else {
+    indeterminateType.value = true
   }
 })
 
@@ -275,11 +249,21 @@ const getTypeList = () => {
 }
 getTypeList()
 
+// 获取省份列表
+const getAreaList = () => {
+  fetchAreaList({ fileTime: month.value }).then((res) => {
+    areaList.value = res.data.data
+  })
+}
+
 // 类型变化时业务列表变化
 watch(type, (val) => {
   if (!val) {
     businessList.value = []
     return
+  }
+  if (val === 2) {
+    target.value = []
   }
   fetchBusinessList({ code: val }).then((res) => {
     businessList.value = res.data.data
@@ -297,6 +281,7 @@ watch(business, (val) => {
   })
 })
 
+// 省份全选
 const handleCheckAll = (val) => {
   handleMonthChange(val, 4)
   indeterminate.value = false
@@ -304,6 +289,17 @@ const handleCheckAll = (val) => {
     area.value = areaList.value.map((_) => _.value)
   } else {
     area.value = []
+  }
+}
+
+// 指标全选
+const handleCheckTypeAll = (val) => {
+  handleMonthChange(val, 5)
+  indeterminateType.value = false
+  if (val) {
+    target.value = targetList.value.map((_) => _.value)
+  } else {
+    target.value = []
   }
 }
 
@@ -323,6 +319,7 @@ function clearData(typeData) {
       checkAll.value = false
       indeterminate.value = false
       target.value = ''
+      customBlobContent.value = ''
       break
     case 1:
       type.value = ''
@@ -415,7 +412,32 @@ function handleMonthChange(val, step) {
     ElMessage.warning('请先选择前面所有选项')
     return
   }
+  if (step === 1) {
+    getAreaList()
+  }
   isActiveClass.value = step
+}
+
+// 查询
+const handleQuery = () => {
+  if (checkChange(5)) {
+    ElMessage.warning('请先选择前面所有选项')
+    return
+  }
+  const params = {
+    fileTime: month.value,
+    type: type.value,
+    serviceType: business.value,
+    provinces: area.value,
+    indexs: Array.isArray(target.value) ? target.value : [target.value]
+  }
+  fetchSelectResult(params).then((res) => {
+    customBlobContent.value = new Blob([res.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel 文件类型
+    })
+  }).catch((err) => {
+    console.log(err)
+  })
 }
 
 // 图标颜色

@@ -98,7 +98,8 @@ const getDownload = () => {
 };
 </script>
 
-<style>
+
+<style lang="scss" scoped>
 .demo-form-inline .el-input {
   --el-input-width: 220px;
 }
@@ -107,3 +108,4 @@ const getDownload = () => {
   --el-select-width: 220px;
 }
 </style>
+
