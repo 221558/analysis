@@ -4,7 +4,8 @@ export default [
   {
     path: '/login',
     name: '登录页',
-    component: () => (Store.getters.isMacOs ? import('@/mac/login.vue') : import('@/page/login/index.vue')),
+    component: () =>
+      Store.getters.isMacOs ? import('@/mac/login.vue') : import('@/page/login/index.vue'),
     meta: {
       keepAlive: true,
       isTab: false,
@@ -14,7 +15,8 @@ export default [
   {
     path: '/lock',
     name: '锁屏页',
-    component: () => (Store.getters.isMacOs ? import('@/mac/lock.vue') : import('@/page/lock/index.vue')),
+    component: () =>
+      Store.getters.isMacOs ? import('@/mac/lock.vue') : import('@/page/lock/index.vue'),
     meta: {
       keepAlive: true,
       isTab: false,
@@ -55,5 +57,25 @@ export default [
     path: '/',
     name: '主页',
     redirect: '/wel',
+  },
+  {
+    path: '/board',
+    component: () => import(/* webpackChunkName: "page" */ '@/views/board/board.vue'),
+    name: 'board',
+    meta: {
+      keepAlive: true,
+      isTab: false,
+      isAuth: false,
+    },
+  },
+  {
+    path: '/province',
+    component: () => import(/* webpackChunkName: "page" */ '@/views/board/province.vue'),
+    name: 'province',
+    meta: {
+      keepAlive: true,
+      isTab: false,
+      isAuth: false,
+    },
   },
 ];

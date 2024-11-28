@@ -130,3 +130,5 @@ a {
 @import './media.scss';
 //滚动条样式
 @include scrollBar;
+// 大屏日期选择器样式
+@import './date.scss';

@@ -2,14 +2,14 @@ import { validatenull } from './validate';
 import sha256 from 'crypto-js/sha256';
 import Base64 from 'crypto-js/enc-base64';
 // 表单序列化
-export const serialize = (data) => {
+export const serialize = data => {
   const list = [];
-  Object.keys(data).forEach((ele) => {
+  Object.keys(data).forEach(ele => {
     list.push(`${ele}=${data[ele]}`);
   });
   return list.join('&');
 };
-export const getObjType = (obj) => {
+export const getObjType = obj => {
   const { toString } = Object.prototype;
   const map = {
     '[object Boolean]': 'boolean',
@@ -31,7 +31,7 @@ export const getObjType = (obj) => {
 /**
  * 对象深拷贝
  */
-export const deepClone = (data) => {
+export const deepClone = data => {
   const type = getObjType(data);
   let obj;
   if (type === 'array') {
@@ -56,7 +56,7 @@ export const deepClone = (data) => {
 /**
  * 设置灰度模式
  */
-export const toggleGrayMode = (status) => {
+export const toggleGrayMode = status => {
   if (status) {
     document.body.className = `${document.body.className} grayMode`;
   } else {
@@ -66,22 +66,22 @@ export const toggleGrayMode = (status) => {
 /**
  * 设置主题
  */
-export const setTheme = (name) => {
+export const setTheme = name => {
   document.body.className = name;
 };
 
 /**
  * 加密处理
  */
-export const encryption = (params) => {
+export const encryption = params => {
   const { data = {}, type, param, key } = params;
   const result = JSON.parse(JSON.stringify(data));
   if (type == 'Base64') {
-    param.forEach((ele) => {
+    param.forEach(ele => {
       result[ele] = Base64.stringify(result[ele]);
     });
   } else if (type == 'Aes') {
-    param.forEach((ele) => {
+    param.forEach(ele => {
       result[ele] = sha256(result[ele], key);
     });
   }
@@ -101,7 +101,7 @@ export const fullscreenToggel = () => {
 /**
  * esc监听全屏
  */
-export const listenfullscreen = (callback) => {
+export const listenfullscreen = callback => {
   function listen() {
     callback();
   }
@@ -122,7 +122,8 @@ export const listenfullscreen = (callback) => {
  * 浏览器判断是否全屏
  */
 export const fullscreenEnable = () => {
-  const isFullscreen = document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen;
+  const isFullscreen =
+    document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen;
   return isFullscreen;
 };
 
@@ -175,7 +176,7 @@ export const findParent = (menu, id) => {
  * 动态插入css
  */
 
-export const loadStyle = (url) => {
+export const loadStyle = url => {
   const link = document.createElement('link');
   link.type = 'text/css';
   link.rel = 'stylesheet';
@@ -228,7 +229,7 @@ export const findByvalue = (dic, value) => {
   } else if (value instanceof Array) {
     result = [];
     let index = 0;
-    value.forEach((ele) => {
+    value.forEach(ele => {
       index = findArray(dic, ele);
       if (index != -1) {
         result.push(dic[index].label);
@@ -270,15 +271,21 @@ export const openWindow = (url, title, w, h) => {
   const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
   const dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
 
-  const width = window.innerWidth || (document.documentElement && document.documentElement.clientWidth) || screen.width;
-  const height = window.innerHeight || (document.documentElement && document.documentElement.clientHeight) || screen.height;
+  const width =
+    window.innerWidth ||
+    (document.documentElement && document.documentElement.clientWidth) ||
+    screen.width;
+  const height =
+    window.innerHeight ||
+    (document.documentElement && document.documentElement.clientHeight) ||
+    screen.height;
 
   const left = width / 2 - w / 2 + dualScreenLeft;
   const top = height / 2 - h / 2 + dualScreenTop;
   const newWindow = window.open(
     url,
     title,
-    `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=yes, copyhistory=no, width=${w}, height=${h}, top=${top}, left=${left}`,
+    `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=yes, copyhistory=no, width=${w}, height=${h}, top=${top}, left=${left}`
   );
 
   // Puts focus on the newWindow
@@ -287,7 +294,7 @@ export const openWindow = (url, title, w, h) => {
   }
 };
 
-export const getScreen = (isCollapse) => {
+export const getScreen = isCollapse => {
   if (document.body.clientWidth <= 768) {
     return !isCollapse;
   } else {
@@ -306,7 +313,7 @@ export const getTopUrl = () => {
  * 获取url参数
  * @param name 参数名
  */
-export const getQueryString = (name) => {
+export const getQueryString = name => {
   const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
   const r = window.location.search.substr(1).match(reg);
   if (r != null) return unescape(decodeURI(r[2]));
@@ -318,7 +325,7 @@ export const getQueryString = (name) => {
  * @param {*} str
  * @returns
  */
-export const escape2Html = (str) => {
+export const escape2Html = str => {
   const arrEntities = { lt: '<', gt: '>', nbsp: ' ', amp: '&', quot: '"' };
   return str.replace(/&(lt|gt|nbsp|amp|quot);/gi, (all, t) => {
     return arrEntities[t];
@@ -377,7 +384,7 @@ export const HtmlUtil = {
   },
   /* 5.用正则表达式实现html编码（转义）（另一种写法） */
   html2Escape(sHtml) {
-    return sHtml.replace(/[<>&"]/g, (c) => {
+    return sHtml.replace(/[<>&"]/g, c => {
       return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c];
     });
   },
@@ -388,4 +395,25 @@ export const HtmlUtil = {
       return arrEntities[t];
     });
   },
+};
+export const getTime = () => {
+  const currentDate = new Date();
+
+  // 获取年、月、日
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1; // 月份是从0开始计数的，所以要加1
+  const day = currentDate.getDate();
+
+  // 获取星期几，返回值是0（星期日）到6（星期六）之间的整数
+  const weekday = currentDate.getDay();
+  const weekdayNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+  const weekdayName = weekdayNames[weekday];
+
+  // 获取时、分、秒
+  const hours = currentDate.getHours() < 10 ? '0' + currentDate.getHours() : currentDate.getHours();
+  const minutes =
+    currentDate.getMinutes() < 10 ? '0' + currentDate.getMinutes() : currentDate.getMinutes();
+  const seconds =
+    currentDate.getSeconds() < 10 ? '0' + currentDate.getSeconds() : currentDate.getSeconds();
+  return `${year}年${month}月${day}日\u00A0\u00A0${weekdayName}\u00A0\u00A0${hours}: ${minutes}: ${seconds}`;
 };
