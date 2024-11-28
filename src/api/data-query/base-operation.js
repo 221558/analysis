@@ -6,12 +6,12 @@
 import request from '@/axios'
 
 // 条件查询结果
-export const downloadFile = params => {
+export const fetchSelectResult = data => {
   return request({
-    url: '/analysis-system/data-table/upload-records/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
+    url: '/analysis-system/condition/select',
+    method: 'post',
+    data,
+    responseType: 'blob',
   })
 }
 

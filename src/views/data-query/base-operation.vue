@@ -152,7 +152,7 @@
           </el-row>
         </div>
         <div class="bottom">
-          <el-button color="#0068FF" type="primary">查询</el-button>
+          <el-button color="#0068FF" type="primary" @click="handleQuery">查询</el-button>
           <el-button class="reset-btn" @click="handleMonthChange('', 0)">重置</el-button>
         </div>
       </div>
@@ -168,9 +168,12 @@
 import BasicTitle from '@/components/basic-title/main.vue'
 import VueOfficeExcel from '@vue-office/excel'
 import '@vue-office/excel/lib/index.css'
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import {
-  downloadFile, fetchAreaList, fetchBusinessList, fetchTargetList,
+  fetchAreaList,
+  fetchBusinessList,
+  fetchSelectResult,
+  fetchTargetList,
   fetchTimeList,
   fetchTypeList
 } from '@/api/data-query/base-operation'
@@ -178,16 +181,6 @@ import { ElMessage } from 'element-plus'
 
 // 文件预览
 let customBlobContent = ref()
-
-onMounted(() => {
-  downloadFile({ recordIds: '1860931757090549763' }).then((res) => {
-    customBlobContent.value = new Blob([res.data], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel 文件类型
-    })
-  }).catch((err) => {
-    console.log(err)
-  })
-})
 
 // 月份选择
 const month = ref('')
@@ -326,6 +319,7 @@ function clearData(typeData) {
       checkAll.value = false
       indeterminate.value = false
       target.value = ''
+      customBlobContent.value = ''
       break
     case 1:
       type.value = ''
@@ -422,6 +416,28 @@ function handleMonthChange(val, step) {
     getAreaList()
   }
   isActiveClass.value = step
+}
+
+// 查询
+const handleQuery = () => {
+  if (checkChange(5)) {
+    ElMessage.warning('请先选择前面所有选项')
+    return
+  }
+  const params = {
+    fileTime: month.value,
+    type: type.value,
+    serviceType: business.value,
+    provinces: area.value,
+    indexs: Array.isArray(target.value) ? target.value : [target.value]
+  }
+  fetchSelectResult(params).then((res) => {
+    customBlobContent.value = new Blob([res.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel 文件类型
+    })
+  }).catch((err) => {
+    console.log(err)
+  })
 }
 
 // 图标颜色
