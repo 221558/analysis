@@ -59,7 +59,7 @@ export default [
     redirect: '/wel',
   },
   {
-    path: '/board',
+    path: '/board/board',
     component: () => import(/* webpackChunkName: "page" */ '@/views/board/board.vue'),
     name: 'board',
     meta: {
@@ -69,7 +69,7 @@ export default [
     },
   },
   {
-    path: '/province',
+    path: '/board/province',
     component: () => import(/* webpackChunkName: "page" */ '@/views/board/province.vue'),
     name: 'province',
     meta: {
