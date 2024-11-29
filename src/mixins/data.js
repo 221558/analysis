@@ -25,15 +25,15 @@ export function useMixins() {
     index: false, // 是否有序号
     indexLabel: '序号', // 序号列标题
     indexWidth: 80, // 序号列宽度
-    // addBtn: false, // 新增按钮
-    // editBtn: false, // 修改按钮
-    // delBtn: false, // 删除按钮
-    // viewBtn: false, // 查看按钮
-    // selection: true, // 是否显示多选框
-    refreshBtn: true, // 刷新按钮
-    columnBtn: true, // 表格列操作按钮
-    searchShowBtn: true, // 搜索按钮
-    gridBtn: true, // 卡片模式切换按钮
+    addBtn: false, // 新增按钮
+    editBtn: false, // 修改按钮
+    delBtn: false, // 删除按钮
+    viewBtn: false, // 查看按钮
+    selection: true, // 是否显示多选框
+    refreshBtn: false, // 刷新按钮
+    columnBtn: false, // 表格列操作按钮
+    searchShowBtn: false, // 搜索按钮
+    gridBtn: false, // 卡片模式切换按钮
   });
   // 复选框 多选变量，初始为空数组
   const selectionList = ref([]);
