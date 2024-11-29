@@ -45,10 +45,6 @@ let page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });
 
 option.value = {
   ...conf.value,
-  addBtn: false,
-  editBtn: false,
-  delBtn: false,
-  viewBtn: false,
   selection: true,
   align: 'center',
   column: [
