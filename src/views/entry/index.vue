@@ -195,7 +195,7 @@ function beforeUpload(file) {
 
 // 上传成功
 function handleSuccess(res, file, fileList) {
-  console.log(res, file, fileList)
+  fullscreenLoading.value = false
   if (res.code !== 200) {
     ElMessage.error(res.msg)
     return
@@ -203,7 +203,6 @@ function handleSuccess(res, file, fileList) {
   ElMessage.success('上传成功')
   // 刷新表格数据
   onLoad(page.value)
-  fullscreenLoading.value = false
 }
 
 // 上传失败

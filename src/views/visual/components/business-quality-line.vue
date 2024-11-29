@@ -146,5 +146,5 @@ const handleClick = (tab, event) => {
 
 <style lang="scss" scoped>
 // 导入样式文件
-@import '@/styles/bar-line.scss';
+@use '@/styles/bar-line.scss';
 </style>

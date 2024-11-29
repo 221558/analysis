@@ -1,3 +1,11 @@
+/*
+ * @Author: 韩鹏涛 sj-hpt@dimpt.com
+ * @Date: 2024-11-26 15:10:11
+ * @LastEditors: 韩鹏涛 sj-hpt@dimpt.com
+ * @LastEditTime: 2024-11-29 09:53:22
+ * @FilePath: /analysis-system-frontend/src/mixins/data.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 // 导入getCurrentInstance函数，用于获取当前实例
 import { ref, getCurrentInstance } from 'vue';
 // 导入useStore函数，用于获取vuex中的store
@@ -25,15 +33,16 @@ export function useMixins() {
     index: false, // 是否有序号
     indexLabel: '序号', // 序号列标题
     indexWidth: 80, // 序号列宽度
-    // addBtn: false, // 新增按钮
-    // editBtn: false, // 修改按钮
-    // delBtn: false, // 删除按钮
-    // viewBtn: false, // 查看按钮
-    // selection: true, // 是否显示多选框
-    refreshBtn: true, // 刷新按钮
-    columnBtn: true, // 表格列操作按钮
-    searchShowBtn: true, // 搜索按钮
-    gridBtn: true, // 卡片模式切换按钮
+    addBtn: false, // 新增按钮
+    editBtn: false, // 修改按钮
+    delBtn: false, // 删除按钮
+    viewBtn: false, // 查看按钮
+    reserveSelection: true, // 翻页多选，保留选中状态
+    selection: true, // 是否显示多选框
+    refreshBtn: false, // 刷新按钮
+    columnBtn: false, // 表格列操作按钮
+    searchShowBtn: false, // 搜索按钮
+    gridBtn: false, // 卡片模式切换按钮
   });
   // 复选框 多选变量，初始为空数组
   const selectionList = ref([]);
