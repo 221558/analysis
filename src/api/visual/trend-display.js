@@ -42,3 +42,11 @@ export const getExperience = params => {
     params,
   });
 };
+
+// 获取省份下拉框
+export const getProvinceList = () => {
+  return request({
+    url: '/analysis-system/business-warn/province-list',
+    method: 'get',
+  });
+};

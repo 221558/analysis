@@ -16,7 +16,7 @@
               <el-select
                 style="width: 120px"
                 v-model="form.businessType"
-                placeholder="活动区域"
+                placeholder="选择业务"
                 @change="getExperienceEanking(form)"
               >
                 <el-option
@@ -31,6 +31,7 @@
               <el-date-picker
                 v-model="form.fileTime"
                 type="month"
+                :clearable="false"
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"

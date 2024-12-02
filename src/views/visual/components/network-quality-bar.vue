@@ -17,6 +17,7 @@
               <el-date-picker
                 v-model="delayIpv4Form.fileTime"
                 type="month"
+                :clearable="false"
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"
@@ -46,6 +47,7 @@
               <el-date-picker
                 v-model="delayIpv6Form.fileTime"
                 type="month"
+                :clearable="false"
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"
@@ -75,6 +77,7 @@
               <el-date-picker
                 v-model="loserIpv4Form.fileTime"
                 type="month"
+                :clearable="false"
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"
@@ -105,6 +108,7 @@
               <el-date-picker
                 v-model="loserIpv6Form.fileTime"
                 type="month"
+                :clearable="false"
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"
