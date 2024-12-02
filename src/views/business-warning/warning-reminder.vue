@@ -18,10 +18,6 @@
 import { ref } from 'vue';
 // 定义一个响应式的变量activeName，初始值为'first'
 const activeName = ref('first');
-// 网络质量
-import networkQuality from './components/network-quality-bar.vue'; // NOSONAR
-// 业务质量
-import businessQuality from './components/business-quality-bar.vue'; // NOSONAR
 // 定义一个点击事件处理函数
 const handleClick = (tab, event) => {
   // 打印出点击的tab和事件
