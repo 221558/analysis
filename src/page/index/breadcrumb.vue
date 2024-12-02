@@ -17,8 +17,7 @@ export default {
     const route = useRoute();
 
     // 根据当前路由动态生成面包屑
-    const breadcrumbs = computed(() => {
-      console.log('route', route);
+    const breadcrumbs = computed(() => { 
       const arr = route.matched.filter(item => item.name)
       return arr.map(routeItem => {
         return {

@@ -2,7 +2,7 @@
  * @Author: 韩鹏涛 sj-hpt@dimpt.com
  * @Date: 2024-11-26 15:10:11
  * @LastEditors: 韩鹏涛 sj-hpt@dimpt.com
- * @LastEditTime: 2024-11-29 09:53:22
+ * @LastEditTime: 2024-12-02 11:29:37
  * @FilePath: /analysis-system-frontend/src/mixins/data.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,6 +17,9 @@ export function useMixins() {
   const _this = proxy;
   // vuex 储存内容
   const store = useStore();
+  // 月份数据
+  const monthDataList = computed(() => store.getters.monthDataList);
+
   // const userInfo = computed(() => store.getters.userInfo);
   // 定义选项参考变量，初始值为 null
   const option = ref(null);
@@ -59,5 +62,5 @@ export function useMixins() {
   };
 
   // 返回相关变量和方法
-  return { _this, store, option, data, search, loadings, conf, selectionList, selectionChange };
+  return { _this, store, option, data, search, loadings, conf, selectionList, selectionChange, monthDataList };
 }

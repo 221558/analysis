@@ -45,14 +45,7 @@ export const loginBySocial = (tenantId, source, code, state) =>
     headers: {
       'Tenant-Id': tenantId,
     },
-    params: {
-      tenantId,
-      source,
-      code,
-      state,
-      grantType: 'social',
-      scope: 'all',
-    },
+    params: { tenantId, source, code, state, grantType: 'social', scope: 'all' },
   });
 
 /**
@@ -80,15 +73,11 @@ export const getUserInfo = () =>
  * @param {string} refreshToken - 刷新令牌
  * @returns {Promise} - 返回刷新令牌请求的Promise对象
  */
-export const refreshToken = (refreshToken) =>
+export const refreshToken = refreshToken =>
   request({
     url: '/blade-auth/token',
     method: 'post',
-    params: {
-      refreshToken,
-      grantType: 'refresh_token',
-      scope: 'all',
-    },
+    params: { refreshToken, grantType: 'refresh_token', scope: 'all' },
   });
 
 /**
@@ -145,7 +134,7 @@ export const getTopMenu = () =>
  * @param {Array} list - 日志列表
  * @returns {Promise} - 返回发送日志请求的Promise对象
  */
-export const sendLogs = (list) =>
+export const sendLogs = list =>
   request({
     url: '/user/send-logs',
     method: 'post',
@@ -162,12 +151,11 @@ export const logout = () =>
   //   url: '/blade-auth/logout',
   //   method: 'post',
   // });
-  new Promise((resolve) => {
-    const data = {
-      code: 200,
-      success: true,
-      data: '',
-      msg: '操作成功',
-    };
+  new Promise(resolve => {
+    const data = { code: 200, success: true, data: '', msg: '操作成功' };
     resolve({ data });
   });
+
+// 时间数组
+export const getTimeArray = () =>
+  request({ url: '/analysis-system/condition/time-list', method: 'get' });
