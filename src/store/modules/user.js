@@ -1,7 +1,7 @@
 import { setToken, setRefreshToken, removeToken, removeRefreshToken } from '@/utils/auth';
 import { setStore, getStore } from '@/utils/store';
 import { deepClone, escape2Html } from '@/utils/util';
-import { loginByUsername, loginBySocial, getUserInfo, getMenu, getTopMenu, logout, refreshToken, getButtons } from '@/api/user';
+import { loginByUsername, loginBySocial, getUserInfo, getMenu, getTopMenu, logout, refreshToken, getButtons, getTimeArray } from '@/api/user';
 import { formatPath } from '@/router/avue-router';
 import { getList as getDictionaryList } from '@/api/system/dict';
 import { ElMessage } from 'element-plus';
@@ -19,13 +19,14 @@ const user = {
     topPath: getStore({ name: 'topPath' }) || '',
     token: getStore({ name: 'token' }) || '',
     refreshToken: getStore({ name: 'refreshToken' }) || '',
+    monthDataList: getStore({ name: 'monthDataList' }) || [],
   },
   actions: {
     // 根据用户名登录
     LoginByUsername({ commit }, userInfo = {}) {
       return new Promise((resolve, reject) => {
-        loginByUsername(userInfo.tenantId, userInfo.username, encrypt(userInfo.password), userInfo.type, userInfo.key, userInfo.code)
-          .then((res) => {
+        loginByUsername( userInfo.tenantId, userInfo.username, encrypt(userInfo.password), userInfo.type, userInfo.key, userInfo.code )
+          .then(res => {
             const { data } = res;
             if (data.success) {
               commit('SET_TOKEN', data.data.accessToken);
@@ -34,43 +35,39 @@ const user = {
               commit('DEL_ALL_TAG');
               commit('CLEAR_LOCK');
             } else {
-              ElMessage({
-                message: data.msg,
-                type: 'error',
-              });
+              ElMessage({ message: data.msg, type: 'error' });
             }
             resolve();
           })
-          .catch((err) => {
+          .catch(err => {
             reject(err);
           });
       });
     },
     // 根据第三方信息登录
     LoginBySocial({ commit }, userInfo) {
-      return new Promise((resolve) => {
-        loginBySocial(userInfo.tenantId, userInfo.source, userInfo.code, userInfo.state).then((res) => {
-          const { data } = res;
-          if (data.success) {
-            commit('SET_TOKEN', data.data.accessToken);
-            commit('SET_REFRESH_TOKEN', data.data.refreshToken);
-            commit('SET_USER_INFO', data.data);
-            commit('DEL_ALL_TAG');
-            commit('CLEAR_LOCK');
-          } else {
-            ElMessage({
-              message: data.msg,
-              type: 'error',
-            });
+      return new Promise(resolve => {
+        loginBySocial(userInfo.tenantId, userInfo.source, userInfo.code, userInfo.state).then(
+          res => {
+            const { data } = res;
+            if (data.success) {
+              commit('SET_TOKEN', data.data.accessToken);
+              commit('SET_REFRESH_TOKEN', data.data.refreshToken);
+              commit('SET_USER_INFO', data.data);
+              commit('DEL_ALL_TAG');
+              commit('CLEAR_LOCK');
+            } else {
+              ElMessage({ message: data.msg, type: 'error' });
+            }
+            resolve();
           }
-          resolve();
-        });
+        );
       });
     },
     // 根据手机号登录
     LoginByPhone({ commit }, userInfo) {
-      return new Promise((resolve) => {
-        loginByUsername(userInfo.phone, userInfo.code).then((res) => {
+      return new Promise(resolve => {
+        loginByUsername(userInfo.phone, userInfo.code).then(res => {
           const { data } = res.data;
           commit('SET_TOKEN', data);
           commit('DEL_ALL_TAG', []);
@@ -82,12 +79,12 @@ const user = {
     GetUserInfo({ commit }) {
       return new Promise((resolve, reject) => {
         getUserInfo()
-          .then((res) => {
+          .then(res => {
             const { data } = res.data;
             commit('SET_ROLES', data.roles);
             resolve(data);
           })
-          .catch((err) => {
+          .catch(err => {
             reject(err);
           });
       });
@@ -96,14 +93,14 @@ const user = {
     RefreshToken({ state, commit }) {
       return new Promise((resolve, reject) => {
         refreshToken(state.refreshToken)
-          .then((res) => {
+          .then(res => {
             const { data } = res;
             commit('SET_TOKEN', data.data.accessToken);
             commit('SET_REFRESH_TOKEN', data.data.refreshToken);
             commit('SET_USER_INFO', data.data);
             resolve(data);
           })
-          .catch((error) => {
+          .catch(error => {
             reject(error);
           });
       });
@@ -124,20 +121,21 @@ const user = {
             removeRefreshToken();
             resolve();
           })
-          .catch((error) => {
+          .catch(error => {
             reject(error);
           });
       });
     },
     // 注销session
     FedLogOut({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         commit('SET_TOKEN', '');
         commit('SET_REFRESH_TOKEN', '');
         commit('SET_MENUALL_NULL', []);
         commit('SET_MENU', []);
         commit('SET_ROLES', []);
         commit('DEL_ALL_TAG', []);
+        commit('SET_TIME_ARRAY', []);
         commit('CLEAR_LOCK');
         removeToken();
         removeRefreshToken();
@@ -145,41 +143,52 @@ const user = {
       });
     },
     GetTopMenu() {
-      return new Promise((resolve) => {
-        getTopMenu().then((res) => {
+      return new Promise(resolve => {
+        getTopMenu().then(res => {
           const data = res.data.data || [];
           resolve(data);
         });
       });
     },
     GetMenu({ commit, dispatch }, parentId) {
-      return new Promise((resolve) => {
-        getMenu(parentId).then((res) => {
+      return new Promise(resolve => {
+        getMenu(parentId).then(res => {
           const { data } = res.data;
           const menu = deepClone(data);
-          menu.forEach((ele) => formatPath(ele, true));
+          menu.forEach(ele => formatPath(ele, true));
           commit('SET_MENU', menu);
           commit('SET_MENU_TOP', menu);
           commit('SET_MENU_ALL', menu);
           dispatch('GetButtons');
           dispatch('GetDictionary');
+          dispatch('GetTimeArray'); // 获取月份
           resolve(menu);
         });
       });
     },
     GetButtons({ commit }) {
-      return new Promise((resolve) => {
-        getButtons().then((res) => {
+      return new Promise(resolve => {
+        getButtons().then(res => {
           const { data } = res.data;
           commit('SET_PERMISSION', data);
           resolve();
         });
       });
     },
+    // 获取时间数组
+    GetTimeArray({ commit }) {
+      return new Promise(resolve => {
+        getTimeArray().then(res => {
+          const { data } = res.data;
+          commit('SET_TIME_ARRAY', data);
+          resolve(data);
+        });
+      });
+    },
     // 获取系统字典
     GetDictionary({ commit }) {
-      return new Promise((resolve) => {
-        getDictionaryList().then((res) => {
+      return new Promise(resolve => {
+        getDictionaryList().then(res => {
           const { data } = res.data;
           data.sort((a, b) => {
             return a.sort - b.sort;
@@ -210,8 +219,8 @@ const user = {
     },
     SET_MENU_ALL: (state, menuAll) => {
       const menu = state.menuAll;
-      menuAll.forEach((ele) => {
-        const index = menu.findIndex((item) => item.path === ele.path);
+      menuAll.forEach(ele => {
+        const index = menu.findIndex(item => item.path === ele.path);
         if (index === -1) {
           menu.push(ele);
         } else {
@@ -221,7 +230,7 @@ const user = {
       state.menuAll = menu;
       setStore({ name: 'menuAll', content: state.menuAll });
     },
-    SET_MENUALL_NULL: (state) => {
+    SET_MENUALL_NULL: state => {
       state.menuAll = [];
       setStore({ name: 'menuAll', content: state.menuAll });
     },
@@ -230,7 +239,6 @@ const user = {
       setStore({ name: 'topPath', content: state.topPath });
     },
     SET_MENU_TOP: (state, menu) => {
-      // const menu =
       state.menuTop = menu;
       setStore({ name: 'menuTop', content: state.menu });
     },
@@ -244,7 +252,7 @@ const user = {
     SET_PERMISSION: (state, permission) => {
       const result = [];
       function getCode(list) {
-        list.forEach((ele) => {
+        list.forEach(ele => {
           if (typeof ele === 'object') {
             const chiildren = ele.children;
             const { code } = ele;
@@ -258,17 +266,18 @@ const user = {
       }
       getCode(permission);
       state.permission = {};
-      result.forEach((ele) => {
+      result.forEach(ele => {
         state.permission[ele] = true;
       });
       setStore({ name: 'permission', content: state.permission, type: 'session' });
     },
     SET_DICTIONARY: (state, dictionary) => {
       state.dictionary = JSON.parse(escape2Html(JSON.stringify(dictionary)));
-      setStore({
-        name: 'dictionary',
-        content: state.dictionary,
-      });
+      setStore({ name: 'dictionary', content: state.dictionary });
+    },
+    SET_TIME_ARRAY: (state, monthDataList) => {
+      state.monthDataList = monthDataList;
+      setStore({ name: 'monthDataList', content: state.monthDataList });
     },
   },
 };

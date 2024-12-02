@@ -1,3 +1,5 @@
+
+<!-- 排名展示-网络质量 -->
 <template>
   <div class="chart-box">
     <!-- 省间互访时延排名（IPv4） -->
@@ -10,9 +12,16 @@
         </el-col>
         <!-- 右侧搜索框 -->
         <el-col :span="18">
-          <el-form class="form" :inline="true" :model="formInline">
+          <el-form class="form" :inline="true" :model="delayIpv4Form">
             <el-form-item label="时间选择">
-              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+              <el-date-picker
+                v-model="delayIpv4Form.fileTime"
+                type="month"
+                placeholder="选择月份"
+                value-format="YYYY-MM"
+                :disabled-date="disabledDate"
+                @change="getDelayIpv4Data(delayIpv4Form.fileTime)"
+              />
             </el-form-item>
             <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
@@ -32,9 +41,16 @@
         </el-col>
         <!-- 右侧搜索框 -->
         <el-col :span="18">
-          <el-form class="form" :inline="true" :model="formInline">
+          <el-form class="form" :inline="true" :model="delayIpv6Form">
             <el-form-item label="时间选择">
-              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+              <el-date-picker
+                v-model="delayIpv6Form.fileTime"
+                type="month"
+                placeholder="选择月份"
+                value-format="YYYY-MM"
+                :disabled-date="disabledDate"
+                @change="getDelayIpv6Data(delayIpv6Form.fileTime)"
+              />
             </el-form-item>
             <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
@@ -54,9 +70,16 @@
         </el-col>
         <!-- 右侧搜索框 -->
         <el-col :span="18">
-          <el-form class="form" :inline="true" :model="formInline">
+          <el-form class="form" :inline="true" :model="loserIpv4Form">
             <el-form-item label="时间选择">
-              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+              <el-date-picker
+                v-model="loserIpv4Form.fileTime"
+                type="month"
+                placeholder="选择月份"
+                value-format="YYYY-MM"
+                :disabled-date="disabledDate"
+                @change="getLoserIpv4Data(loserIpv4Form.fileTime)"
+              />
             </el-form-item>
             <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
@@ -77,15 +100,16 @@
         </el-col>
         <!-- 右侧搜索框 -->
         <el-col :span="18">
-          <el-form class="form" :inline="true" :model="formInline">
-            <el-form-item label="省份">
-              <el-select style="width: 120px" v-model="formInline.region" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
+          <el-form class="form" :inline="true" :model="loserIpv6Form">
             <el-form-item label="时间选择">
-              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+              <el-date-picker
+                v-model="loserIpv6Form.fileTime"
+                type="month"
+                placeholder="选择月份"
+                value-format="YYYY-MM"
+                :disabled-date="disabledDate"
+                @change="getLoserIpv6Data(loserIpv6Form.fileTime)"
+              />
             </el-form-item>
             <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
@@ -100,7 +124,13 @@
 <script setup>
 // 引入echarts库
 import * as echarts from 'echarts';
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
+// 导入通用CRUD混入
+import { useMixins } from '@/mixins/data.js';
+// monthDataList
+const { monthDataList } = useMixins();
+import { getDelayIpv4, getDelayIpv6, getLossIpv4, getLossIpv6 } from '@/api/visual/rankings';
+
 // 定义一个响应式变量，用于存储当前激活的标签页名称
 const activeName = ref('first');
 // 定义一个响应式变量，用于存储IPv4的延迟时间
@@ -111,86 +141,56 @@ const delayIpv6 = ref(null);
 const loserIpv4 = ref(null);
 // 定义一个响应式变量，用于存储IPv6的丢包率
 const loserIpv6 = ref(null);
-// 定义一个响应式变量，用于存储输入框的值
-const value2 = ref('');
-const formInline = ref({
-  user: '',
-  region: '',
-});
+const data = ref([]);
 
-// 定义一个函数，用于生成一个1到100之间的随机整数
-const getRandomValue = () => {
-  // 生成一个1到100之间的随机整数
-  return Math.floor(Math.random() * 100) + 1;
+// 定义禁用未来日期的函数
+const disabledDate = time => {
+  // 如果传入的时间大于当前时间，则返回true，表示禁用该日期
+  return time.getTime() > Date.now();
 };
-
-const data = [
-  { label: '北京', value: getRandomValue() },
-  { label: '天津', value: getRandomValue() },
-  { label: '上海', value: getRandomValue() },
-  { label: '重庆', value: getRandomValue() },
-  { label: '河北', value: getRandomValue() },
-  { label: '山西', value: getRandomValue() },
-  { label: '内蒙古', value: getRandomValue() },
-  { label: '辽宁', value: getRandomValue() },
-  { label: '吉林', value: getRandomValue() },
-  { label: '黑龙江', value: getRandomValue() },
-  { label: '江苏', value: getRandomValue() },
-  { label: '浙江', value: getRandomValue() },
-  { label: '安徽', value: getRandomValue() },
-  { label: '福建', value: getRandomValue() },
-  { label: '江西', value: getRandomValue() },
-  { label: '山东', value: getRandomValue() },
-  { label: '河南', value: getRandomValue() },
-  { label: '湖北', value: getRandomValue() },
-  { label: '湖南', value: getRandomValue() },
-  { label: '广东', value: getRandomValue() },
-  { label: '广西', value: getRandomValue() },
-  { label: '海南', value: getRandomValue() },
-  { label: '四川', value: getRandomValue() },
-  { label: '贵州', value: getRandomValue() },
-  { label: '云南', value: getRandomValue() },
-  { label: '西藏', value: getRandomValue() },
-  { label: '陕西', value: getRandomValue() },
-  { label: '甘肃', value: getRandomValue() },
-  { label: '青海', value: getRandomValue() },
-  { label: '宁夏', value: getRandomValue() },
-  { label: '新疆', value: getRandomValue() },
-  { label: '香港', value: getRandomValue() },
-  { label: '澳门', value: getRandomValue() },
-  { label: '台湾', value: getRandomValue() },
-];
+// 定义一个响应式变量，用于存储输入框的值
+const delayIpv4Form = ref({ fileTime: monthDataList.value[0].value });
+const delayIpv6Form = ref({ fileTime: monthDataList.value[0].value });
+const loserIpv4Form = ref({ fileTime: monthDataList.value[0].value });
+const loserIpv6Form = ref({ fileTime: monthDataList.value[0].value });
 
 onMounted(() => {
-  // getDelayIpv4(data, delayIpv4.value);
-  // getDelayIpv6(data, delayIpv6.value);
-  // getLoserIpv4(data, loserIpv4.value);
-  // getLoserIpv6(data, loserIpv6.value);
-
-  handleData(data, delayIpv4.value);
-  handleData(data, delayIpv6.value);
-  handleData(data, loserIpv4.value);
-  handleData(data, loserIpv6.value);
+  getDelayIpv4Data(delayIpv4Form.value.fileTime);
+  getDelayIpv6Data(delayIpv6Form.value.fileTime);
+  getLoserIpv4Data(loserIpv4Form.value.fileTime);
+  getLoserIpv6Data(loserIpv6Form.value.fileTime);
 });
 
-// const getDelayIpv4 = (data, ref) => {
-//   handleData(data, ref);
-// };
-// const getDelayIpv6 = (data, ref) => {
-//   handleData(data, ref);
-// };
-// const getLoserIpv4 = (data, ref) => {
-//   handleData(data, ref);
-// };
-// const getLoserIpv6 = (data, ref) => {
-//   handleData(data, ref);
-// };
+const getDelayIpv4Data = time => {
+  getDelayIpv4({ fileTime: time }).then(res => {
+    nextTick(() => {
+      handleData(res.data.data, delayIpv4.value);
+    });
+  });
+};
+const getDelayIpv6Data = time => {
+  getDelayIpv6({ fileTime: time }).then(res => {
+    nextTick(() => {
+      handleData(res.data.data, delayIpv6.value);
+    });
+  });
+};
+const getLoserIpv4Data = time => {
+  getLossIpv4({ fileTime: time }).then(res => {
+    nextTick(() => {
+      handleData(res.data.data, loserIpv4.value);
+    });
+  });
+};
+const getLoserIpv6Data = time => {
+  getLossIpv6({ fileTime: time }).then(res => {
+    nextTick(() => {
+      handleData(res.data.data, loserIpv6.value);
+    });
+  });
+};
 
 const handleData = (data, ref) => {
-  // 将data中的每个元素的label属性提取出来，存入labels数组中
-  const labels = data.map(item => item.label);
-  // 将data中的每个元素的value属性提取出来，存入values数组中
-  const values = data.map(item => item.value);
   // 初始化echarts实例，ref为容器，null为配置项，{ renderer: 'canvas', useDirtyRect: false }为渲染器
   let myChart = echarts.init(ref, null, { renderer: 'canvas', useDirtyRect: false });
   // 定义图表的配置项
@@ -209,24 +209,20 @@ const handleData = (data, ref) => {
     // 设置x轴
     xAxis: {
       type: 'category',
-      data: labels,
+      data: data.xaxis,
       axisLabel: {
         interval: 0, // 强制显示所有标签
         // rotate: 45, // 旋转标签以防止重叠
         margin: 10, // 标签与轴线的距离
       },
     },
-    // 设置y轴
-    yAxis: {
-      type: 'value',
-      // 在每个值后面加上单位 "ms"
-      axisLabel: { formatter: '{value}ms' },
-    },
+    // 设置y轴    // 在每个值后面加上单位 "ms"
+    yAxis: { type: 'value', axisLabel: { formatter: '{value}ms' } },
     // 设置图表的系列
     series: [
       {
         name: '数据',
-        data: values,
+        data: data.yaxis,
         type: 'bar',
         barWidth: 20,
         barCategoryGap: 10, // 缩小柱状图之间的间距

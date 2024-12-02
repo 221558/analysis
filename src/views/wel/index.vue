@@ -40,7 +40,7 @@ const data = [
     // 图片路径
     image: '/image/large_screen_display.png',
     // 图片颜色
-    color: 'rgb(234, 242, 255)',
+    color: '#eaf2ff',
   },
   {
     // 数据录入
@@ -50,32 +50,37 @@ const data = [
     // 图片路径
     image: '/image/data_entry.png',
     // 颜色
-    color: 'rgb(234, 249, 249)',
+    color: '#eaf9f9',
   },
   // 数据查询
-  { label: '数据查询', url: '/data-query/original-report', image: '/image/data_query.png', color: 'rgb(239, 241, 255)' },
+  {
+    label: '数据查询',
+    url: '/data-query/original-report/index',
+    image: '/image/data_query.png',
+    color: '#eff1ff',
+  },
   {
     // 可视化展示
     label: '可视化展示',
     // 图片链接
-    url: '1',
+    url: '/visual/rankings',
     // 图片路径
     image: '/image/visual_display.png',
     // 图片颜色
-    color: 'rgb(255, 245, 235)',
+    color: '#fff5eb',
   },
   {
     // 业务预警
     label: '业务预警',
     // 链接
-    url: '1',
+    url: '/business-warning/threshold-settings',
     // 图片路径
     image: '/image/business_warning.png',
     // 颜色
-    color: 'rgb(234, 242, 255)',
+    color: '#f0faef',
   },
   // 根因分析
-  { label: '根因分析', url: '1', image: '/image/cause_analysis.png', color: 'rgb(234, 242, 255)' },
+  { label: '根因分析', url: '1', image: '/image/cause_analysis.png', color: '#eaf2ff' },
   // 系统管理
   {
     label: '系统管理',
@@ -84,7 +89,7 @@ const data = [
     // 图片路径
     image: '/image/system_management.png',
     // 颜色
-    color: 'rgb(234, 249, 249)',
+    color: '#eaf9f9',
   },
 ];
 

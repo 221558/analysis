@@ -1,17 +1,12 @@
-<!--
- * @Author: 韩鹏涛 sj-hpt@dimpt.com
- * @Date: 2024-11-27 09:42:02
- * @LastEditors: 韩鹏涛 sj-hpt@dimpt.com
- * @LastEditTime: 2024-11-28 17:30:50
- * @FilePath: /analysis-system-frontend/src/views/visual/trend-display.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
-
+<!-- 趋势展示 -->
 <template>
+  <!-- 使用TabbedContent组件，传入tabs和defaultActive属性 -->
   <TabbedContent :tabs="tabs" :default-active="defaultActive">
+    <!-- 使用插槽，将网络质量组件放在first插槽中 -->
     <template #first>
       <networkQualityLine />
     </template>
+    <!-- 使用插槽，将业务质量组件放在second插槽中 -->
     <template #second>
       <businessQualityLine />
     </template>
@@ -19,6 +14,7 @@
 </template>
 
 <script setup>
+// 引入TabbedContent组件
 import TabbedContent from '@/components/tabbed-content/main.vue';
 // 网络质量
 import networkQualityLine from './components/network-quality-line.vue'; // NOSONAR

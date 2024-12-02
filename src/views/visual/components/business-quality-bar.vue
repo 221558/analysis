@@ -1,3 +1,4 @@
+<!-- 排名展示-业务质量 -->
 <template>
   <div class="chart-box">
     <!-- 外层容器 -->
@@ -10,15 +11,31 @@
         </el-col>
         <!-- 右侧搜索框 -->
         <el-col :span="20">
-          <el-form class="form" :inline="true" :model="formInline">
+          <el-form class="form" :inline="true" :model="form">
             <el-form-item label="业务选择">
-              <el-select style="width: 120px" v-model="formInline.region" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+              <el-select
+                style="width: 120px"
+                v-model="form.businessType"
+                placeholder="活动区域"
+                @change="getExperienceEanking(form)"
+              >
+                <el-option
+                  v-for="item in businesstypeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="时间选择">
-              <el-date-picker v-model="formInline.region" type="month" placeholder="选择月份" />
+              <el-date-picker
+                v-model="form.fileTime"
+                type="month"
+                placeholder="选择月份"
+                value-format="YYYY-MM"
+                :disabled-date="disabledDate"
+                @change="getExperienceEanking(form)"
+              />
             </el-form-item>
             <div class="detail">详情</div>
             <el-icon class="icon"><ArrowRight /></el-icon>
@@ -34,77 +51,59 @@
 // 引入echarts库
 import * as echarts from 'echarts';
 // 导入onMounted和ref函数
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
+// 导入通用CRUD混入
+import { useMixins } from '@/mixins/data.js';
+// monthDataList
+const { monthDataList } = useMixins();
+
+import { getBusinesstypeList, getExperience } from '@/api/visual/rankings';
+
 // 定义一个响应式变量activeName，初始值为'first'
 const activeName = ref('first');
+
 // 定义一个响应式变量experienceEanking，初始值为null
 const experienceEanking = ref(null);
-// 定义一个响应式变量value2，初始值为空字符串
-const value2 = ref('');
-const formInline = ref({
-  user: '',
-  region: '',
-});
+const businesstypeList = ref([]);
+const data = ref([]);
+const form = ref({ businessType: '', fileTime: '' });
 
-// 定义一个函数，用于生成一个1到100之间的随机整数
-const getRandomValue = () => {
-  // 生成一个1到100之间的随机整数
-  return Math.floor(Math.random() * 100) + 1;
+// 定义禁用未来日期的函数
+const disabledDate = time => {
+  // 如果传入的时间大于当前时间，则返回true，表示禁用该日期
+  return time.getTime() > Date.now();
 };
-const data = [
-  { label: '北京', value: getRandomValue() },
-  { label: '天津', value: getRandomValue() },
-  { label: '上海', value: getRandomValue() },
-  { label: '重庆', value: getRandomValue() },
-  { label: '河北', value: getRandomValue() },
-  { label: '山西', value: getRandomValue() },
-  { label: '内蒙古', value: getRandomValue() },
-  { label: '辽宁', value: getRandomValue() },
-  { label: '吉林', value: getRandomValue() },
-  { label: '黑龙江', value: getRandomValue() },
-  { label: '江苏', value: getRandomValue() },
-  { label: '浙江', value: getRandomValue() },
-  { label: '安徽', value: getRandomValue() },
-  { label: '福建', value: getRandomValue() },
-  { label: '江西', value: getRandomValue() },
-  { label: '山东', value: getRandomValue() },
-  { label: '河南', value: getRandomValue() },
-  { label: '湖北', value: getRandomValue() },
-  { label: '湖南', value: getRandomValue() },
-  { label: '广东', value: getRandomValue() },
-  { label: '广西', value: getRandomValue() },
-  { label: '海南', value: getRandomValue() },
-  { label: '四川', value: getRandomValue() },
-  { label: '贵州', value: getRandomValue() },
-  { label: '云南', value: getRandomValue() },
-  { label: '西藏', value: getRandomValue() },
-  { label: '陕西', value: getRandomValue() },
-  { label: '甘肃', value: getRandomValue() },
-  { label: '青海', value: getRandomValue() },
-  { label: '宁夏', value: getRandomValue() },
-  { label: '新疆', value: getRandomValue() },
-  { label: '香港', value: getRandomValue() },
-  { label: '澳门', value: getRandomValue() },
-  { label: '台湾', value: getRandomValue() },
-];
 
 onMounted(() => {
-  // getExperienceEanking(data, experienceEanking.value);
-  handleData(data, experienceEanking.value);
+  // 调用getBusinesstypeList函数，获取业务类型列表
+  getBusinesstypeList().then(res => {
+    // 将获取到的数据赋值给businesstypeList
+    businesstypeList.value = res.data.data;
+    form.value.businessType = businesstypeList.value[0].value;
+    form.value.fileTime = monthDataList.value[0].value;
+    nextTick(() => {
+      getExperienceEanking(form.value);
+    });
+  });
 });
 
-// const getExperienceEanking= (data, ref) => {
-//   handleData(data, ref);
-// };
+const getExperienceEanking = form => {
+  getExperience(form).then(res => {
+    data.value = res.data.data;
+    nextTick(() => {
+      // 调用handleData函数，处理数据并生成图表
+      handleData(data.value);
+    });
+  });
+};
 
 // 定义一个函数，用于处理数据并生成图表
-const handleData = (data, ref) => {
-  // 获取数据的标签
-  const labels = data.map(item => item.label);
-  // 获取数据的值
-  const values = data.map(item => item.value);
+const handleData = data => {
   // 初始化图表
-  let myChart = echarts.init(ref, null, { renderer: 'canvas', useDirtyRect: false });
+  let myChart = echarts.init(experienceEanking.value, null, {
+    renderer: 'canvas',
+    useDirtyRect: false,
+  });
   // 定义图表的配置项
   let option = {
     color: ['#5087ec'],
@@ -114,7 +113,7 @@ const handleData = (data, ref) => {
     // 设置x轴
     xAxis: {
       type: 'category',
-      data: labels,
+      data: data.xaxis,
       axisLabel: {
         interval: 0, // 强制显示所有标签
         // rotate: 45, // 旋转标签以防止重叠
@@ -127,7 +126,7 @@ const handleData = (data, ref) => {
     series: [
       {
         name: '数据',
-        data: values,
+        data: data.yaxis,
         type: 'bar',
         barWidth: 20,
         barCategoryGap: 10, // 缩小柱状图之间的间距
@@ -146,10 +145,6 @@ const handleData = (data, ref) => {
   }
   // 监听窗口大小变化，重新调整图表大小
   window.addEventListener('resize', myChart.resize);
-};
-
-const handleClick = (tab, event) => {
-  console.log(tab, event);
 };
 </script>
 
