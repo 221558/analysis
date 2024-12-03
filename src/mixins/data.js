@@ -1,11 +1,3 @@
-/*
- * @Author: 韩鹏涛 sj-hpt@dimpt.com
- * @Date: 2024-11-26 15:10:11
- * @LastEditors: 韩鹏涛 sj-hpt@dimpt.com
- * @LastEditTime: 2024-12-02 11:29:37
- * @FilePath: /analysis-system-frontend/src/mixins/data.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 // 导入getCurrentInstance函数，用于获取当前实例
 import { ref, getCurrentInstance } from 'vue';
 // 导入useStore函数，用于获取vuex中的store
