@@ -21,7 +21,7 @@
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"
-                @change="getDelayIpv4Data(delayIpv4Form.fileTime)"
+                @change="getDelayIpv4Data(delayIpv4Form)"
               />
             </el-form-item>
             <div class="detail">详情</div>
@@ -51,7 +51,7 @@
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"
-                @change="getDelayIpv6Data(delayIpv6Form.fileTime)"
+                @change="getDelayIpv6Data(delayIpv6Form)"
               />
             </el-form-item>
             <div class="detail">详情</div>
@@ -81,7 +81,7 @@
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"
-                @change="getLoserIpv4Data(loserIpv4Form.fileTime)"
+                @change="getLoserIpv4Data(loserIpv4Form)"
               />
             </el-form-item>
             <div class="detail">详情</div>
@@ -112,7 +112,7 @@
                 placeholder="选择月份"
                 value-format="YYYY-MM"
                 :disabled-date="disabledDate"
-                @change="getLoserIpv6Data(loserIpv6Form.fileTime)"
+                @change="getLoserIpv6Data(loserIpv6Form)"
               />
             </el-form-item>
             <div class="detail">详情</div>
@@ -159,35 +159,35 @@ const loserIpv4Form = ref({ fileTime: monthDataList.value[0].value });
 const loserIpv6Form = ref({ fileTime: monthDataList.value[0].value });
 
 onMounted(() => {
-  getDelayIpv4Data(delayIpv4Form.value.fileTime);
-  getDelayIpv6Data(delayIpv6Form.value.fileTime);
-  getLoserIpv4Data(loserIpv4Form.value.fileTime);
-  getLoserIpv6Data(loserIpv6Form.value.fileTime);
+  getDelayIpv4Data(delayIpv4Form.value);
+  getDelayIpv6Data(delayIpv6Form.value);
+  getLoserIpv4Data(loserIpv4Form.value);
+  getLoserIpv6Data(loserIpv6Form.value);
 });
 
-const getDelayIpv4Data = time => {
-  getDelayIpv4({ fileTime: time }).then(res => {
+const getDelayIpv4Data = form => {
+  getDelayIpv4(form).then(res => {
     nextTick(() => {
       handleData(res.data.data, delayIpv4.value);
     });
   });
 };
-const getDelayIpv6Data = time => {
-  getDelayIpv6({ fileTime: time }).then(res => {
+const getDelayIpv6Data = form => {
+  getDelayIpv6(form).then(res => {
     nextTick(() => {
       handleData(res.data.data, delayIpv6.value);
     });
   });
 };
-const getLoserIpv4Data = time => {
-  getLossIpv4({ fileTime: time }).then(res => {
+const getLoserIpv4Data = form => {
+  getLossIpv4(form).then(res => {
     nextTick(() => {
       handleData(res.data.data, loserIpv4.value);
     });
   });
 };
-const getLoserIpv6Data = time => {
-  getLossIpv6({ fileTime: time }).then(res => {
+const getLoserIpv6Data = form => {
+  getLossIpv6(form).then(res => {
     nextTick(() => {
       handleData(res.data.data, loserIpv6.value);
     });

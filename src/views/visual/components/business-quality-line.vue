@@ -16,11 +16,11 @@
               <el-select
                 style="width: 120px"
                 v-model="form.province"
-                placeholder="活动区域"
-                @change="getExperienceEanking"
+                placeholder="选择省份"
+                @change="getExperienceEanking(form)"
               >
                 <el-option
-                  v-for="item in ProvinceList"
+                  v-for="item in provinceList"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -31,8 +31,8 @@
               <el-select
                 style="width: 120px"
                 v-model="form.businessType"
-                placeholder="活动区域"
-                @change="getExperienceEanking"
+                placeholder="选择业务"
+                @change="getExperienceEanking(form)"
               >
                 <el-option
                   v-for="item in businesstypeList"
@@ -53,7 +53,7 @@
                 start-placeholder="开始月份"
                 end-placeholder="结束月份"
                 :disabled-date="disabledDate"
-                @change="getExperienceEanking"
+                @change="getExperienceEanking(form)"
               />
             </el-form-item>
             <div class="detail">详情</div>
@@ -86,7 +86,7 @@ const experienceEanking = ref(null);
 
 // 定义业务类型列表的响应式数据
 const businesstypeList = ref([]);
-const ProvinceList = ref([{ label: '全国', value: '全国' }]);
+const provinceList = ref([{ label: '全国', value: '全国' }]);
 const data = ref([]);
 const timeList = ref([]);
 const form = ref({ province: '', businessType: '', startTime: '', endTime: '' });
@@ -100,7 +100,7 @@ const disabledDate = time => {
 onMounted(async () => {
   // const [provinceRes, businessRes] = await Promise.all([getProvinceList(), getBusinesstypeList()]);
   const [businessRes] = await Promise.all([getBusinesstypeList()]);
-  // ProvinceList.value = provinceRes.data.data;
+  // provinceList.value = provinceRes.data.data;
   businesstypeList.value = businessRes.data.data;
   // 确保数据已经加载完成后再调用 getHandleData
   nextTick(() => {
@@ -117,13 +117,14 @@ const getHandleData = async () => {
     timeList.value[1] = monthDataList.value[length].value;
 
     // 确保 ProvinceList 和 businesstypeList 不为空
-    if (ProvinceList.value && ProvinceList.value.length > 0) {
-      form.value.province = ProvinceList.value[0].value;
+    if (provinceList.value && provinceList.value.length > 0) {
+      form.value.province = provinceList.value[0].value;
     }
 
     if (businesstypeList.value && businesstypeList.value.length > 0) {
       form.value.businessType = businesstypeList.value[0].value;
     }
+
     form.value.startTime = timeList.value[0];
     form.value.endTime = timeList.value[1];
 
@@ -134,6 +135,8 @@ const getHandleData = async () => {
 };
 
 const getExperienceEanking = form => {
+  form.startTime = timeList.value[0];
+  form.endTime = timeList.value[1];
   getExperience(form).then(res => {
     handleData(res.data.data);
   });

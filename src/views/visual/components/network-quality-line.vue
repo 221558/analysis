@@ -13,22 +13,34 @@
             </el-col>
             <!-- 右侧搜索框 -->
             <el-col :span="18">
-              <el-form class="form" :inline="true" :model="formInline">
+              <el-form class="form" :inline="true" :model="delayIpv4Form">
                 <el-form-item label="省份">
-                  <el-select style="width: 90px" v-model="formInline.region" placeholder="全国">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
+                  <el-select
+                    style="width: 90px"
+                    v-model="delayIpv4Form.province"
+                    placeholder="全国"
+                    @change="getDelayIpv4Data(delayIpv4Form)"
+                  >
+                    <el-option
+                      v-for="item in provinceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="日期">
                   <el-date-picker
-                    v-model="value2"
+                    v-model="delayIpv4TimeList"
                     value-format="YYYY-MM"
                     :unlink-panels="true"
+                    :clearable="false"
                     type="monthrange"
                     range-separator="至"
                     start-placeholder="开始月份"
                     end-placeholder="结束月份"
+                    @change="getDelayIpv4Data(delayIpv4Form)"
+                    :disabled-date="disabledDate"
                   />
                 </el-form-item>
                 <div class="detail">详情</div>
@@ -51,22 +63,34 @@
             </el-col>
             <!-- 右侧搜索框 -->
             <el-col :span="18">
-              <el-form class="form" :inline="true" :model="formInline">
+              <el-form class="form" :inline="true" :model="delayIpv6Form">
                 <el-form-item label="省份">
-                  <el-select style="width: 90px" v-model="formInline.region" placeholder="全国">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
+                  <el-select
+                    style="width: 90px"
+                    v-model="delayIpv6Form.province"
+                    placeholder="全国"
+                    @change="getDelayIpv6Data(delayIpv6Form)"
+                  >
+                    <el-option
+                      v-for="item in provinceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="日期">
                   <el-date-picker
-                    v-model="value2"
+                    v-model="delayIpv6TimeList"
                     value-format="YYYY-MM"
                     :unlink-panels="true"
+                    :clearable="false"
                     type="monthrange"
                     range-separator="至"
                     start-placeholder="开始月份"
                     end-placeholder="结束月份"
+                    @change="getDelayIpv6Data(delayIpv6Form)"
+                    :disabled-date="disabledDate"
                   />
                 </el-form-item>
                 <div class="detail">详情</div>
@@ -89,22 +113,34 @@
             </el-col>
             <!-- 右侧搜索框 -->
             <el-col :span="18">
-              <el-form class="form" :inline="true" :model="formInline">
+              <el-form class="form" :inline="true" :model="loserIpv4Form">
                 <el-form-item label="省份">
-                  <el-select style="width: 90px" v-model="formInline.region" placeholder="全国">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
+                  <el-select
+                    style="width: 90px"
+                    v-model="loserIpv4Form.province"
+                    placeholder="全国"
+                    @change="getLoserIpv4Data(loserIpv4Form)"
+                  >
+                    <el-option
+                      v-for="item in provinceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="日期">
                   <el-date-picker
-                    v-model="value2"
+                    v-model="loserIpv4TimeList"
                     value-format="YYYY-MM"
                     :unlink-panels="true"
+                    :clearable="false"
                     type="monthrange"
                     range-separator="至"
                     start-placeholder="开始月份"
                     end-placeholder="结束月份"
+                    @change="getLoserIpv4Data(loserIpv4Form)"
+                    :disabled-date="disabledDate"
                   />
                 </el-form-item>
                 <div class="detail">详情</div>
@@ -127,22 +163,34 @@
             </el-col>
             <!-- 右侧搜索框 -->
             <el-col :span="18">
-              <el-form class="form" :inline="true" :model="formInline">
+              <el-form class="form" :inline="true" :model="loserIpv6Form">
                 <el-form-item label="省份">
-                  <el-select style="width: 90px" v-model="formInline.region" placeholder="全国">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
+                  <el-select
+                    style="width: 90px"
+                    v-model="loserIpv6Form.province"
+                    placeholder="全国"
+                    @change="getLoserIpv6Data(loserIpv4Form)"
+                  >
+                    <el-option
+                      v-for="item in provinceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="日期">
                   <el-date-picker
-                    v-model="value2"
+                    v-model="loserIpv6TimeList"
                     value-format="YYYY-MM"
                     :unlink-panels="true"
+                    :clearable="false"
                     type="monthrange"
                     range-separator="至"
                     start-placeholder="开始月份"
                     end-placeholder="结束月份"
+                    @change="getLoserIpv6Data(loserIpv4Form)"
+                    :disabled-date="disabledDate"
                   />
                 </el-form-item>
                 <div class="detail">详情</div>
@@ -160,45 +208,21 @@
 <script setup>
 // 引入echarts库
 import * as echarts from 'echarts';
-
-import { ref, onMounted, onUnmounted, watchEffect } from 'vue';
-
+import { ref, onMounted, onUnmounted, watchEffect, nextTick } from 'vue';
+import { getDelayIpv4, getDelayIpv6, getLossIpv4, getLossIpv6 } from '@/api/visual/trend-display';
+// 导入通用CRUD混入
+import { useMixins } from '@/mixins/data.js';
+// monthDataList
+const { monthDataList } = useMixins();
 // 定义一个响应式变量来存储屏幕宽度
 const screenWidth = ref(window.innerWidth);
-
-// 定义一个响应式变量来存储是否是小屏幕
 const isSmallScreen = ref(screenWidth.value < 768);
-
-// 监听屏幕宽度变化的函数
 const handleResize = () => {
   screenWidth.value = window.innerWidth;
 };
-
-// 使用 watchEffect 监听 screenWidth 的变化
 watchEffect(() => {
   isSmallScreen.value = screenWidth.value < 1566;
-  console.log(isSmallScreen.value);
 });
-
-// 在组件挂载时添加事件监听器
-onMounted(() => {
-  window.addEventListener('resize', handleResize);
-  // getDelayIpv4(data, delayIpv4.value);
-  // getDelayIpv6(data, delayIpv6.value);
-  // getLoserIpv4(data, loserIpv4.value);
-  // getLoserIpv6(data, loserIpv6.value);
-
-  handleData(data, delayIpv4.value);
-  handleData(data, delayIpv6.value);
-  handleData(data, loserIpv4.value);
-  handleData(data, loserIpv6.value);
-});
-
-// 在组件卸载时移除事件监听器
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-});
-
 // 定义一个响应式变量，用于存储当前激活的标签页名称
 const activeName = ref('first');
 // 定义一个响应式变量，用于存储IPv4的延迟时间
@@ -209,50 +233,84 @@ const delayIpv6 = ref(null);
 const loserIpv4 = ref(null);
 // 定义一个响应式变量，用于存储IPv6的丢包率
 const loserIpv6 = ref(null);
-// 定义一个响应式变量，用于存储输入框的值
-const value2 = ref('');
-const formInline = ref({
-  user: '',
-  region: '',
+
+const provinceList = ref([{ label: '全国', value: '全国' }]);
+const delayIpv4Form = ref({ province: provinceList.value[0].value, startTime: '', endTime: '' });
+const delayIpv6Form = ref({ province: provinceList.value[0].value, startTime: '', endTime: '' });
+const loserIpv4Form = ref({ province: provinceList.value[0].value, startTime: '', endTime: '' });
+const loserIpv6Form = ref({ province: provinceList.value[0].value, startTime: '', endTime: '' });
+const delayIpv4TimeList = ref([]);
+const delayIpv6TimeList = ref([]);
+const loserIpv4TimeList = ref([]);
+const loserIpv6TimeList = ref([]);
+
+// 在组件挂载时添加事件监听器
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+  getHandleData();
 });
 
-// 定义一个函数，用于生成一个1到100之间的随机整数
-const getRandomValue = () => {
-  // 生成一个1到100之间的随机整数
-  return Math.floor(Math.random() * 100) + 1;
+// 定义禁用未来日期的函数
+const disabledDate = time => {
+  // 如果传入的时间大于当前时间，则返回true，表示禁用该日期
+  return time.getTime() > Date.now();
 };
-const data = [
-  { label: '2024-01', value: getRandomValue() },
-  { label: '2024-02', value: getRandomValue() },
-  { label: '2024-03', value: getRandomValue() },
-  { label: '2024-04', value: getRandomValue() },
-  { label: '2024-05', value: getRandomValue() },
-  { label: '2024-06', value: getRandomValue() },
-  { label: '2024-07', value: getRandomValue() },
-  { label: '2024-08', value: getRandomValue() },
-  { label: '2024-09', value: getRandomValue() },
-  { label: '2024-10', value: getRandomValue() },
-  { label: '2024-11', value: getRandomValue() },
-];
 
-// const getDelayIpv4 = (data, ref) => {
-//   handleData(data, ref);
-// };
-// const getDelayIpv6 = (data, ref) => {
-//   handleData(data, ref);
-// };
-// const getLoserIpv4 = (data, ref) => {
-//   handleData(data, ref);
-// };
-// const getLoserIpv6 = (data, ref) => {
-//   handleData(data, ref);
-// };
+const setFormAndTimeList = timeList => {
+  if (monthDataList.value && monthDataList.value.length > 0) {
+    const length = monthDataList.value.length - 1;
+    timeList.value[0] = monthDataList.value[0].value;
+    timeList.value[1] = monthDataList.value[length].value;
+    nextTick(() => {
+      getDelayIpv4Data(delayIpv4Form.value);
+      getDelayIpv6Data(delayIpv6Form.value);
+      getLoserIpv4Data(loserIpv4Form.value);
+      getLoserIpv6Data(loserIpv6Form.value);
+    });
+  }
+};
+const getHandleData = () => {
+  setFormAndTimeList(delayIpv4TimeList);
+  setFormAndTimeList(delayIpv6TimeList);
+  setFormAndTimeList(loserIpv4TimeList);
+  setFormAndTimeList(loserIpv6TimeList);
+};
+const getDelayIpv4Data = form => {
+  getDelayIpv4(handleTime(form, delayIpv4TimeList.value)).then(res => {
+    nextTick(() => {
+      handleData(res.data.data, delayIpv4.value);
+    });
+  });
+};
+const getDelayIpv6Data = form => {
+  getDelayIpv6(handleTime(form, delayIpv6TimeList.value)).then(res => {
+    nextTick(() => {
+      handleData(res.data.data, delayIpv6.value);
+    });
+  });
+};
+const getLoserIpv4Data = form => {
+  getLossIpv4(handleTime(form, loserIpv4TimeList.value)).then(res => {
+    nextTick(() => {
+      handleData(res.data.data, loserIpv4.value);
+    });
+  });
+};
+const getLoserIpv6Data = form => {
+  getLossIpv6(handleTime(form, loserIpv6TimeList.value)).then(res => {
+    nextTick(() => {
+      handleData(res.data.data, loserIpv6.value);
+    });
+  });
+};
+
+const handleTime = (form, timeList) => {
+  form.startTime = timeList[0];
+  form.endTime = timeList[1];
+  return form;
+};
 
 const handleData = (data, ref) => {
-  // 将data中的每个元素的label属性提取出来，存入labels数组中
-  const labels = data.map(item => item.label);
-  // 将data中的每个元素的value属性提取出来，存入values数组中
-  const values = data.map(item => item.value);
   // 初始化echarts实例，ref为容器，null为配置项，{ renderer: 'canvas', useDirtyRect: false }为渲染器
   let myChart = echarts.init(ref, null, { renderer: 'canvas', useDirtyRect: false });
   // 定义图表的配置项
@@ -271,7 +329,7 @@ const handleData = (data, ref) => {
     // 设置x轴
     xAxis: {
       type: 'category',
-      data: labels,
+      data: data.xaxis,
       axisLabel: {
         interval: 0, // 强制显示所有标签
         // rotate: 45, // 旋转标签以防止重叠
@@ -288,7 +346,7 @@ const handleData = (data, ref) => {
     series: [
       {
         name: '数据',
-        data: values,
+        data: data.yaxis,
         type: 'line',
         barWidth: 20,
         barCategoryGap: 10, // 缩小柱状图之间的间距
@@ -308,9 +366,10 @@ const handleData = (data, ref) => {
   // 监听窗口大小变化事件，当窗口大小变化时，重新调整图表大小
   window.addEventListener('resize', myChart.resize);
 };
-const handleClick = (tab, event) => {
-  console.log(tab, event);
-};
+// 在组件卸载时移除事件监听器
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 
 <style lang="scss" scoped>
