@@ -48,8 +48,8 @@ watch(
   // 设置el-tabs__item的宽度为120px
   width: 120px;
   // 设置el-tabs__item的左上角和右上角的圆角半径为20px
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
   // 设置el-tabs__item的背景颜色为#ebedf0
   background-color: #ebedf0;
 }
