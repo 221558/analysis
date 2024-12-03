@@ -20,9 +20,11 @@ import TabbedContent from '@/components/tabbed-content/main.vue';
 import networkQualityLine from './components/network-quality-line.vue'; // NOSONAR
 // 业务质量
 import businessQualityLine from './components/business-quality-line.vue'; // NOSONAR
+// 定义一个tabs数组，包含两个对象，每个对象包含label和name属性
 const tabs = [
   { label: '网络质量', name: 'first' },
   { label: '业务质量', name: 'second' },
 ];
+// 定义一个默认激活的tab，值为'first'
 const defaultActive = 'first';
 </script>

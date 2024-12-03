@@ -48,10 +48,14 @@ const form = ref({ keyword: '', fileTime: '' });
 const fileTimeData = ref([]);
 const fileTimeList = ref([]);
 
-//
+
+// 定义一个函数，用于获取时间数据
 const getTimeData = () => {
+  // 调用timelist函数，获取时间数据
   timelist().then(res => {
+    // 打印获取到的数据
     console.log(res.data.data);
+    // 将获取到的数据赋值给fileTimeData
     fileTimeData.value = res.data.data;
   });
 };

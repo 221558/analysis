@@ -152,49 +152,75 @@ const disabledDate = time => {
   // 如果传入的时间大于当前时间，则返回true，表示禁用该日期
   return time.getTime() > Date.now();
 };
-// 定义一个响应式变量，用于存储输入框的值
+// 定义一个名为delayIpv4Form的响应式对象，初始值为monthDataList.value[0].value
 const delayIpv4Form = ref({ fileTime: monthDataList.value[0].value });
+// 定义一个名为delayIpv6Form的响应式对象，初始值为monthDataList.value[0].value
 const delayIpv6Form = ref({ fileTime: monthDataList.value[0].value });
+// 定义一个名为loserIpv4Form的响应式对象，初始值为monthDataList.value[0].value
 const loserIpv4Form = ref({ fileTime: monthDataList.value[0].value });
+// 定义一个名为loserIpv6Form的响应式对象，初始值为monthDataList.value[0].value
 const loserIpv6Form = ref({ fileTime: monthDataList.value[0].value });
 
 onMounted(() => {
+  // 获取IPv4延迟数据
   getDelayIpv4Data(delayIpv4Form.value);
+  // 获取IPv6延迟数据
   getDelayIpv6Data(delayIpv6Form.value);
+  // 获取IPv4丢包数据
   getLoserIpv4Data(loserIpv4Form.value);
+  // 获取IPv6丢包数据
   getLoserIpv6Data(loserIpv6Form.value);
 });
 
+// 定义一个函数，用于获取IPv4延迟数据
 const getDelayIpv4Data = form => {
+  // 调用getDelayIpv4函数，传入form参数
   getDelayIpv4(form).then(res => {
+    // 在nextTick函数中处理数据
     nextTick(() => {
+      // 调用handleData函数，传入res.data.data和delayIpv4.value参数
       handleData(res.data.data, delayIpv4.value);
     });
   });
 };
+// 定义一个函数，用于获取延迟IPv6数据
 const getDelayIpv6Data = form => {
+  // 调用getDelayIpv6函数，传入form参数
   getDelayIpv6(form).then(res => {
+    // 在nextTick函数中处理数据
     nextTick(() => {
+      // 调用handleData函数，传入res.data.data和delayIpv6.value参数
       handleData(res.data.data, delayIpv6.value);
     });
   });
 };
+// 定义一个函数，用于获取IPv4数据
 const getLoserIpv4Data = form => {
+  // 调用getLossIpv4函数，传入form参数
   getLossIpv4(form).then(res => {
+    // 在下一个tick中处理数据
     nextTick(() => {
+      // 调用handleData函数，传入res.data.data和loserIpv4.value参数
       handleData(res.data.data, loserIpv4.value);
     });
   });
 };
+// 定义一个函数，用于获取IPv6数据
 const getLoserIpv6Data = form => {
+  // 调用getLossIpv6函数，传入form参数
   getLossIpv6(form).then(res => {
+    // 在下一个tick中处理数据
     nextTick(() => {
+      // 调用handleData函数，传入res.data.data和loserIpv6.value参数
       handleData(res.data.data, loserIpv6.value);
     });
   });
 };
 
 const handleData = (data, ref) => {
+  if (!ref) {
+    return;
+  }
   // 初始化echarts实例，ref为容器，null为配置项，{ renderer: 'canvas', useDirtyRect: false }为渲染器
   let myChart = echarts.init(ref, null, { renderer: 'canvas', useDirtyRect: false });
   // 定义图表的配置项

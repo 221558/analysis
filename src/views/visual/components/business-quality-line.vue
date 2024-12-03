@@ -86,9 +86,13 @@ const experienceEanking = ref(null);
 
 // 定义业务类型列表的响应式数据
 const businesstypeList = ref([]);
-const provinceList = ref([{ label: '全国', value: '全国' }]);
+// 定义一个provinceList变量，用于存储省份列表
+const provinceList = ref([]);
+// 定义一个data变量，用于存储数据
 const data = ref([]);
+// 定义一个timeList变量，用于存储时间列表
 const timeList = ref([]);
+// 定义一个form变量，用于存储表单数据
 const form = ref({ province: '', businessType: '', startTime: '', endTime: '' });
 
 // 定义禁用未来日期的函数
@@ -98,9 +102,8 @@ const disabledDate = time => {
 };
 
 onMounted(async () => {
-  // const [provinceRes, businessRes] = await Promise.all([getProvinceList(), getBusinesstypeList()]);
-  const [businessRes] = await Promise.all([getBusinesstypeList()]);
-  // provinceList.value = provinceRes.data.data;
+  const [provinceRes, businessRes] = await Promise.all([getProvinceList(), getBusinesstypeList()]);
+  provinceList.value = provinceRes.data.data;
   businesstypeList.value = businessRes.data.data;
   // 确保数据已经加载完成后再调用 getHandleData
   nextTick(() => {
@@ -109,7 +112,9 @@ onMounted(async () => {
 });
 
 const getHandleData = async () => {
+  // 判断 monthDataList 是否存在且长度大于0
   if (monthDataList.value && monthDataList.value.length > 0) {
+    // 获取 monthDataList 的长度减1
     const length = monthDataList.value.length - 1;
     // 回显 开始
     timeList.value[0] = monthDataList.value[0].value;
@@ -118,34 +123,38 @@ const getHandleData = async () => {
 
     // 确保 ProvinceList 和 businesstypeList 不为空
     if (provinceList.value && provinceList.value.length > 0) {
+      // 将 ProvinceList 的第一个值赋值给 form 的 province
       form.value.province = provinceList.value[0].value;
     }
 
     if (businesstypeList.value && businesstypeList.value.length > 0) {
+      // 将 businesstypeList 的第一个值赋值给 form 的 businessType
       form.value.businessType = businesstypeList.value[0].value;
     }
-
-    form.value.startTime = timeList.value[0];
-    form.value.endTime = timeList.value[1];
-
+    // 在 nextTick 中调用 getExperienceEanking 方法，并传入 form 的值
     nextTick(() => {
       getExperienceEanking(form.value);
     });
   }
 };
 
+// 根据传入的form参数，获取经验排行榜
 const getExperienceEanking = form => {
+  // 将时间列表的第一个值赋给form的startTime属性
   form.startTime = timeList.value[0];
+  // 将时间列表的第二个值赋给form的endTime属性
   form.endTime = timeList.value[1];
+  // 调用getExperience方法，传入form参数，获取经验排行榜
   getExperience(form).then(res => {
-    handleData(res.data.data);
+    // 处理获取到的数据
+    handleData(res.data.data, experienceEanking.value);
   });
 };
 
 // 定义一个函数，用于处理数据并生成图表
-const handleData = data => {
+const handleData = (data, ref) => {
   // 初始化图表
-  let myChart = echarts.init(experienceEanking.value, null, {
+  let myChart = echarts.init(ref, null, {
     renderer: 'canvas',
     useDirtyRect: false,
   });

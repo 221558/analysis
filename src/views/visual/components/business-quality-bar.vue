@@ -80,8 +80,11 @@ onMounted(() => {
   getBusinesstypeList().then(res => {
     // 将获取到的数据赋值给businesstypeList
     businesstypeList.value = res.data.data;
+    // 设置表单中的businessType值为businesstypeList中的第一个元素的value值
     form.value.businessType = businesstypeList.value[0].value;
+    // 设置表单中的fileTime值为monthDataList中的第一个元素的value值
     form.value.fileTime = monthDataList.value[0].value;
+    // 在下一个tick中调用getExperienceEanking函数，并传入表单的值
     nextTick(() => {
       getExperienceEanking(form.value);
     });

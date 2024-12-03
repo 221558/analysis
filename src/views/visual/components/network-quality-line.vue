@@ -209,7 +209,13 @@
 // 引入echarts库
 import * as echarts from 'echarts';
 import { ref, onMounted, onUnmounted, watchEffect, nextTick } from 'vue';
-import { getDelayIpv4, getDelayIpv6, getLossIpv4, getLossIpv6 } from '@/api/visual/trend-display';
+import {
+  getDelayIpv4,
+  getDelayIpv6,
+  getLossIpv4,
+  getLossIpv6,
+  getProvinceList,
+} from '@/api/visual/trend-display';
 // 导入通用CRUD混入
 import { useMixins } from '@/mixins/data.js';
 // monthDataList
@@ -234,20 +240,24 @@ const loserIpv4 = ref(null);
 // 定义一个响应式变量，用于存储IPv6的丢包率
 const loserIpv6 = ref(null);
 
-const provinceList = ref([{ label: '全国', value: '全国' }]);
-const delayIpv4Form = ref({ province: provinceList.value[0].value, startTime: '', endTime: '' });
-const delayIpv6Form = ref({ province: provinceList.value[0].value, startTime: '', endTime: '' });
-const loserIpv4Form = ref({ province: provinceList.value[0].value, startTime: '', endTime: '' });
-const loserIpv6Form = ref({ province: provinceList.value[0].value, startTime: '', endTime: '' });
+const provinceList = ref([]);
+const delayIpv4Form = ref({ province: '', startTime: '', endTime: '' });
+const delayIpv6Form = ref({ province: '', startTime: '', endTime: '' });
+const loserIpv4Form = ref({ province: '', startTime: '', endTime: '' });
+const loserIpv6Form = ref({ province: '', startTime: '', endTime: '' });
 const delayIpv4TimeList = ref([]);
 const delayIpv6TimeList = ref([]);
 const loserIpv4TimeList = ref([]);
 const loserIpv6TimeList = ref([]);
 
-// 在组件挂载时添加事件监听器
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('resize', handleResize);
-  getHandleData();
+  const [provinceRes] = await Promise.all([getProvinceList()]);
+  provinceList.value = provinceRes.data.data;
+  // 确保数据已经加载完成后再调用 getHandleData
+  nextTick(() => {
+    getHandleData();
+  });
 });
 
 // 定义禁用未来日期的函数
@@ -256,61 +266,103 @@ const disabledDate = time => {
   return time.getTime() > Date.now();
 };
 
-const setFormAndTimeList = timeList => {
+// 定义一个函数，用于设置表单和时间列表
+const setFormAndTimeList = (timeList, city) => {
+  // 如果monthDataList有值且长度大于0
   if (monthDataList.value && monthDataList.value.length > 0) {
+    // 获取monthDataList的最后一个元素的索引
     const length = monthDataList.value.length - 1;
+    // 将monthDataList的第一个元素的值赋给timeList的第一个元素
     timeList.value[0] = monthDataList.value[0].value;
+    // 将monthDataList的最后一个元素的值赋给timeList的第二个元素
     timeList.value[1] = monthDataList.value[length].value;
+    // 将provinceList的第一个元素的值赋给city的province属性
+    city.value.province = provinceList.value[0].value;
+
+    // 在下一个tick中执行以下操作
     nextTick(() => {
+      // 调用getDelayIpv4Data函数，传入delayIpv4Form的值
       getDelayIpv4Data(delayIpv4Form.value);
+      // 调用getDelayIpv6Data函数，传入delayIpv6Form的值
       getDelayIpv6Data(delayIpv6Form.value);
+      // 调用getLoserIpv4Data函数，传入loserIpv4Form的值
       getLoserIpv4Data(loserIpv4Form.value);
+      // 调用getLoserIpv6Data函数，传入loserIpv6Form的值
       getLoserIpv6Data(loserIpv6Form.value);
     });
   }
 };
+// 获取处理数据
 const getHandleData = () => {
-  setFormAndTimeList(delayIpv4TimeList);
-  setFormAndTimeList(delayIpv6TimeList);
-  setFormAndTimeList(loserIpv4TimeList);
-  setFormAndTimeList(loserIpv6TimeList);
+  // 设置IPv4延迟时间和表单
+  setFormAndTimeList(delayIpv4TimeList, delayIpv4Form);
+  // 设置IPv6延迟时间和表单
+  setFormAndTimeList(delayIpv6TimeList, delayIpv6Form);
+  // 设置IPv4丢包时间和表单
+  setFormAndTimeList(loserIpv4TimeList, loserIpv4Form);
+  // 设置IPv6丢包时间和表单
+  setFormAndTimeList(loserIpv6TimeList, loserIpv6Form);
 };
+// 获取IPv4延迟数据
 const getDelayIpv4Data = form => {
+  // 获取IPv4延迟数据
   getDelayIpv4(handleTime(form, delayIpv4TimeList.value)).then(res => {
+    // 下一个tick
     nextTick(() => {
+      // 处理数据
       handleData(res.data.data, delayIpv4.value);
     });
   });
 };
+// 获取IPv6延迟数据
 const getDelayIpv6Data = form => {
+  // 获取IPv6延迟数据
   getDelayIpv6(handleTime(form, delayIpv6TimeList.value)).then(res => {
+    // 下一个tick
     nextTick(() => {
+      // 处理数据
       handleData(res.data.data, delayIpv6.value);
     });
   });
 };
+// 获取输家IPv4数据
 const getLoserIpv4Data = form => {
+  // 调用getLossIpv4函数，传入处理后的时间和输家IPv4时间列表
   getLossIpv4(handleTime(form, loserIpv4TimeList.value)).then(res => {
+    // 在下一个tick中处理数据
     nextTick(() => {
+      // 调用handleData函数，传入获取到的数据和输家IPv4
       handleData(res.data.data, loserIpv4.value);
     });
   });
 };
+// 获取IPv6数据
 const getLoserIpv6Data = form => {
+  // 调用getLossIpv6函数，传入处理后的时间和loserIpv6TimeList的值
   getLossIpv6(handleTime(form, loserIpv6TimeList.value)).then(res => {
+    // 在下一个tick中处理数据
     nextTick(() => {
+      // 调用handleData函数，传入res.data.data和loserIpv6的值
       handleData(res.data.data, loserIpv6.value);
     });
   });
 };
 
+// 定义一个函数handleTime，用于处理时间
 const handleTime = (form, timeList) => {
+  // 将timeList的第一个元素赋值给form的startTime属性
   form.startTime = timeList[0];
+  // 将timeList的第二个元素赋值给form的endTime属性
   form.endTime = timeList[1];
+  // 返回处理后的form对象
   return form;
 };
 
 const handleData = (data, ref) => {
+  if (!ref) {
+    return;
+  }
+
   // 初始化echarts实例，ref为容器，null为配置项，{ renderer: 'canvas', useDirtyRect: false }为渲染器
   let myChart = echarts.init(ref, null, { renderer: 'canvas', useDirtyRect: false });
   // 定义图表的配置项

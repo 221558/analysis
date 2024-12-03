@@ -44,14 +44,22 @@ const { _this, option, data, search, loadings, conf, selectionList, selectionCha
 let page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });
 
 option.value = {
+  // 将conf.value中的属性展开
   ...conf.value,
+  // 设置表格内容的对齐方式为居中
   align: 'center',
   column: [
+    // 表格编号
     { label: '表格编号', prop: 'sheetIndex' },
+    // 表格名
     { label: '表格名', prop: 'sheetName' },
+    // 所属月份
     { label: '所属月份', prop: 'fileTime' },
+    // 说明
     { label: '说明', prop: 'explain' },
-  ],
+  ].map(item => {
+    return { ...item, overHidden: true };
+  }),
 };
 // 每页多少条
 const sizeChange = val => {
