@@ -1,18 +1,18 @@
 <template>
   <el-form :inline="true" :model="form" class="demo-form-inline">
-    <el-form-item label="选择月份：">
+    <el-form-item label="省份：">
       <el-date-picker
         v-model="form.fileTime"
         type="month"
-        placeholder="请选择选择月份"
+        placeholder="请选择省份"
         clearable
         value-format="YYYY-MM"
         :disabled-date="disabledDate"
         @change="changeData(form.fileTime)"
       />
     </el-form-item>
-    <el-form-item label="关键字：">
-      <el-input v-model="form.keyword" placeholder="请选择关键字" clearable />
+    <el-form-item label="监控参数：">
+      <el-input v-model="form.keyword" placeholder="请选择监控参数" clearable />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="getSearchForm">查询</el-button>

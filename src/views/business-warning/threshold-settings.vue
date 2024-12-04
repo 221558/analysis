@@ -1,3 +1,4 @@
+<!-- 业务预警:阈值设置 -->
 <template>
   <TabbedContent :tabs="tabs" :default-active="defaultActive">
     <template #first>

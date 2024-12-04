@@ -1,6 +1,5 @@
 <template>
   <div class="table-container">
-    <searchReport :selectionList="selectionList" @getSearch="getSearch" />
     <avue-crud
       ref="crudRef"
       :data="data"
@@ -16,6 +15,13 @@
       @selection-change="selectionChange"
       @on-load="onLoad"
     >
+      <template #menu-left>
+        <searchReport :selectionList="selectionList" @getSearch="getSearch" />
+      </template>
+      <template #menu-right>
+        <el-button type="primary" plain @click="getDownload"> 新增 </el-button>
+        <el-button type="primary" plain @click="getDownload"> 批量新增 </el-button>
+      </template>
       <template #menu="scope">
         <el-button text type="primary" @click.stop="getView(scope.row)">
           <el-icon><View /></el-icon>
