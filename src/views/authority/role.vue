@@ -18,8 +18,8 @@
       @on-load="onLoad"
     >
       <template #menu-left>
-        <el-button type="danger" icon="el-icon-delete" v-if="permission.role_delete" plain @click="handleDelete">删 除 </el-button>
-        <el-button icon="el-icon-delete" @click="handleRole" plain>权限设置 </el-button>
+        <el-button type="danger" icon="el-icon-delete" v-if="permission.role_delete" plain @click="handleDelete">删 除</el-button>
+        <el-button icon="el-icon-setting" @click="handleRole" plain>权限设置</el-button>
       </template>
     </avue-crud>
     <el-dialog title="角色配置" v-model="box" width="345px">
