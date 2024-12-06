@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :model="form" class="demo-form-inline">
     <el-form-item label="省份：">
-      <el-select v-model="form.province" placeholder="选择省份" @change="getData(form)" clearable multiple >
+      <el-select v-model="form.provinces" placeholder="选择省份" @change="getData(form)" clearable multiple >
         <el-option
           v-for="item in props.provinceList"
           :key="item.value"
@@ -12,7 +12,7 @@
     </el-form-item>
     <el-form-item label="监控参数：">
       <el-select
-        v-model="form.monitorParam"
+        v-model="form.monitorParams"
         placeholder="选择监控参数"
         @change="getData(form)"
         clearable
@@ -46,12 +46,12 @@ const ids = computed(() => {
   return props.selectionList.map(item => String(item.id)).join(',');
 });
 // 创建一个响应式对象form，包含user和date两个属性
-const form = reactive({ province: [], monitorParam: [] });
+const form = reactive({ provinces: [], monitorParams: [] });
 // 重置表单
 const getResetForm = () => {
   // 将表单中的用户名和日期重置为空
-  form.province = [];
-  form.monitorParam = [];
+  form.provinces = [];
+  form.monitorParams = [];
   // 打印表单中的用户名和日期
   emit('getSearch', form);
 };

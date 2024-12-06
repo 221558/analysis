@@ -41,6 +41,9 @@
           <span>删除</span>
         </el-button>
       </template>
+      <template #status="{ row }">
+        {{ row.status == 1 ? '启用' : '禁用' }}
+      </template>
     </avue-crud>
   </div>
 </template>
@@ -56,7 +59,7 @@ import {
   businessParamSave,
   businessParamUpdate,
   networkParamDelete,
-  checkMonitorId
+  checkMonitorId,
 } from '@/api/business/threshold.js';
 // 导入getToken方法，用于获取token
 import { getToken } from 'utils/auth';
@@ -126,7 +129,13 @@ option.value = {
       ],
       value: 1,
     },
-    { label: '说明', prop: 'note', span: 24, type: 'textarea' , rules: [{ required: true, message: '请输入说明', trigger: 'blur' }],},
+    {
+      label: '说明',
+      prop: 'note',
+      span: 24,
+      type: 'textarea',
+      rules: [{ required: true, message: '请输入说明', trigger: 'blur' }],
+    },
   ],
 };
 // 每页多少条

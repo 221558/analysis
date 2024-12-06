@@ -75,7 +75,7 @@ export const businessParamSave = data => {
 //阈值业务参数修改
 export const businessParamUpdate = data => {
   return request({
-    url: '/analysis-system/business-warn/network-param/update',
+    url: '/analysis-system/business-warn/business-param/update',
     method: 'post',
     data,
   });
