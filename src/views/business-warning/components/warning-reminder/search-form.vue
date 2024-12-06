@@ -18,7 +18,6 @@
       <el-button type="primary" @click="getSearchForm">查询</el-button>
       <el-button @click="getResetForm">重置</el-button>
     </el-form-item>
-    <el-button style="float: right" type="primary" plain @click="getDownload">批量下载</el-button>
   </el-form>
 </template>
 

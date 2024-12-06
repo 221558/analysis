@@ -1,6 +1,5 @@
 <template>
   <basic-container>
-    <searchReport :selectionList="selectionList" @getSearch="getSearch" />
     <avue-crud
       ref="crudRef"
       :data="data"
@@ -16,12 +15,18 @@
       @selection-change="selectionChange"
       @on-load="onLoad"
     >
+      <template #menu-left>
+        <searchReport @getSearch="getSearch" />
+      </template>
+      <template #menu-right>
+        <el-button type="primary" plain @click="getDownload('more', ids)"> 批量下载 </el-button>
+      </template>
       <template #menu="scope">
         <el-button text type="primary" @click.stop="getView(scope.row)">
           <el-icon><View /></el-icon>
           <span>查看</span>
         </el-button>
-        <el-button text type="primary" @click.stop="getDownload(scope.row)">
+        <el-button text type="primary" @click.stop="getDownload('one', scope.row)">
           <el-icon><Download /></el-icon>
           <span>下载</span>
         </el-button>
@@ -32,17 +37,18 @@
 
 <script setup>
 import { ref } from 'vue';
+import { ElMessage } from 'element-plus';
 import searchReport from './components/search-report.vue'; // NOSONAR
 import { getUploadRecords, getDownloadFile } from '@/api/data-query/original-report';
-// 导入getToken方法，用于获取token
-import { getToken } from 'utils/auth';
 // 导入通用CRUD混入
 import { useMixins } from '@/mixins/data.js';
 // _this, store, option, data, search, loadings, conf, selectionList, selectionChange
 const { _this, option, data, search, loadings, conf, selectionList, selectionChange } = useMixins();
 // 定义分页信息变量，包括每页大小、当前页码和总条数
 let page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });
-
+const ids = computed(() => {
+  return selectionList.value.map(item => String(item.id)).join(',');
+});
 option.value = {
   // 将conf.value中的属性展开
   ...conf.value,
@@ -122,32 +128,39 @@ const getView = row => {
 };
 
 // 定义一个函数getDownload，参数为row
-const getDownload = row => {
-  getDownloadFile({ recordIds: row.id }).then(res => {
-    // 如果返回的状态码为200
-    if (res.status == 200) {
-      // 创建一个Blob对象，将返回的数据作为参数传入
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-      // 创建一个a标签
-      const link = document.createElement('a');
-      // 设置a标签的样式为不显示
-      link.style.display = 'none';
-      // 设置a标签的href属性为Blob对象的URL
-      link.href = url;
-      // 设置a标签的download属性为row对象的deviceFileName属性
-      link.setAttribute('download', row.sheetName + row.fileTime + '.xlsx');
-      // 将a标签添加到body中
-      document.body.appendChild(link);
-      // 模拟点击a标签，触发下载
-      link.click();
-      // 将a标签从body中移除
-      document.body.removeChild(link);
-      // 释放Blob对象的URL
-      window.URL.revokeObjectURL(link.href);
-    } else {
-      // 如果返回的状态码不为200，则弹出错误提示
-      ElMessage.error('下载失败，请稍后再试。');
-    }
-  });
+const getDownload = (type, row) => {
+  if (type == 'more' && selectionList.value.length === 0) {
+    return ElMessage.warning('请选择至少一条数据');
+  } else {
+    getDownloadFile({ recordIds: type == 'more' ? row : row.id }).then(res => {
+      // 如果返回的状态码为200
+      if (res.status == 200) {
+        // 创建一个Blob对象，将返回的数据作为参数传入
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        // 创建一个a标签
+        const link = document.createElement('a');
+        // 设置a标签的样式为不显示
+        link.style.display = 'none';
+        // 设置a标签的href属性为Blob对象的URL
+        link.href = url;
+        // 设置a标签的download属性为row对象的deviceFileName属性
+        link.setAttribute(
+          'download',
+          type == 'more' ? '信通院报表数据.xlsx' : row.sheetName + row.fileTime + '.xlsx'
+        );
+        // 将a标签添加到body中
+        document.body.appendChild(link);
+        // 模拟点击a标签，触发下载
+        link.click();
+        // 将a标签从body中移除
+        document.body.removeChild(link);
+        // 释放Blob对象的URL
+        window.URL.revokeObjectURL(link.href);
+      } else {
+        // 如果返回的状态码不为200，则弹出错误提示
+        ElMessage.error('下载失败，请稍后再试。');
+      }
+    });
+  }
 };
 </script>
