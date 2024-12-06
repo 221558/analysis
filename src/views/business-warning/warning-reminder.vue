@@ -15,8 +15,8 @@ import TabbedContent from '@/components/tabbed-content/main.vue';
 import networkParameter from './components/warning-reminder/network-parameter.vue';
 import businessParameter from './components/warning-reminder/business-parameters.vue';
 const tabs = [
-  { label: '网络参数', name: 'first' },
-  { label: '业务参数', name: 'second' },
+  { label: '网络预警', name: 'first' },
+  { label: '业务预警', name: 'second' },
 ];
 const defaultActive = 'first';
 </script>
