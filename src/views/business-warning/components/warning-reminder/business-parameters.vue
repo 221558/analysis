@@ -16,7 +16,11 @@
       @on-load="onLoad"
     >
       <template #menu-left>
-        <searchReport :selectionList="selectionList" @getSearch="getSearch" />
+        <searchReport
+          @getSearch="getSearch"
+          :provinceList="provinceList"
+          :monitorParamList="monitorParamList"
+        />
       </template>
 
       <template #menu="scope">
@@ -24,10 +28,9 @@
           <!-- <el-icon><View /></el-icon> -->
           <span>根因分析</span>
         </el-button>
-        <!-- <el-button text type="primary" @click.stop="getDownload(scope.row)">
-          <el-icon><Download /></el-icon>
-          <span>下载</span>
-        </el-button> -->
+      </template>
+      <template #status="{ row }">
+        {{ row.status == 1 ? '启用' : '禁用' }}
       </template>
     </avue-crud>
   </div>
@@ -62,7 +65,7 @@ option.value = {
   ...conf.value,
   align: 'center',
   column: [
-    { label: '监控ID', prop: 'id' },
+    { label: '监控ID', prop: 'businessWarnId' },
     { label: '监控省份', prop: 'province' },
     { label: '监控参数', prop: 'monitorParam' },
     { label: '阈值设置', prop: 'monitorThreshold' },
