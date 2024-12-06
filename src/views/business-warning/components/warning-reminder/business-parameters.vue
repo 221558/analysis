@@ -21,13 +21,13 @@
 
       <template #menu="scope">
         <el-button text type="primary" @click.stop="getView(scope.row)">
-          <el-icon><View /></el-icon>
-          <span>查看</span>
+          <!-- <el-icon><View /></el-icon> -->
+          <span>根因分析</span>
         </el-button>
-        <el-button text type="primary" @click.stop="getDownload(scope.row)">
+        <!-- <el-button text type="primary" @click.stop="getDownload(scope.row)">
           <el-icon><Download /></el-icon>
           <span>下载</span>
-        </el-button>
+        </el-button> -->
       </template>
     </avue-crud>
   </div>
@@ -35,8 +35,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import searchReport from './search-form.vue'; // NOSONAR
-import { getUploadRecords, getDownloadFile } from '@/api/data-query/original-report';
+import searchReport from '../search-form.vue'; // NOSONAR
+import { getProvinceList, getMonitorParamList2 } from '@/api/business/threshold.js';
+import { businessRemindPage } from '@/api/business/warning.js';
 // 导入getToken方法，用于获取token
 import { getToken } from 'utils/auth';
 // 导入通用CRUD混入
@@ -45,17 +46,28 @@ import { useMixins } from '@/mixins/data.js';
 const { _this, option, data, search, loadings, conf, selectionList, selectionChange } = useMixins();
 // 定义分页信息变量，包括每页大小、当前页码和总条数
 let page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });
+const crudRef = ref(null);
+const provinceList = ref([]); // 省份下拉框
+const monitorParamList = ref([]); // 监控参数下拉框
+onMounted(async () => {
+  const [provinceRes, monitorParamRes] = await Promise.all([
+    getProvinceList(),
+    getMonitorParamList2(),
+  ]);
+  provinceList.value = provinceRes.data.data;
+  monitorParamList.value = monitorParamRes.data.data;
+});
 
 option.value = {
   ...conf.value,
   align: 'center',
   column: [
-    { label: '监控ID', prop: 'sheetIndex' },
-    { label: '监控省份', prop: 'sheetName' },
-    { label: '监控参数', prop: 'fileTime' },
-    { label: '阈值设置', prop: 'explain' },
-    { label: '实际值', prop: 'explain' },
-    { label: '预警月份', prop: 'explain' },
+    { label: '监控ID', prop: 'id' },
+    { label: '监控省份', prop: 'province' },
+    { label: '监控参数', prop: 'monitorParam' },
+    { label: '阈值设置', prop: 'monitorThreshold' },
+    { label: '实际值', prop: 'actualValue' },
+    { label: '预警月份', prop: 'fileTime' },
   ],
 };
 // 每页多少条
@@ -94,7 +106,7 @@ const resetChange = () => {
 
 const onLoad = pages => {
   loadings.value = true;
-  getUploadRecords({ current: pages.currentPage, size: pages.pageSize, ...search.value })
+  businessRemindPage(search.value, { current: pages.currentPage, size: pages.pageSize })
     .then(res => {
       const datContent = res.data.data;
       data.value = datContent.records;
@@ -115,37 +127,7 @@ const getSearch = form => {
 // 定义一个函数，用于查看报告
 const getView = row => {
   // 使用路由跳转到查看报告页面，并传递报告信息
-  _this.$router.push({ path: '/original-report/view-report', query: row });
-};
-
-// 定义一个函数getDownload，参数为row
-const getDownload = row => {
-  getDownloadFile({ recordIds: row.id }).then(res => {
-    // 如果返回的状态码为200
-    if (res.status == 200) {
-      // 创建一个Blob对象，将返回的数据作为参数传入
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-      // 创建一个a标签
-      const link = document.createElement('a');
-      // 设置a标签的样式为不显示
-      link.style.display = 'none';
-      // 设置a标签的href属性为Blob对象的URL
-      link.href = url;
-      // 设置a标签的download属性为row对象的deviceFileName属性
-      link.setAttribute('download', row.sheetName + row.fileTime + '.xlsx');
-      // 将a标签添加到body中
-      document.body.appendChild(link);
-      // 模拟点击a标签，触发下载
-      link.click();
-      // 将a标签从body中移除
-      document.body.removeChild(link);
-      // 释放Blob对象的URL
-      window.URL.revokeObjectURL(link.href);
-    } else {
-      // 如果返回的状态码不为200，则弹出错误提示
-      ElMessage.error('下载失败，请稍后再试。');
-    }
-  });
+  _this.$router.push({ path: '/cause-analysis/index', query: row });
 };
 </script>
 
