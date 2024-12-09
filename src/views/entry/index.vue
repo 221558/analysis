@@ -1,15 +1,19 @@
 <template>
   <basic-container class="entry-container" v-loading.fullscreen.lock="fullscreenLoading">
+    <!-- 表单 -->
     <avue-form ref="formRef" :option="option" v-model="formData"></avue-form>
+    <!-- 上传组件 -->
     <el-upload
       class="upload-demo"
       drag
+      :disabled="disabled"
       :show-file-list="false"
       :action="action"
       accept=".xls,.xlsx"
       :before-upload="beforeUpload"
       :on-success="handleSuccess"
       :on-error="handleError"
+      @click="handleRowClick"
     >
       <el-icon class="el-icon--upload"><upload-filled /></el-icon>
       <div class="el-upload__text">
@@ -17,11 +21,12 @@
       </div>
       <template #tip>
         <div class="el-upload__tip">
-          点击上传Excel文档 或 拖拽Excel文档至此， 支持格式： .xls   .xlsx
+          点击上传Excel文档 或 拖拽Excel文档至此， 支持格式：.xls .xlsx
         </div>
       </template>
     </el-upload>
-    <basic-title style="margin-top: 40px;" :title="title" />
+    <!-- 标题 -->
+    <basic-title style="margin-top: 40px" :title="title" />
     <!-- 表格信息 -->
     <avue-crud
       ref="crudRef"
@@ -35,224 +40,289 @@
       @on-load="onLoad"
     >
       <template #menu="{ row, index, size }">
+        <!-- 下载按钮 -->
         <el-button
           type="primary"
           text
           :size="size"
           icon="el-icon-download"
-          @click="rowDownload(row, index)">下载</el-button>
+          @click="rowDownload(row, index)"
+        >
+          下载
+        </el-button>
+        <!-- 删除按钮 -->
         <el-button
           type="danger"
           text
           :size="size"
           icon="el-icon-delete"
-          @click="rowDel(row, index)">删除</el-button>
+          @click="rowDel(row, index)"
+        >
+          删除
+        </el-button>
       </template>
     </avue-crud>
   </basic-container>
 </template>
 
 <script setup>
-import BasicTitle from '@/components/basic-title/main.vue'
-import { ref } from 'vue'
-import { dataDownload, deleteUploadRecord, getFileTypeList, getUploadRecords } from '@/api/entry'
-import { ElMessage } from 'element-plus'
-import { getToken } from '@/utils/auth'
-import { baseUrl } from '@/config/env'
+// 导入BasicTitle组件
+import BasicTitle from '@/components/basic-title/main.vue';
+// 导入ref函数
+import { ref } from 'vue';
+// 导入dataDownload、deleteUploadRecord、getFileTypeList、getUploadRecords函数
+import { dataDownload, deleteUploadRecord, getFileTypeList, getUploadRecords } from '@/api/entry';
+// 导入ElMessage组件
+import { ElMessage } from 'element-plus';
+// 导入getToken函数
+import { getToken } from '@/utils/auth';
+// 导入baseUrl
+import { baseUrl } from '@/config/env';
 
-const option = ref({})
-const optionTable = ref({})
-const tableData = ref([])
-const formData = ref({})
-const loading = ref(true)
-const action = ref('')
-const fullscreenLoading = ref(false)
-const title = ref('历史录入记录')
+// 定义option变量，初始值为空对象
+const option = ref({});
+// 定义optionTable变量，初始值为空对象
+const optionTable = ref({});
+// 定义tableData变量，初始值为空数组
+const tableData = ref([]);
+// 定义formData变量，初始值为空对象
+const formData = ref({});
+// 定义loading变量，初始值为true
+const loading = ref(true);
+// 定义action变量，初始值为空字符串
+const action = ref('');
+// 定义fullscreenLoading变量，初始值为false
+const fullscreenLoading = ref(false);
+// 定义title变量，初始值为'历史录入记录'
+const title = ref('历史录入记录');
+// 定义disabled变量，初始值为true
+const disabled = ref(true);
 // 表单配置
 option.value = {
+  // 标签宽度
   labelWidth: '72',
+  // 标签位置
   labelPosition: 'left',
+  // 提交按钮
   submitBtn: false,
+  // 清空按钮
   emptyBtn: false,
+  // 栅格间隔
   gutter: 20,
+  // 列配置
   column: [
     {
+      // 标签
       label: '选择月份',
+      // 属性
       prop: 'fileTime',
-      type: "month",
+      // 类型
+      type: 'month',
+      // 占用栅格数
       span: 4,
+      // 值格式
       valueFormat: 'YYYY-MM',
+      // 提示信息
       placeholder: '请选择 月份',
+      // 禁用日期
       disabledDate(time) {
-        return time.getTime() > Date.now()
+        return time.getTime() > Date.now();
       },
     },
-    {
-      label: '上传数据',
-      prop: 'filetype',
-      type: 'select',
-      dicData: [],
-      span: 4,
-      row: true,
-    },
-  ]
-}
+    { label: '数据类型', prop: 'filetype', type: 'select', dicData: [], span: 4, row: true },
+  ],
+};
 
 // 获取搜索条件数据
 const getFormFiles = () => {
-  getFileTypeList().then(res => {
-    option.value.column[1].dicData = res.data.data
-  }).catch(err => {
-    console.log(err)
-  })
-}
-getFormFiles()
+  getFileTypeList()
+    .then(res => {
+      option.value.column[1].dicData = res.data.data;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+getFormFiles();
 
 // 表格分页信息
-const page = ref({
-  background: false,
-  total: 0,
-  currentPage: 1,
-  pageSize: 10,
-})
+const page = ref({ background: false, total: 0, currentPage: 1, pageSize: 10 });
 
 // 表格配置
 optionTable.value = {
+  // 是否显示编辑按钮
   editBtn: false,
+  // 是否显示删除按钮
   delBtn: false,
+  // 是否显示表头
   header: false,
+  // 是否显示边框
   border: true,
+  // 表格内容居中对齐
   align: 'center',
+  // 表格列配置
   column: [
-    {
-      label: '上传日期',
-      prop: 'createTime'
-    },
-    {
-      label: '文件名',
-      prop: 'fileName'
-    },
-  ]
-}
+    { label: '上传日期', prop: 'createTime' },
+    { label: '文件名', prop: 'fileName' },
+  ],
+};
+// 监听formData.value.fileTime和formData.value.filetype的变化
+watchEffect(() => {
+  // 如果formData.value.fileTime和formData.value.filetype都有值，则disabled.value为false，否则为true
+  if (formData.value.fileTime && formData.value.filetype) {
+    disabled.value = false;
+  } else {
+    disabled.value = true;
+  }
+});
 
 // 每页多少条
 const sizeChange = val => {
   // 将当前页码重置为1
-  page.value.currentPage = 1
+  page.value.currentPage = 1;
   // 将每页显示条数设置为val
-  page.value.pageSize = val
-}
+  page.value.pageSize = val;
+};
 
 // 当前页数
 const currentChange = val => {
   // 将当前页码设置为val
-  page.value.currentPage = val
-}
+  page.value.currentPage = val;
+};
 
 // 获取表格数据
+// 加载函数，接收参数pages
 function onLoad(pages) {
-  loading.value = true
+  // 设置loading状态为true
+  loading.value = true;
+  // 调用getUploadRecords函数，传入参数current和size
   getUploadRecords({
     current: pages.currentPage,
-    size: pages.pageSize
-  }).then(res => {
-    const datContent = res.data.data;
-    tableData.value = datContent.records;
-    page.value.total = datContent.total;
-    loading.value = false
-  }).catch(err => {
-    console.log(err)
-    loading.value = false
+    size: pages.pageSize,
   })
+    // 请求成功时执行
+    .then(res => {
+      // 获取返回的数据
+      const datContent = res.data.data;
+      // 将数据赋值给tableData
+      tableData.value = datContent.records;
+      // 将总页数赋值给page
+      page.value.total = datContent.total;
+      // 设置loading状态为false
+      loading.value = false;
+    })
+    // 请求失败时执行
+    .catch(err => {
+      // 打印错误信息
+      console.log(err);
+      // 设置loading状态为false
+      loading.value = false;
+    });
 }
 
 // 上传文件
 function beforeUpload(file) {
-  const flag = Boolean(formData.value.fileTime && formData.value.filetype)
+  const flag = Boolean(formData.value.fileTime && formData.value.filetype);
   if (!flag) {
-    ElMessage.warning('请先选择条件')
-    return false
+    ElMessage.warning('请先选择条件');
+    return false;
   }
-  const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1)
+  const fileSuffix = file.name.substring(file.name.lastIndexOf('.') + 1);
 
-  const whiteList = ["xls", "xlsx"]
+  const whiteList = ['xls', 'xlsx'];
 
   if (whiteList.indexOf(fileSuffix) === -1) {
-    ElMessage.error('上传文件只能是xls、xlsx格式')
-    return false
+    ElMessage.error('上传文件只能是xls、xlsx格式');
+    return false;
   }
-  const { VITE_APP_BASE_URL, MODE } = import.meta.env
-  console.log(import.meta.env)
+  const { VITE_APP_BASE_URL, MODE } = import.meta.env;
+  console.log(import.meta.env);
   // 定义api前缀
-  let apiPrefix = '/api'
+  let apiPrefix = '/api';
   if (MODE !== 'development') {
-    apiPrefix = VITE_APP_BASE_URL
+    apiPrefix = VITE_APP_BASE_URL;
   }
-  action.value = `${baseUrl}/analysis-system/data-file/upload?blade-auth=bearer ${getToken()}&fileTime=${formData.value.fileTime}&filetype=${formData.value.filetype}`
-  fullscreenLoading.value = true
-  return true
+  action.value = `${baseUrl}/analysis-system/data-file/upload?blade-auth=bearer ${getToken()}&fileTime=${
+    formData.value.fileTime
+  }&filetype=${formData.value.filetype}`;
+  fullscreenLoading.value = true;
+  return true;
 }
 
 // 上传成功
 function handleSuccess(res, file, fileList) {
-  fullscreenLoading.value = false
+  fullscreenLoading.value = false;
   if (res.code !== 200) {
-    ElMessage.error(res.msg)
-    return
+    // 如果返回码不是200，则提示错误信息
+    ElMessage.error(res.msg);
+    return;
   }
-  ElMessage.success('上传成功')
+  // 提示上传成功
+  ElMessage.success('上传成功');
   // 刷新表格数据
-  onLoad(page.value)
+  onLoad(page.value);
 }
 
 // 上传失败
 function handleError(err, file, fileList) {
-  console.log(err)
-  fullscreenLoading.value = false
-  ElMessage.error('上传失败')
+  console.log(err);
+  fullscreenLoading.value = false;
+  // 提示上传失败
+  ElMessage.error('上传失败');
 }
 
 // 下载文件
 function rowDownload(row, index) {
-  console.log(row)
-  dataDownload({ recordId: row.id }).then(res => {
-    // 创建下载链接
-    const url = window.URL.createObjectURL(res.data)
-    const link = document.createElement('a')
-    link.href = url
-    // 设置文件名
-    link.setAttribute('download', row.fileName)
-    // 将锚点添加到文档
-    document.body.appendChild(link)
-    // 模拟点击
-    link.click()
-    // 下载后移除锚点
-    document.body.removeChild(link)
-    // 释放内存
-    window.URL.revokeObjectURL(url)
-    link.style.display = 'none'
-    ElMessage.success('正在下载中...')
-  }).catch(err => {
-    console.log(err)
-  })
+  console.log(row);
+  dataDownload({ recordId: row.id })
+    .then(res => {
+      // 创建下载链接
+      const url = window.URL.createObjectURL(res.data);
+      const link = document.createElement('a');
+      link.href = url;
+      // 设置文件名
+      link.setAttribute('download', row.fileName);
+      // 将锚点添加到文档
+      document.body.appendChild(link);
+      // 模拟点击
+      link.click();
+      // 下载后移除锚点
+      document.body.removeChild(link);
+      // 释放内存
+      window.URL.revokeObjectURL(url);
+      link.style.display = 'none';
+      ElMessage.success('正在下载中...');
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
 
-// 删除行
+// 删除行数据
 function rowDel(row, index, done) {
-  console.log(row)
-  deleteUploadRecord({ recordId: row.id }).then(res => {
-    ElMessage.success('删除成功')
-    // 刷新表格数据 并 关闭弹窗
-    onLoad(page.value)
-    // done(row)
-  }).catch(err => {
-    console.log(err)
-  })
+  // 打印当前行数据
+  console.log(row);
+  // 调用删除上传记录的接口，传入当前行的id
+  deleteUploadRecord({ recordId: row.id })
+    .then(res => {
+      // 删除成功后，弹出成功提示
+      ElMessage.success('删除成功');
+      // 刷新表格数据 并 关闭弹窗
+      onLoad(page.value);
+      // done(row)
+    })
+    .catch(err => {
+      // 打印错误信息
+      console.log(err);
+    });
 }
 
-// 表单提交
-function handleSubmit(form) {
-  console.log(form.value)
+// 点击行时触发的事件
+function handleRowClick() {
+  // 如果formData.value.fileTime或formData.value.filetype为空，则弹出警告信息
+  if (!formData.value.fileTime || !formData.value.filetype) {
+    ElMessage.warning('请选择月份与数据类型');
+  }
 }
 </script>
 
@@ -260,9 +330,9 @@ function handleSubmit(form) {
 :deep.entry-container {
   .el-upload__tip {
     position: relative;
-    width: 460px;
+    width: 100%;
     color: rgba(165, 165, 165, 1);
-    font-size: 16px;
+    text-align: center;
     font-family: SourceHanSansSC-regular;
     margin: -44px auto 0;
   }
@@ -303,6 +373,9 @@ function handleSubmit(form) {
     &:first-child {
       margin-top: 30px;
     }
+  }
+  .el-upload.is-disabled .el-upload-dragger {
+    background: #fff !important;
   }
 }
 </style>
