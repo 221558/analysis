@@ -18,17 +18,41 @@
       @on-load="onLoad"
     >
       <template #menu-left>
-        <el-button type="danger" icon="el-icon-delete" v-if="permission.role_delete" plain @click="handleDelete">删 除</el-button>
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          v-if="permission.role_delete"
+          plain
+          @click="handleDelete"
+        >
+          删 除
+        </el-button>
         <el-button icon="el-icon-setting" @click="handleRole" plain>权限设置</el-button>
       </template>
     </avue-crud>
     <el-dialog title="角色配置" v-model="box" width="345px">
       <el-tabs type="border-card">
         <el-tab-pane label="菜单权限">
-          <el-tree :data="menuGrantList" show-checkbox node-key="id" ref="treeMenu" :default-checked-keys="menuTreeObj" :props="props"> </el-tree>
+          <el-tree
+            :data="menuGrantList"
+            show-checkbox
+            node-key="id"
+            ref="treeMenu"
+            :default-checked-keys="menuTreeObj"
+            :props="props"
+          >
+          </el-tree>
         </el-tab-pane>
         <el-tab-pane label="数据权限">
-          <el-tree :data="dataScopeGrantList" show-checkbox node-key="id" ref="treeDataScope" :default-checked-keys="dataScopeTreeObj" :props="props"> </el-tree>
+          <el-tree
+            :data="dataScopeGrantList"
+            show-checkbox
+            node-key="id"
+            ref="treeDataScope"
+            :default-checked-keys="dataScopeTreeObj"
+            :props="props"
+          >
+          </el-tree>
         </el-tab-pane>
       </el-tabs>
       <template #footer>
@@ -42,7 +66,16 @@
 </template>
 
 <script>
-import { add, getList, getRole, getRoleTree, grant, grantTree, remove, update } from '@/api/system/role';
+import {
+  add,
+  getList,
+  getRole,
+  getRoleTree,
+  grant,
+  grantTree,
+  remove,
+  update,
+} from '@/api/system/role';
 import { mapGetters } from 'vuex';
 import website from '@/config/website';
 import { baseUrl } from '@/config/env';
@@ -69,6 +102,7 @@ export default {
         total: 0,
       },
       option: {
+        dialogWidth: 800, // 弹窗宽度
         searchShow: true,
         searchMenuSpan: 6,
         tip: false,
@@ -91,29 +125,29 @@ export default {
               },
             ],
           },
-          {
-            label: '所属租户',
-            prop: 'tenantId',
-            type: 'tree',
-            dicUrl: `${baseUrl}/blade-system/tenant/select`,
-            addDisplay: false,
-            editDisplay: false,
-            viewDisplay: website.tenantMode,
-            span: 24,
-            props: {
-              label: 'tenantName',
-              value: 'tenantId',
-            },
-            hide: !website.tenantMode,
-            search: website.tenantMode,
-            rules: [
-              {
-                required: true,
-                message: '请输入所属租户',
-                trigger: 'click',
-              },
-            ],
-          },
+          // {
+          //   label: '所属租户',
+          //   prop: 'tenantId',
+          //   type: 'tree',
+          //   dicUrl: `${baseUrl}/blade-system/tenant/select`,
+          //   addDisplay: false,
+          //   editDisplay: false,
+          //   viewDisplay: website.tenantMode,
+          //   span: 24,
+          //   props: {
+          //     label: 'tenantName',
+          //     value: 'tenantId',
+          //   },
+          //   hide: !website.tenantMode,
+          //   search: website.tenantMode,
+          //   rules: [
+          //     {
+          //       required: true,
+          //       message: '请输入所属租户',
+          //       trigger: 'click',
+          //     },
+          //   ],
+          // },
           {
             label: '角色别名',
             prop: 'roleAlias',
@@ -127,24 +161,24 @@ export default {
               },
             ],
           },
-          {
-            label: '上级角色',
-            prop: 'parentId',
-            dicData: [],
-            type: 'tree',
-            hide: true,
-            span: 24,
-            props: {
-              label: 'title',
-            },
-            rules: [
-              {
-                required: false,
-                message: '请选择上级角色',
-                trigger: 'click',
-              },
-            ],
-          },
+          // {
+          //   label: '上级角色',
+          //   prop: 'parentId',
+          //   dicData: [],
+          //   type: 'tree',
+          //   hide: true,
+          //   span: 24,
+          //   props: {
+          //     label: 'title',
+          //   },
+          //   rules: [
+          //     {
+          //       required: false,
+          //       message: '请选择上级角色',
+          //       trigger: 'click',
+          //     },
+          //   ],
+          // },
           {
             label: '角色排序',
             prop: 'sort',
@@ -175,14 +209,14 @@ export default {
     },
     ids() {
       const ids = [];
-      this.selectionList.forEach((ele) => {
+      this.selectionList.forEach(ele => {
         ids.push(ele.id);
       });
       return ids.join(',');
     },
     idsArray() {
       const ids = [];
-      this.selectionList.forEach((ele) => {
+      this.selectionList.forEach(ele => {
         ids.push(ele.id);
       });
       return ids;
@@ -221,10 +255,10 @@ export default {
             message: '操作成功!',
           });
         },
-        (error) => {
+        error => {
           window.console.log(error);
           loading();
-        },
+        }
       );
     },
     rowUpdate(row, index, done, loading) {
@@ -237,10 +271,10 @@ export default {
             message: '操作成功!',
           });
         },
-        (error) => {
+        error => {
           window.console.log(error);
           loading();
-        },
+        }
       );
     },
     rowDel(row) {
@@ -281,10 +315,10 @@ export default {
       }
       this.menuTreeObj = [];
       this.dataScopeTreeObj = [];
-      grantTree().then((res) => {
+      grantTree().then(res => {
         this.menuGrantList = res.data.data.menu;
         this.dataScopeGrantList = res.data.data.dataScope;
-        getRole(this.ids).then((res) => {
+        getRole(this.ids).then(res => {
           this.menuTreeObj = res.data.data.menu;
           this.dataScopeTreeObj = res.data.data.dataScope;
           this.box = true;
@@ -332,13 +366,13 @@ export default {
     },
     onLoad(page, params = {}) {
       this.loading = true;
-      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then((res) => {
+      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
         this.data = res.data.data;
         this.loading = false;
-        getRoleTree().then((res) => {
-          const column = this.findObject(this.option.column, 'parentId');
-          column.dicData = res.data.data;
-        });
+        // getRoleTree().then(res => {
+        //   const column = this.findObject(this.option.column, 'parentId');
+        //   column.dicData = res.data.data;
+        // });
       });
     },
   },
