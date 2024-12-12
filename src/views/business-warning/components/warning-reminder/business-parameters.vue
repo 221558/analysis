@@ -29,6 +29,9 @@
           <span>根因分析</span>
         </el-button>
       </template>
+      <template #actualValue="{ row }">
+        <span style="color: red">{{ row.actualValue }}</span>
+      </template>
       <template #status="{ row }">
         {{ row.status == 1 ? '启用' : '禁用' }}
       </template>

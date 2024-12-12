@@ -29,6 +29,7 @@ watch(
     if (!newTabs.find(tab => tab.name === activeName.value)) {
       activeName.value = newTabs[0]?.name;
     }
+    console.log('activeName', activeName.value);
   },
   { deep: true }
 );

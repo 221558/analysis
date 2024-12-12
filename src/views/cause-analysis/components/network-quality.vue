@@ -1,17 +1,44 @@
 <template>
   <div class="table-container">
-    <Steps />
-    <avue-crud ref="crudRef" :data="data" :option="option" @on-load="onLoad"> </avue-crud>
+    <Steps :steps="steps" />
+    <avue-crud ref="crudRef" :data="data" :option="option">
+      <template #menu-left>
+        <div style="font-weight: 600; font-size: 16px">当前查询预警参数</div>
+      </template>
+      <template #menu-right>
+        <el-button type="primary" @click="isShow = true">预警选择</el-button>
+        <el-button type="primary" @click="toAnalyse"> 开始分析 </el-button>
+      </template>
+      <template #actualValue="{ row }">
+        <span style="color: red">{{ row.actualValue }}</span>
+      </template>
+    </avue-crud>
+    <RankTable
+      :analysisResults="analysisResults"
+      :analysisType="'networkQuality'"
+      :provinceType="provinceType"
+      v-if="reFresh"
+    />
   </div>
+  <el-dialog title="新增" v-model="isShow" width="40%">
+    <SelectTable v-if="isShow" :analysisType="'networkQuality'" :selectItem="data" />
+    <template #footer>
+      <div style="display: flex; justify-content: center">
+        <el-button type="primary" @click="isShow = false">取 消</el-button>
+        <el-button type="primary" @click="selectConfirm">确 定</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
+import mittBus from '@/utils/mitt';
 import Steps from './steps.vue';
-import { ref } from 'vue';
+import SelectTable from './select-table.vue';
+import RankTable from './rank-table.vue';
+import { nextTick, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import { getUploadRecords, getDownloadFile } from '@/api/data-query/original-report';
-// 导入getToken方法，用于获取token
-import { getToken } from 'utils/auth';
+import { rootCauseList } from '@/api/root-case';
 // 导入通用CRUD混入
 import { useMixins } from '@/mixins/data.js';
 // _this, store, option, data, search, loadings, conf, selectionList, selectionChange
@@ -19,137 +46,64 @@ const { _this, option, data, search, loadings, conf, selectionList, selectionCha
 // 定义分页信息变量，包括每页大小、当前页码和总条数
 let page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });
 const crudRef = ref(null);
+const steps = ref(1); //分析步骤
+const isShow = ref(false); // 是否显示弹窗
 
 option.value = {
   ...conf.value,
   align: 'center',
-  dialogWidth: 600,
   menu: false,
   selection: false,
+  maxHeight:100,
   column: [
-    { label: '监控ID', prop: 'sheetIndex' },
-    { label: '监控省份', prop: 'sheetName' },
-    { label: '监控参数', prop: 'fileTime' },
-    { label: '阈值设置', prop: 'explain' },
-    { label: '实际值', prop: 'status' },
-    { label: '预警月份', prop: 'month' },
+    { label: '监控ID', prop: 'businessWarnId' },
+    { label: '监控省份', prop: 'province' },
+    { label: '监控参数', prop: 'monitorParam' },
+    { label: '阈值设置', prop: 'monitorThreshold' },
+    { label: '实际值', prop: 'actualValue' },
+    { label: '预警月份', prop: 'fileTime' },
   ],
 };
-// 每页多少条
-const sizeChange = val => {
-  // 将当前页码重置为1
-  page.value.currentPage = 1;
-  // 将每页显示条数设置为val
-  page.value.pageSize = val;
+const selectItem = ref({});
+mittBus.on('selectItem', item => {
+  selectItem.value = item;
+});
+const provinceType = ref('全国');
+const reFresh = ref(true);
+//确定选择
+const selectConfirm = () => {
+  isShow.value = false;
+  steps.value = 1;
+  data.value = [selectItem.value];
+  analysisResults.value = [];
+  reFresh.value = false; // 强制刷新,展示不同表头
+  nextTick(() => {
+    reFresh.value = true;
+  });
+  provinceType.value = selectItem.value.province;
 };
-
-// 当前页数
-const currentChange = val => {
-  // 将当前页码设置为val
-  page.value.currentPage = val;
-};
-
-// 刷新
-const refreshChange = () => {
-  onLoad(page.value);
-};
-
-// 搜索
-const searchChange = () => {
-  page.value.currentPage = 1;
-  onLoad(page.value);
-};
-
-// 搜索清空
-const resetChange = () => {
-  // 将搜索条件重置为空对象
-  search.value = {};
-  // 重新加载数据
-  onLoad(page.value);
-};
-// 查询
-
-const onLoad = pages => {
-  loadings.value = true;
-  getUploadRecords({ current: pages.currentPage, size: pages.pageSize, ...search.value })
-    .then(res => {
-      const datContent = res.data.data;
-      data.value = datContent.records;
-      page.value.total = datContent.total;
-      loadings.value = false;
-    })
-    .catch(() => {
-      loadings.value = false;
-    });
-};
-// 定义一个函数，用于获取搜索表单
-const getSearch = form => {
-  // 打印搜索表单
-  search.value = form;
-  onLoad(page.value);
-};
-const getAdd = () => {
-  crudRef.value.rowAdd();
-};
-// 定义一个函数，用于新增数据
-const rowSave = (row, done, loading) => {
-  // add(row)
-  //   .then(() => {
-  //     done();
-  //     refreshChange();
-  //     crudRef.value.closeDialog();
-  //   })
-  //   .catch(() => {
-  //     loading();
-  //   });
-};
-// 定义一个函数，用于批量数据
-const getDeleteSelection = () => {
-  if (selectionList.value.length === 0) {
+const analysisResults = ref([]); //分析结果
+// 开始分析
+const toAnalyse = () => {
+  if (!data.value[0].id) {
     return ElMessage.warning('请选择至少一条数据');
   }
-  _this
-    .$confirm('确定将选择数据删除?', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
-    .then(() => {
-      return remove(selectionList.value.map(item => item.id));
-    })
-    .then(() => {
-      _this.onLoad(_this.page);
-      _this.$message({
-        type: 'success',
-        message: '操作成功!',
-      });
-    });
+  steps.value = 2;
+  rootCauseList(data.value[0].id).then(res => {
+    steps.value = 3;
+    analysisResults.value = res.data.data;
+    console.log('analysisResults.value', analysisResults.value);
+  });
 };
-// 定义一个函数，用于编辑行数据
-const getEdit = row => {
-  crudRef.value.rowEdit(row);
-};
-// 定义一个函数，用于更新行数据
-const rowUpdate = (row, index, done, loading) => {};
-// 定义一个函数，用于删除行数据
-const getDelete = row => {
-  _this
-    .$confirm('确定将选择数据删除?', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
-    .then(() => {
-      return remove(row.id);
-    })
-    .then(() => {
-      _this.onLoad(_this.page);
-      _this.$message({
-        type: 'success',
-        message: '操作成功!',
-      });
-    });
-};
+
+onMounted(() => {
+  const routerParams = _this.$route.query; // 获取路由参数
+  if (Object.keys(routerParams).length > 0) {
+    data.value = [{ ...routerParams }];
+  } else {
+    data.value = [];
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -157,7 +111,7 @@ const getDelete = row => {
   // 设置背景颜色为白色
   background-color: #fff;
   // 设置内边距为15px
-  padding: 20px 15px 15px 15px;
+  padding: 20px 28px;
   // 设置左下角圆角半径为5px
   border-bottom-left-radius: 5px;
   // 设置右下角圆角半径为5px
