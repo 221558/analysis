@@ -42,7 +42,9 @@
         </el-button>
       </template>
       <template #status="{ row }">
-        {{ row.status == 1 ? '启用' : '禁用' }}
+        <el-tag :type="row.status == 1 ? 'success' : 'danger'">{{
+          row.status == 1 ? '启用' : '禁用'
+        }}</el-tag>
       </template>
     </avue-crud>
   </div>

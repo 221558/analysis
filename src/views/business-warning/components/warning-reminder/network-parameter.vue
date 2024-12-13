@@ -30,9 +30,6 @@
       <template #actualValue="{ row }">
         <span style="color: red">{{ row.actualValue }}</span>
       </template>
-      <template #status="{ row }">
-        {{ row.status == 1 ? '启用' : '禁用' }}
-      </template>
     </avue-crud>
   </div>
 </template>
