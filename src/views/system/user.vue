@@ -46,7 +46,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import searchReport from './components/search-report.vue'; // NOSONAR
+import searchReport from './components/search.vue'; // NOSONAR
 import { getUserList, getAddUser, getUpdataUser, getDelUser } from '@/api/system/user';
 import { getRoleTree } from '@/api/system/role';
 // 导入通用CRUD混入
