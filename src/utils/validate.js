@@ -259,3 +259,8 @@ export function passwordValidate(val) {
   if (!regName.test(val)) return false;
   return true;
 }
+
+export function validatePositiveInteger(number) {
+  var regex = /^\d+$/;
+  return regex.test(number);
+}

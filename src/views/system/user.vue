@@ -47,20 +47,38 @@
 import { ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import searchReport from './components/search.vue'; // NOSONAR
-import { getUserList, getAddUser, getUpdataUser, getDelUser } from '@/api/system/user';
+import { getUserList, getAddUser, getUpdataUser, getDelUser, getUserId } from '@/api/system/user';
 import { getRoleTree } from '@/api/system/role';
 // 导入通用CRUD混入
 import { useMixins } from '@/mixins/data.js';
 import func from '@/utils/func';
 // _this, store, option, data, search, loadings, conf, selectionList, selectionChange
 const { _this, option, data, search, loadings, conf, selectionList, selectionChange } = useMixins();
-import { passwordValidate } from '@/utils/validate';
+import { passwordValidate, validatePositiveInteger } from '@/utils/validate';
 // 定义分页信息变量，包括每页大小、当前页码和总条数
 const page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });
 const ids = computed(() => {
   return selectionList.value.map(item => String(item.id)).join(',');
 });
 const form = ref({ roleId: '', province: '' });
+
+const validateNumber = (rule, value, callback) => {
+  // 如果密码为空
+  if (value === '') {
+    // 调用回调函数，传入错误信息提示用户输入密码
+    callback(new Error('请输入用户ID'));
+    // 再次调用回调函数，不传入错误信息，表示验证完成
+    callback();
+    // 如果密码不符合验证规则
+  } else if (!validatePositiveInteger(value)) {
+    // 调用回调函数，传入错误信息提示密码格式不正确
+    callback(new Error('请输入数字！'));
+    // 如果密码符合验证规则
+  } else {
+    // 调用回调函数，不传入错误信息，表示验证完成
+    callback();
+  }
+};
 
 const validatePass = (rule, value, callback) => {
   // 如果密码为空
@@ -113,7 +131,7 @@ option.value = {
     {
       label: '用户ID',
       prop: 'userId',
-      rules: [{ required: true, message: '请输入用户ID', trigger: 'blur' }],
+      rules: [{ required: true, validator: validateNumber, trigger: 'blur' }],
     },
     {
       label: '用户名',
@@ -190,10 +208,19 @@ watch(
       // 同时将form对象的province属性设置为空字符串
       form.value.province = '';
     }
+    if (form.value.userId) {
+      getUserId({ userId: form.value.userId }).then(res => {});
+    }
   },
   // 深度监听，即监听对象内部属性的变化
   { deep: true }
 );
+
+//
+
+watchEffect(() => {
+  console.log(form.value.userId);
+});
 
 // 在打开弹窗之前执行的操作
 const beforeOpen = (done, type, loading) => {

@@ -169,3 +169,11 @@ export const getDelUser = params => {
     params,
   });
 };
+
+export const getUserId = params => {
+  return request({
+    url: '/blade-system/user/check-user-id',
+    method: 'get',
+    params,
+  });
+};
