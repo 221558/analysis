@@ -102,7 +102,6 @@ export default {
         total: 0,
       },
       option: {
-        dialogWidth: 800, // 弹窗宽度
         searchShow: true,
         searchMenuSpan: 6,
         tip: false,
@@ -125,29 +124,29 @@ export default {
               },
             ],
           },
-          // {
-          //   label: '所属租户',
-          //   prop: 'tenantId',
-          //   type: 'tree',
-          //   dicUrl: `${baseUrl}/blade-system/tenant/select`,
-          //   addDisplay: false,
-          //   editDisplay: false,
-          //   viewDisplay: website.tenantMode,
-          //   span: 24,
-          //   props: {
-          //     label: 'tenantName',
-          //     value: 'tenantId',
-          //   },
-          //   hide: !website.tenantMode,
-          //   search: website.tenantMode,
-          //   rules: [
-          //     {
-          //       required: true,
-          //       message: '请输入所属租户',
-          //       trigger: 'click',
-          //     },
-          //   ],
-          // },
+          {
+            label: '所属租户',
+            prop: 'tenantId',
+            type: 'tree',
+            dicUrl: `${baseUrl}/blade-system/tenant/select`,
+            addDisplay: false,
+            editDisplay: false,
+            viewDisplay: website.tenantMode,
+            span: 24,
+            props: {
+              label: 'tenantName',
+              value: 'tenantId',
+            },
+            hide: !website.tenantMode,
+            search: website.tenantMode,
+            rules: [
+              {
+                required: true,
+                message: '请输入所属租户',
+                trigger: 'click',
+              },
+            ],
+          },
           {
             label: '角色别名',
             prop: 'roleAlias',
@@ -161,24 +160,24 @@ export default {
               },
             ],
           },
-          // {
-          //   label: '上级角色',
-          //   prop: 'parentId',
-          //   dicData: [],
-          //   type: 'tree',
-          //   hide: true,
-          //   span: 24,
-          //   props: {
-          //     label: 'title',
-          //   },
-          //   rules: [
-          //     {
-          //       required: false,
-          //       message: '请选择上级角色',
-          //       trigger: 'click',
-          //     },
-          //   ],
-          // },
+          {
+            label: '上级角色',
+            prop: 'parentId',
+            dicData: [],
+            type: 'tree',
+            hide: true,
+            span: 24,
+            props: {
+              label: 'title',
+            },
+            rules: [
+              {
+                required: false,
+                message: '请选择上级角色',
+                trigger: 'click',
+              },
+            ],
+          },
           {
             label: '角色排序',
             prop: 'sort',
@@ -369,10 +368,10 @@ export default {
       getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
         this.data = res.data.data;
         this.loading = false;
-        // getRoleTree().then(res => {
-        //   const column = this.findObject(this.option.column, 'parentId');
-        //   column.dicData = res.data.data;
-        // });
+        getRoleTree().then(res => {
+          const column = this.findObject(this.option.column, 'parentId');
+          column.dicData = res.data.data;
+        });
       });
     },
   },

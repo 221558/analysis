@@ -3,7 +3,7 @@
     <el-form-item label="用户权限：">
       <el-select
         style="width: 220px"
-        v-model="form.role"
+        v-model="form.roleIds"
         multiple
         placeholder="请选择用户权限"
         @focus="getRoleList"
@@ -18,13 +18,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="状态：">
-      <el-select
-        style="width: 220px"
-        v-model="form.state"
-        multiple
-        placeholder="请选择状态"
-        clearable
-      >
+      <el-select style="width: 220px" v-model="form.status" placeholder="请选择状态" clearable>
         <el-option
           v-for="item in stateList"
           :key="item.value"
@@ -49,12 +43,12 @@ import { ref } from 'vue';
 import { getRoleTree } from '@/api/system/role';
 const emit = defineEmits(['getSearch']);
 // 创建一个响应式对象form，包含user和date两个属性
-const form = ref({ role: '', state: '', account: '' });
+const form = ref({ roleIds: [], status: '', account: '' });
 
 const roleList = ref([]);
 const stateList = ref([
-  { label: '停用', value: 0 },
   { label: '启用', value: 1 },
+  { label: '停用', value: 0 },
 ]);
 
 // 定义一个函数，用于获取时间数据
@@ -65,7 +59,7 @@ const getRoleList = () => {
 };
 // 重置表单
 const getResetForm = () => {
-  form.value = { role: '', state: '', account: '' };
+  form.value = { roleIds: [], status: '', account: '' };
   // 打印表单中的用户名和日期
   emit('getSearch', form.value);
 };
