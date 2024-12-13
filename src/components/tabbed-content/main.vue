@@ -24,16 +24,13 @@ const props = defineProps({
 const activeName = ref(props.defaultActive || props.tabs[0]?.name);
 
 watch(
-  () => props.tabs,
-  newTabs => {
-    if (!newTabs.find(tab => tab.name === activeName.value)) {
-      activeName.value = newTabs[0]?.name;
-    }
+  () => props,
+  propsVal => {
+    activeName.value = propsVal.defaultActive || propsVal.tabs[0]?.name;
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
 </script>
-
 
 <style lang="scss" scoped>
 :deep(.el-card) {

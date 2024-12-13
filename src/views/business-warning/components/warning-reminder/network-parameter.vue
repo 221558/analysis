@@ -27,8 +27,8 @@
           <span>根因分析</span>
         </el-button>
       </template>
-      <template #status="{ row }">
-        {{ row.status == 1 ? '启用' : '禁用' }}
+      <template #actualValue="{ row }">
+        <span style="color: red">{{ row.actualValue }}</span>
       </template>
     </avue-crud>
   </div>
@@ -38,11 +38,8 @@
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import searchReport from '../search-form.vue'; // NOSONAR
-import {
-  getProvinceList,
-  getMonitorParamList1,
-} from '@/api/business/threshold.js';
-import {networkRemindPage} from '@/api/business/warning.js';
+import { getProvinceList, getMonitorParamList1 } from '@/api/business/threshold.js';
+import { networkRemindPage } from '@/api/business/warning.js';
 // 导入getToken方法，用于获取token
 import { getToken } from 'utils/auth';
 // 导入通用CRUD混入
@@ -71,8 +68,8 @@ option.value = {
     { label: '监控省份', prop: 'province' },
     { label: '监控参数', prop: 'monitorParam' },
     { label: '阈值设置', prop: 'monitorThreshold' },
-    { label: '实际值', prop: 'actualValue'},
-    { label: '预警月份', prop: 'fileTime'},
+    { label: '实际值', prop: 'actualValue' },
+    { label: '预警月份', prop: 'fileTime' },
   ],
 };
 // 每页多少条
@@ -139,10 +136,12 @@ const rowSave = (row, done, loading) => {
       loading();
     });
 };
-// 定义一个函数，用于批量数据
-// 定义一个函数，用于编辑行数据
+// 跳转根因分析
 const getView = row => {
-  _this.$router.push({ path: '/cause-analysis/index', query: row });
+  _this.$router.push({
+    path: '/cause-analysis/index',
+    query: { ...row, rootCauseType: 'first' },
+  });
 };
 </script>
 

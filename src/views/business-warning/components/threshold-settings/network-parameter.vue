@@ -42,7 +42,9 @@
         </el-button>
       </template>
       <template #status="{ row }">
-        {{ row.status == 1 ? '启用' : '禁用' }}
+        <el-tag :type="row.status == 1 ? 'success' : 'danger'">{{
+          row.status == 1 ? '启用' : '禁用'
+        }}</el-tag>
       </template>
     </avue-crud>
   </div>
@@ -128,7 +130,13 @@ option.value = {
       ],
       value: 1,
     },
-    { label: '说明', prop: 'note', span: 24, type: 'textarea' , rules: [{ required: true, message: '请输入说明', trigger: 'blur' }],},
+    {
+      label: '说明',
+      prop: 'note',
+      span: 24,
+      type: 'textarea',
+      rules: [{ required: true, message: '请输入说明', trigger: 'blur' }],
+    },
   ],
 };
 // 每页多少条
