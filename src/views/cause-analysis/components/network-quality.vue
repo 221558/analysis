@@ -36,7 +36,8 @@ import mittBus from '@/utils/mitt';
 import Steps from './steps.vue';
 import SelectTable from './select-table.vue';
 import RankTable from './rank-table.vue';
-import { nextTick, onMounted, ref } from 'vue';
+import { nextTick, onBeforeMount, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { rootCauseList } from '@/api/root-case';
 // 导入通用CRUD混入
@@ -44,17 +45,18 @@ import { useMixins } from '@/mixins/data.js';
 // _this, store, option, data, search, loadings, conf, selectionList, selectionChange
 const { _this, option, data, search, loadings, conf, selectionList, selectionChange } = useMixins();
 // 定义分页信息变量，包括每页大小、当前页码和总条数
-let page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });
 const crudRef = ref(null);
 const steps = ref(1); //分析步骤
 const isShow = ref(false); // 是否显示弹窗
+const route = useRoute(); //获取路由方法
+const routerParams = route.query; // 获取路由参数
 
 option.value = {
   ...conf.value,
   align: 'center',
   menu: false,
   selection: false,
-  maxHeight:100,
+  maxHeight: 100,
   column: [
     { label: '监控ID', prop: 'businessWarnId' },
     { label: '监控省份', prop: 'province' },
@@ -95,10 +97,11 @@ const toAnalyse = () => {
     console.log('analysisResults.value', analysisResults.value);
   });
 };
-
+onBeforeMount(() => {
+  provinceType.value = routerParams.province || '全国';
+});
 onMounted(() => {
-  const routerParams = _this.$route.query; // 获取路由参数
-  if (Object.keys(routerParams).length > 0) {
+  if (Object.keys(routerParams).length > 0 && routerParams.rootCauseType == 'first') {
     data.value = [{ ...routerParams }];
   } else {
     data.value = [];

@@ -17,6 +17,7 @@
       :analysisResults="analysisResults"
       :analysisType="'businessQuality'"
       :provinceType="provinceType"
+      v-if="reFresh"
     />
   </div>
   <el-dialog title="新增" v-model="isShow" width="40%">
@@ -35,8 +36,10 @@ import mittBus from '@/utils/mitt';
 import Steps from './steps.vue';
 import SelectTable from './select-table.vue';
 import RankTable from './rank-table.vue';
-import { onMounted, ref } from 'vue';
+import { nextTick, onBeforeMount, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { rootCauseList } from '@/api/root-case';
 // 导入通用CRUD混入
 import { useMixins } from '@/mixins/data.js';
 // _this, store, option, data, search, loadings, conf, selectionList, selectionChange
@@ -46,13 +49,15 @@ let page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });
 const crudRef = ref(null);
 const steps = ref(1); //分析步骤
 const isShow = ref(false); // 是否显示弹窗
+const route = useRoute(); //获取路由方法
+const routerParams = route.query; // 获取路由参数
 
 option.value = {
   ...conf.value,
   align: 'center',
   menu: false,
   selection: false,
-  maxHeight:100,
+  maxHeight: 100,
   column: [
     { label: '监控ID', prop: 'businessWarnId' },
     { label: '监控省份', prop: 'province' },
@@ -62,47 +67,46 @@ option.value = {
     { label: '预警月份', prop: 'fileTime' },
   ],
 };
-const analysisResults = ref([]); //分析结果
-const provinceType = ref('全国');
-// 开始分析
-const toAnalyse = () => {
-  console.log('data', data.value);
-  if (data.value.length == 0) {
-    return ElMessage.warning('请选择至少一条数据');
-  }
-  steps.value = 2;
-
-  // _this
-  //   .$confirm('确定将选择数据删除?', {
-  //     confirmButtonText: '确定',
-  //     cancelButtonText: '取消',
-  //     type: 'warning',
-  //   })
-  //   .then(() => {
-  //     return remove(selectionList.value.map(item => item.id));
-  //   })
-  //   .then(() => {
-  //     _this.onLoad(_this.page);
-  //     _this.$message({
-  //       type: 'success',
-  //       message: '操作成功!',
-  //     });
-  //   });
-};
-
 const selectItem = ref({});
 mittBus.on('selectItem', item => {
   selectItem.value = item;
 });
+const provinceType = ref('全国');
+const reFresh = ref(true);
 //确定选择
 const selectConfirm = () => {
   isShow.value = false;
+  steps.value = 1;
   data.value = [selectItem.value];
+  analysisResults.value = [];
+  reFresh.value = false; // 强制刷新,展示不同表头
+  nextTick(() => {
+    reFresh.value = true;
+  });
+  provinceType.value = selectItem.value.province;
 };
-
+const analysisResults = ref([]); //分析结果
+// 开始分析
+const toAnalyse = () => {
+  if (!data.value[0].id) {
+    return ElMessage.warning('请选择至少一条数据');
+  }
+  steps.value = 2;
+  rootCauseList(data.value[0].id).then(res => {
+    steps.value = 3;
+    analysisResults.value = res.data.data;
+    console.log('analysisResults.value', analysisResults.value);
+  });
+};
+onBeforeMount(() => {
+  provinceType.value = routerParams.province || '全国';
+});
 onMounted(() => {
-  const routerParams = _this.$route.query; // 获取路由参数
-  data.value = [{ ...routerParams }] || [];
+  if (Object.keys(routerParams).length > 0 && routerParams.rootCauseType == 'second') {
+    data.value = [{ ...routerParams }];
+  } else {
+    data.value = [];
+  }
 });
 </script>
 

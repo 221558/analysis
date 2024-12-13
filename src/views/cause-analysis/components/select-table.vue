@@ -7,8 +7,6 @@
       v-model:page="page"
       v-model:search="search"
       :table-loading="loadings"
-      @row-update="rowUpdate"
-      @row-save="rowSave"
       @size-change="sizeChange"
       @current-change="currentChange"
       @refresh-change="refreshChange"
@@ -59,7 +57,6 @@ import { networkRemindPage, businessRemindPage } from '@/api/business/warning.js
 import { getToken } from 'utils/auth';
 // 导入通用CRUD混入
 import { useMixins } from '@/mixins/data.js';
-// _this, store, option, data, search, loadings, conf, selectionList, selectionChange
 const { _this, option, data, search, loadings, conf, selectionList, selectionChange } = useMixins();
 // 定义分页信息变量，包括每页大小、当前页码和总条数
 let page = ref({ pageSize: 10, currentPage: 1, total: 10, background: false });

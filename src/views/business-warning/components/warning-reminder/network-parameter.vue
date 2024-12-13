@@ -139,12 +139,11 @@ const rowSave = (row, done, loading) => {
       loading();
     });
 };
-// 定义一个函数，用于批量数据
-// 定义一个函数，用于编辑行数据
+// 跳转根因分析
 const getView = row => {
   _this.$router.push({
     path: '/cause-analysis/index',
-    query: { ...row, rootCauseType: 'network' },
+    query: { ...row, rootCauseType: 'first' },
   });
 };
 </script>

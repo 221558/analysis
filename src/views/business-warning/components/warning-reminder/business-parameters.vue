@@ -130,10 +130,13 @@ const getSearch = form => {
   onLoad(page.value);
 };
 
-// 定义一个函数，用于查看报告
+// 跳转根因分析
 const getView = row => {
   // 使用路由跳转到查看报告页面，并传递报告信息
-  _this.$router.push({ path: '/cause-analysis/index', query: row });
+  _this.$router.push({
+    path: '/cause-analysis/index',
+    query: { ...row, rootCauseType: 'second' },
+  });
 };
 </script>
 
