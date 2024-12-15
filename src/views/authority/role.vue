@@ -18,17 +18,41 @@
       @on-load="onLoad"
     >
       <template #menu-left>
-        <el-button type="danger" icon="el-icon-delete" v-if="permission.role_delete" plain @click="handleDelete">删 除</el-button>
+        <el-button
+          type="danger"
+          icon="el-icon-delete"
+          v-if="permission.role_delete"
+          plain
+          @click="handleDelete"
+        >
+          删 除
+        </el-button>
         <el-button icon="el-icon-setting" @click="handleRole" plain>权限设置</el-button>
       </template>
     </avue-crud>
     <el-dialog title="角色配置" v-model="box" width="345px">
       <el-tabs type="border-card">
         <el-tab-pane label="菜单权限">
-          <el-tree :data="menuGrantList" show-checkbox node-key="id" ref="treeMenu" :default-checked-keys="menuTreeObj" :props="props"> </el-tree>
+          <el-tree
+            :data="menuGrantList"
+            show-checkbox
+            node-key="id"
+            ref="treeMenu"
+            :default-checked-keys="menuTreeObj"
+            :props="props"
+          >
+          </el-tree>
         </el-tab-pane>
         <el-tab-pane label="数据权限">
-          <el-tree :data="dataScopeGrantList" show-checkbox node-key="id" ref="treeDataScope" :default-checked-keys="dataScopeTreeObj" :props="props"> </el-tree>
+          <el-tree
+            :data="dataScopeGrantList"
+            show-checkbox
+            node-key="id"
+            ref="treeDataScope"
+            :default-checked-keys="dataScopeTreeObj"
+            :props="props"
+          >
+          </el-tree>
         </el-tab-pane>
       </el-tabs>
       <template #footer>
@@ -42,7 +66,16 @@
 </template>
 
 <script>
-import { add, getList, getRole, getRoleTree, grant, grantTree, remove, update } from '@/api/system/role';
+import {
+  add,
+  getList,
+  getRole,
+  getRoleTree,
+  grant,
+  grantTree,
+  remove,
+  update,
+} from '@/api/system/role';
 import { mapGetters } from 'vuex';
 import website from '@/config/website';
 import { baseUrl } from '@/config/env';
@@ -175,14 +208,14 @@ export default {
     },
     ids() {
       const ids = [];
-      this.selectionList.forEach((ele) => {
+      this.selectionList.forEach(ele => {
         ids.push(ele.id);
       });
       return ids.join(',');
     },
     idsArray() {
       const ids = [];
-      this.selectionList.forEach((ele) => {
+      this.selectionList.forEach(ele => {
         ids.push(ele.id);
       });
       return ids;
@@ -221,10 +254,10 @@ export default {
             message: '操作成功!',
           });
         },
-        (error) => {
+        error => {
           window.console.log(error);
           loading();
-        },
+        }
       );
     },
     rowUpdate(row, index, done, loading) {
@@ -237,10 +270,10 @@ export default {
             message: '操作成功!',
           });
         },
-        (error) => {
+        error => {
           window.console.log(error);
           loading();
-        },
+        }
       );
     },
     rowDel(row) {
@@ -281,10 +314,10 @@ export default {
       }
       this.menuTreeObj = [];
       this.dataScopeTreeObj = [];
-      grantTree().then((res) => {
+      grantTree().then(res => {
         this.menuGrantList = res.data.data.menu;
         this.dataScopeGrantList = res.data.data.dataScope;
-        getRole(this.ids).then((res) => {
+        getRole(this.ids).then(res => {
           this.menuTreeObj = res.data.data.menu;
           this.dataScopeTreeObj = res.data.data.dataScope;
           this.box = true;
@@ -332,10 +365,10 @@ export default {
     },
     onLoad(page, params = {}) {
       this.loading = true;
-      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then((res) => {
+      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
         this.data = res.data.data;
         this.loading = false;
-        getRoleTree().then((res) => {
+        getRoleTree().then(res => {
           const column = this.findObject(this.option.column, 'parentId');
           column.dicData = res.data.data;
         });

@@ -81,7 +81,8 @@ export const vaildatePc = function () {
  * @returns {boolean}
  */
 export function validateEmail(email) {
-  const re = /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re =
+    /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
 
@@ -242,8 +243,24 @@ export function validatenull(val) {
   } else if (val instanceof Object) {
     if (JSON.stringify(val) === '{}') return true;
   } else {
-    if (val == 'null' || val == null || val == 'undefined' || val == undefined || val == '') return true;
+    if (val == 'null' || val == null || val == 'undefined' || val == undefined || val == '')
+      return true;
     return false;
   }
   return false;
+}
+
+/**
+ * 校验密码：（强口令）必须包含字母和数字的组合，不能使用特殊字符，长度在 8-20 之间
+ */
+export function passwordValidate(val) {
+  let regName =
+    /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\\W_!@#$%^&*`~()+=.?]+$)(?![a-z0-9]+$)(?![a-z\\W_!@#$%^&*`~()+=.?]+$)(?![0-9\\W_!@#$%^&*`~()+=.?]+$)[a-zA-Z0-9\\W_!@#$%^&*`~()+=.?]{8,20}$/g;
+  if (!regName.test(val)) return false;
+  return true;
+}
+
+export function validatePositiveInteger(number) {
+  var regex = /^\d+$/;
+  return regex.test(number);
 }

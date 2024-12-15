@@ -25,7 +25,7 @@ export const getList = (current, size, params) => {
  * @param {Array<number>} ids 待删除的用户ID数组
  * @returns {Promise} 请求promise对象
  */
-export const remove = (ids) => {
+export const remove = ids => {
   return request({
     url: '/blade-system/user/remove',
     method: 'post',
@@ -40,7 +40,7 @@ export const remove = (ids) => {
  * @param {object} row 用户信息对象
  * @returns {Promise} 请求promise对象
  */
-export const add = (row) => {
+export const add = row => {
   return request({
     url: '/blade-system/user/submit',
     method: 'post',
@@ -53,7 +53,7 @@ export const add = (row) => {
  * @param {object} row 用户信息对象
  * @returns {Promise} 请求promise对象
  */
-export const update = (row) => {
+export const update = row => {
   return request({
     url: '/blade-system/user/update',
     method: 'post',
@@ -83,7 +83,7 @@ export const grant = (userIds, roleIds) => {
  * @param {number} id 用户ID
  * @returns {Promise} 请求promise对象
  */
-export const getUser = (id) => {
+export const getUser = id => {
   return request({
     url: '/blade-system/user/detail',
     method: 'get',
@@ -109,7 +109,7 @@ export const getUserInfo = () => {
  * @param {Array<number>} userIds 用户ID数组
  * @returns {Promise} 请求promise对象
  */
-export const resetPassword = (userIds) => {
+export const resetPassword = userIds => {
   return request({
     url: '/blade-system/user/reset-password',
     method: 'post',
@@ -135,5 +135,53 @@ export const updatePassword = (oldPassword, newPassword, newPassword1) => {
       newPassword,
       newPassword1,
     },
+  });
+};
+
+export const getUserList = (params, data) => {
+  return request({
+    url: '/blade-system/user/page',
+    method: 'post',
+    params,
+    data,
+  });
+};
+export const getAddUser = data => {
+  return request({
+    url: '/blade-system/user/save',
+    method: 'post',
+    data,
+  });
+};
+
+export const getUpdataUser = data => {
+  return request({
+    url: '/blade-system/user/update',
+    method: 'post',
+    data,
+  });
+};
+
+export const getDelUser = params => {
+  return request({
+    url: '/blade-system/user/remove',
+    method: 'post',
+    params,
+  });
+};
+
+export const getUserId = params => {
+  return request({
+    url: '/blade-system/user/check-user-id',
+    method: 'get',
+    params,
+  });
+};
+
+// 获取省份下拉框
+export const getProvinceList = () => {
+  return request({
+    url: '/analysis-system/business-warn/province-list',
+    method: 'get',
   });
 };
