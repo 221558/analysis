@@ -14,8 +14,6 @@
       @search-reset="resetChange"
       @selection-change="selectionChange"
       @on-load="onLoad"
-      :before-open="beforeOpen"
-      :before-close="beforeClose"
     >
       <template #menu-left>
         <searchReport @getSearch="getSearch" />
@@ -27,7 +25,7 @@
         </el-tag>
       </template>
       <template #menu-right>
-        <el-button type="primary" plain @click="getDialog('add')">
+        <el-button type="primary" plain @click="getDialog('add', '')">
           <el-icon><Plus /></el-icon>
           <span>新增</span>
         </el-button>
