@@ -11,7 +11,7 @@
         <div class="user_icon"></div>
         <div>{{ '你好,admin' }}</div>
         <el-dropdown>
-          <i></i>
+          <em></em>
           <template #dropdown>
             <el-dropdown-menu>
               <!-- <el-dropdown-item @click="$router.push('/')">
@@ -50,7 +50,7 @@
           <span style="color: rgba(150, 210, 239, 0.8); margin-right: 1vw; font-size: 14px"
             >时间 |
           </span>
-          <span class="time_box">{{ params.fileTime }} <i></i></span>
+          <span class="time_box">{{ params.fileTime }} <em></em></span>
           <div v-show="showDropdown1" class="dropdown_content">
             <div
               v-for="item in timeList"
@@ -265,7 +265,7 @@ onMounted(async () => {
         background: url('/board/admin.png') no-repeat center center;
         background-size: contain;
       }
-      i {
+      i,em {
         display: inline-block;
         width: 0;
         height: 0;
@@ -373,7 +373,7 @@ onMounted(async () => {
         }
         .time_box {
           font-size: 18px;
-          i {
+          i,em {
             display: inline-block;
             width: 0;
             height: 0;

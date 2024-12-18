@@ -10,9 +10,8 @@
         <div class="time">{{ nowTime }}</div>
         <div class="user_icon"></div>
         <div>{{ '你好，admin' }}</div>
-        <!-- <i></i> -->
         <el-dropdown>
-          <i></i>
+          <em></em>
           <template #dropdown>
             <el-dropdown-menu>
               <!-- <el-dropdown-item @click="$router.push('/')">
@@ -80,7 +79,7 @@
           <div class="business_type" ref="dropdownWrapper1" @click="showDropdown1 = !showDropdown1">
             <span style="color: rgba(150, 210, 239, 0.8); font-size: 14px; padding-right: 1vw"
               >时间 |</span
-            ><span class="time_box">{{ params.fileTime }} <i></i></span>
+            ><span class="time_box">{{ params.fileTime }} <em></em></span>
             <div v-show="showDropdown1" class="dropdown_content">
               <div
                 v-for="item in timeList"
@@ -430,7 +429,7 @@ onBeforeUnmount(() => {
         background: url('/board/admin.png') no-repeat center center;
         background-size: contain;
       }
-      i {
+      i,em {
         display: inline-block;
         width: 0;
         height: 0;
@@ -542,7 +541,7 @@ onBeforeUnmount(() => {
             }
           }
           .time_box {
-            i {
+            i,em {
               display: inline-block;
               width: 0;
               height: 0;
