@@ -61,6 +61,7 @@ import {
   businessParamSave,
   businessParamUpdate,
   networkParamDelete,
+  businessParamDelete,
   checkMonitorId,
 } from '@/api/business/threshold.js';
 // 导入getToken方法，用于获取token
@@ -220,7 +221,7 @@ const getDeleteSelection = () => {
       type: 'warning',
     })
     .then(() => {
-      return remove(selectionList.value.map(item => item.id));
+      return businessParamDelete(selectionList.value.map(item => item.id));
     })
     .then(() => {
       refreshChange();
@@ -255,7 +256,7 @@ const getDelete = row => {
       type: 'warning',
     })
     .then(() => {
-      return checkMonitorId([row.id]);
+      return businessParamDelete([row.id]);
     })
     .then(() => {
       refreshChange();

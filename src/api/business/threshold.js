@@ -80,6 +80,16 @@ export const businessParamUpdate = data => {
     data,
   });
 };
+//批量删除-业务
+export const businessParamDelete = ids => {
+  return request({
+    url: '/analysis-system/business-warn/remove',
+    method: 'post',
+    params: {
+      ids,
+    },
+  });
+}
 //监控ID校验
 export const checkMonitorId = (monitorId) => {
   return request({
