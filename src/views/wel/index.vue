@@ -91,10 +91,25 @@ const data = [
     // 颜色
     color: '#eaf9f9',
   },
+  // 大模型问答
+  {
+    label: '大模型问答',
+    // 路径
+    url: 'http://172.31.55.21:18889/report-nl2/#/login',
+    // 图片路径
+    image: '/image/answers_large.png',
+    // 颜色
+    color: '#eaf2ff',
+  },
 ];
 
 // 跳转相关模块
 const getJumpRelatedPage = url => {
+  // 跳转大模型问答
+  if (url.indexOf('http') !== -1) {
+    window.open(url);
+    return;
+  }
   // 跳转到 url
   _this.$router.push({ path: url });
 };
