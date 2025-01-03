@@ -11,8 +11,8 @@ export function useMixins() {
   const store = useStore();
   // 月份数据
   const monthDataList = computed(() => store.getters.monthDataList);
-
-  // const userInfo = computed(() => store.getters.userInfo);
+  // 用户信息
+  const userInfo = computed(() => store.getters.userInfo);
   // 定义选项参考变量，初始值为 null
   const option = ref(null);
   // 定义数据列表变量，初始为空数组
@@ -54,5 +54,5 @@ export function useMixins() {
   };
 
   // 返回相关变量和方法
-  return { _this, store, option, data, search, loadings, conf, selectionList, selectionChange, monthDataList };
+  return { _this, store, option, data, search, loadings, conf, selectionList, selectionChange, monthDataList,userInfo };
 }

@@ -9,7 +9,7 @@
       <div class="user">
         <div class="time">{{ nowTime }}</div>
         <div class="user_icon"></div>
-        <div>{{ '你好，admin' }}</div>
+        <div class="user_name">{{ `你好，${userInfo.account}` }}</div>
         <el-dropdown>
           <em></em>
           <template #dropdown>
@@ -31,23 +31,15 @@
         <div class="left_top">
           <Title title="运营商总体情况" />
           <div class="left_top_content">
-            <div style="display: flex; justify-content: center">
-              <div class="left_top_item num1">
-                <div class="item1">{{ top3[0].experience }}</div>
+            <div style="display: flex; justify-content: center;flex-wrap: wrap;">
+              <div
+                v-for="(item, index) in top3"
+                :key="index"
+                :class="['left_top_item', `num${index + 1}`]"
+              >
+                <div class="item1">{{ item.experience }}</div>
                 <div class="item2">综合指数</div>
-                <div class="item3">{{ top3[0].indexName }}</div>
-              </div>
-            </div>
-            <div style="display: flex; justify-content: space-around; margin-top: 7vh">
-              <div class="left_top_item num2">
-                <div class="item1">{{ top3[1].experience }}</div>
-                <div class="item2">综合指数</div>
-                <div class="item3">{{ top3[1].indexName }}</div>
-              </div>
-              <div class="left_top_item num3">
-                <div class="item1">{{ top3[2].experience }}</div>
-                <div class="item2">综合指数</div>
-                <div class="item3">{{ top3[2].indexName }}</div>
+                <div class="item3">{{ item.indexName }}</div>
               </div>
             </div>
           </div>
@@ -93,7 +85,7 @@
           </div>
         </div>
         <div class="map_box">
-          <china-map :provinceRank="provinceRank" />
+          <china-map :provinceRank="provinceRank" v-show="mapShow" />
           <div class="map_tooltip" v-show="isShowTooltip">
             <div class="map_tooltip_title">
               {{ provinceDetail.indexName }}
@@ -164,6 +156,10 @@ import LineChart from './components/lineChart.vue';
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll';
 import dayjs from 'dayjs';
 import { operators, businesses, trend, timelist, businesstypelist } from '@/api/board';
+// 导入通用CRUD混入
+import { useMixins } from '@/mixins/data.js';
+// 用户信息
+const { userInfo } = useMixins();
 const nowTime = ref('');
 const dropdownWrapper = ref(null);
 const dropdownWrapper1 = ref(null);
@@ -173,6 +169,7 @@ const selectedOption = ref(); //业务类型展示
 const provinceDetail = ref({});
 const provinceShow = ref(false);
 const isShowTooltip = ref(false); // 省份弹框显示
+const mapShow = ref(true);
 
 const { proxy } = getCurrentInstance();
 const _this = proxy;
@@ -190,10 +187,12 @@ const logout = () => {
       });
     });
 };
+// 业务类型选择
 const selectOption = item => {
   selectedOption.value = item.label;
   params.businessType = item.value;
   showDropdown.value = false;
+  isShowTooltip.value = false;
   operatorsApi();
   businessesApi();
   trendApi();
@@ -206,8 +205,10 @@ const handleClickOutside = event => {
     showDropdown1.value = false;
   }
 };
+// 时间选择
 const timeChange = item => {
   params.fileTime = item.value;
+  isShowTooltip.value = false;
   operatorsApi();
   businessesApi();
   trendApi();
@@ -230,7 +231,6 @@ const getTop = index => {
   }
 };
 const provinceInfo = e => {
-  console.log('e', e);
   let aa = provinceRank.value.find(item => item.indexName === e);
   if (aa) {
     isShowTooltip.value = true;
@@ -429,7 +429,14 @@ onBeforeUnmount(() => {
         background: url('/board/admin.png') no-repeat center center;
         background-size: contain;
       }
-      i,em {
+      .user_name {
+        width: 3vw;
+        white-space: nowrap; /* 防止文本换行 */
+        overflow: hidden; /* 隐藏溢出的内容 */
+        text-overflow: ellipsis; /* 溢出部分用省略号表示 */
+      }
+      i,
+      em {
         display: inline-block;
         width: 0;
         height: 0;
@@ -480,14 +487,17 @@ onBeforeUnmount(() => {
             }
           }
           .num1 {
+            flex: 1 0 100%;
             background: url('/board/第一名.png') no-repeat center center;
             background-size: contain;
           }
           .num2 {
+            margin-top: 7vh;
             background: url('/board/第二名.png') no-repeat center center;
             background-size: contain;
           }
           .num3 {
+            margin-top: 7vh;
             background: url('/board/第三名.png') no-repeat center center;
             background-size: contain;
           }
@@ -541,7 +551,8 @@ onBeforeUnmount(() => {
             }
           }
           .time_box {
-            i,em {
+            i,
+            em {
               display: inline-block;
               width: 0;
               height: 0;

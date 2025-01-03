@@ -21,6 +21,9 @@
 </template>
 
 <script setup>
+import { useMixins } from '@/mixins/data.js';
+// 用户信息
+const { userInfo } = useMixins();
 // 导入getCurrentInstance函数  onMounted, ref, getCurrentInstance
 import { getCurrentInstance } from 'vue';
 // 导入ElMessage组件
@@ -36,7 +39,7 @@ const data = [
     // 大屏展示
     label: '大屏展示',
     // 图片链接
-    url: '/board/board',
+    url: userInfo.authority == 'GeneralTeamChief' ? '/board/board' : '/board/province',
     // 图片路径
     image: '/image/large_screen_display.png',
     // 图片颜色
@@ -80,7 +83,7 @@ const data = [
     color: '#f0faef',
   },
   // 根因分析
-  { label: '根因分析', url: '1', image: '/image/cause_analysis.png', color: '#eaf2ff' },
+  { label: '根因分析', url: '/cause-analysis/index', image: '/image/cause_analysis.png', color: '#eaf2ff' },
   // 系统管理
   {
     label: '系统管理',
@@ -102,7 +105,6 @@ const data = [
     color: '#eaf2ff',
   },
 ];
-
 // 跳转相关模块
 const getJumpRelatedPage = url => {
   // 跳转大模型问答

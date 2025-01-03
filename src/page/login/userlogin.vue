@@ -126,7 +126,7 @@ export default {
     this.refreshCode();
   },
   // 使用mapGetters将tagWel映射到computed属性中
-  computed: { ...mapGetters(['tagWel']) },
+  computed: { ...mapGetters(['tagWel', 'userInfo']) },
   methods: {
     // 加载用户名和密码
     loadCredentials() {
@@ -180,8 +180,21 @@ export default {
           this.$store
             .dispatch('LoginByUsername', this.loginForm)
             .then(() => {
+              // administrator-超级管理员，GeneralTeamChief-总体组总师用户，ProvincialChief-省份总师用户
+              // 首页为用户管理
+              if (this.userInfo.authority === 'administrator') {
+                this.$router.push('/system/user');
+              }
+              // 首页为总师大屏展示
+              else if (this.userInfo.authority === 'GeneralTeamChief') {
+                this.$router.push('/board/board');
+              }
+              // 首页为省师大屏展示
+              else if (this.userInfo.authority === 'ProvincialChief') {
+                this.$router.push('/board/province');
+              }
               // 跳转到欢迎页面
-              this.$router.push(this.tagWel);
+              // this.$router.push(this.tagWel);
               // 获取字典数据
               this.$store.dispatch('GetDictionary');
             })

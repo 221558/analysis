@@ -43,9 +43,8 @@ const yData = ref([]);
 watch(
   () => props.chartData,
   newVal => {
-    console.log('newVal', newVal);
-    xData.value = newVal.timeData.map(item => monthCode[item.split('-')[1]]);
-    yData.value = newVal.trendData;
+    xData.value = newVal?.timeData.map(item => monthCode[item.split('-')[1]]);
+    yData.value = newVal?.trendData;
     nextTick(() => {
       initChart();
     });

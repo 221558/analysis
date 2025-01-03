@@ -9,7 +9,7 @@
       <div class="user">
         <div class="time">{{ time }}</div>
         <div class="user_icon"></div>
-        <div>{{ '你好,admin' }}</div>
+        <div class="user_name">{{ `你好，${userInfo.account}` }}</div>
         <el-dropdown>
           <em></em>
           <template #dropdown>
@@ -124,6 +124,10 @@ import { getTime } from '@/utils/util';
 import Title from './components/title.vue';
 import LineChart from './components/lineChart.vue';
 import { timelist, provinces, trend, businesstypelist } from '@/api/board';
+// 导入通用CRUD混入
+import { useMixins } from '@/mixins/data.js';
+// 用户信息
+const { userInfo } = useMixins();
 
 const time = ref('');
 const dropdownWrapper1 = ref();
@@ -265,6 +269,12 @@ onMounted(async () => {
         background: url('/board/admin.png') no-repeat center center;
         background-size: contain;
       }
+      .user_name {
+        width: 3vw;
+        white-space: nowrap; /* 防止文本换行 */
+        overflow: hidden; /* 隐藏溢出的内容 */
+        text-overflow: ellipsis; /* 溢出部分用省略号表示 */
+      }
       i,em {
         display: inline-block;
         width: 0;
@@ -405,7 +415,7 @@ onMounted(async () => {
             left: 7vw;
             top: 3vh;
             .business_name {
-              font-size: 24px;
+              font-size: 23px;
               background-image: linear - gradient(to top, rgba(100, 154, 226) 10%, #ffffff 30%);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
