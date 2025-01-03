@@ -67,7 +67,7 @@ option.value = {
   column: [
     { label: '监控ID', prop: 'businessWarnId' },
     { label: '监控省份', prop: 'province' },
-    { label: '监控参数', prop: 'monitorParam' },
+    { label: '监控参数', prop: 'monitorParam', dicData: monitorParamList },
     { label: '阈值设置', prop: 'monitorThreshold' },
     { label: '实际值', prop: 'actualValue' },
     { label: '预警月份', prop: 'fileTime' },
