@@ -39,7 +39,7 @@ const data = [
     // 大屏展示
     label: '大屏展示',
     // 图片链接
-    url: userInfo.authority == 'GeneralTeamChief' ? '/board/board' : '/board/province',
+    url: userInfo.value.authority == 'GeneralTeamChief' ? '/board/board' : '/board/province',
     // 图片路径
     image: '/image/large_screen_display.png',
     // 图片颜色
