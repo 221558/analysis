@@ -85,4 +85,29 @@ export default [
       },
     ],
   },
+  // 用户管理
+  {
+    // 定义路由路径
+    path: '/system',
+    // 定义组件
+    component: Layout,
+    // 定义重定向路径
+    redirect: '/system/user',
+    // 定义子路由
+    children: [
+      {
+        // 定义子路由路径
+        path: '/system/user',
+        // 定义路由名称
+        name: '系统管理 / 用户管理',
+        // 定义路由元信息
+        meta: { i18n: 'editUser' },
+        // 按需加载组件
+        component: () =>
+          import(
+            /* webpackChunkName: "views" */ '@/views/system/user.vue'
+          ),
+      },
+    ],
+  },
 ];
